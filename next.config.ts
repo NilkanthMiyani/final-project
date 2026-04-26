@@ -20,9 +20,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async headers() {
-    return [{ source: "/site.webmanifest", headers: manifestHeaders }];
-  },
 };
 
 export default nextConfig;

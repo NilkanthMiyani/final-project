@@ -13,15 +13,15 @@ const Pager = ({
   prevTitle,
   nextTitle,
 }: {
-  prevHref: string;
-  nextHref: string;
-  prevTitle: string;
-  nextTitle: string;
+  prevHref?: string;
+  nextHref?: string;
+  prevTitle?: string;
+  nextTitle?: string;
 }) => {
   const pathname = usePathname();
   return (
     <div className="flex flex-row items-center justify-between w-full mt-8">
-      {prevHref !== pathname && (
+      {prevHref && prevHref !== pathname && (
         <Button variant="ghost" asChild>
           <Link href={prevHref}>
             <ChevronLeft />
@@ -30,12 +30,14 @@ const Pager = ({
         </Button>
       )}
 
-      <Button variant="ghost" className="ml-auto" asChild>
-        <Link href={nextHref}>
-          {nextTitle}
-          <ChevronRight />
-        </Link>
-      </Button>
+      {nextHref && (
+        <Button variant="ghost" className="ml-auto" asChild>
+          <Link href={nextHref}>
+            {nextTitle}
+            <ChevronRight />
+          </Link>
+        </Button>
+      )}
     </div>
   );
 };
