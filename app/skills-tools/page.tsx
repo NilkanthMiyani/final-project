@@ -1,4 +1,3 @@
-import { Icons } from '@/components/icons';
 import {
   PageHeader,
   PageHeaderDescription,
@@ -27,16 +26,14 @@ const SkillsToolsPage = () => {
       {/* skills and tools badges */}
       <div
         id="badges"
-        className="flex flex-wrap items-center justify-center gap-2 my-4"
+        className="flex flex-wrap items-center justify-start gap-3 my-8"
       >
         {mySkills.map((item) => (
           <Badge
             key={item.title}
-            className="p-4 py-2 border border-secondary bg-secondary-foreground text-secondary"
+            variant="outline"
+            className="px-6 py-3 text-lg font-medium border-border/50 bg-card/50 hover:bg-accent hover:text-accent-foreground shadow-sm transition-all rounded-2xl cursor-default"
           >
-            {Icons[item.icon as keyof typeof Icons]?.({
-              className: 'mr-2 size-4',
-            })}
             {item.title}
           </Badge>
         ))}
