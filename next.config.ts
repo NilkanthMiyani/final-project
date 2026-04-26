@@ -1,12 +1,6 @@
 import type { NextConfig } from "next";
 
-const manifestHeaders = [
-  {
-    key: "Access-Control-Allow-Origin",
-    value: "*",
-  },
-];
- 
+
 const nextConfig: NextConfig = {
   output: 'export',
   images: {
