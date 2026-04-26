@@ -37,7 +37,7 @@ export async function SiteFooter() {
             </Link>{" "}
             · Source code available on{" "}
             <Link
-              href="https://github.com/NilkanthMiyani/demo-portfolio"
+              href="https://github.com/NilkanthMiyani/final-project"
               target="_blank"
               rel="noreferrer"
               className="font-medium transition-colors text-primary hover:text-primary/80"
