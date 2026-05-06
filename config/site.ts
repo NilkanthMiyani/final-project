@@ -27,7 +27,7 @@ export const siteConfig = {
     github: 'https://github.com/NilkanthMiyani',
     githubProfile: 'https://github.com/NilkanthMiyani',
     linkedin: 'https://www.linkedin.com/in/nilkanthmiyani/',
-    resume: '#', // Add your resume link here
+    resume: '/resumenilkanth.pdf', // Add your resume link here
     email: 'mailto:miyaninilkanth2@gmail.com',
     githubUsername: 'NilkanthMiyani',
   },

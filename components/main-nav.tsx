@@ -7,6 +7,7 @@ import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { ExternalLink } from "lucide-react";
 import { Icons } from "./icons";
+import { Button } from "./ui/button";
 
 export function MainNav() {
   const pathname = usePathname();
@@ -41,14 +42,21 @@ export function MainNav() {
           <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
         </Link>
 
-        <Link
-          href={siteConfig.links.resume}
-          target="_blank"
-          className="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
+        <Button
+          variant="outline"
+          size="sm"
+          asChild
+          className="h-8 border-border/40 bg-muted/20 px-3 text-muted-foreground transition-all hover:bg-muted/40 hover:text-foreground"
         >
-          Resume
-          <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </Link>
+          <Link
+            href={siteConfig.links.resume}
+            target="_blank"
+            className="group flex items-center gap-1.5"
+          >
+            Resume
+            <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
+        </Button>
       </nav>
     </div>
   );
