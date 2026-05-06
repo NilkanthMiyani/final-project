@@ -7,7 +7,6 @@ import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { ExternalLink } from "lucide-react";
 import { Icons } from "./icons";
-import { Button } from "./ui/button";
 
 export function MainNav() {
   const pathname = usePathname();
