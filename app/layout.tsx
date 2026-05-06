@@ -14,7 +14,6 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { SiteHeader } from '@/components/site-header';
 import { SideNav } from '@/components/side-nav';
-import { SiteFooter } from '@/components/site-footer';
 import { docsConfig } from '@/config/docs';
 
 // Server actions removed for static export
@@ -115,7 +114,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
                         </div>
                       </div>
                     </main>
-                    <SiteFooter />
                   </div>
                 </div>
               </div>
