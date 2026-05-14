@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
-import { siteConfig } from '@/config/site';
+import { toast } from 'sonner';
 
 const labelWithRequiredStar = ({ label }: { label: string }) => {
   return (
@@ -23,12 +23,29 @@ const ContactForm = () => {
     email: '',
     message: '',
   });
+  const [isPending, setIsPending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`New message from ${formData.fullname}`);
-    const body = encodeURIComponent(`From: ${formData.fullname} (${formData.email})\n\nMessage:\n${formData.message}`);
-    window.location.href = `${siteConfig.links.email}?subject=${subject}&body=${body}`;
+    setIsPending(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.message || 'Message sent successfully!');
+        setFormData({ fullname: '', email: '', message: '' });
+      } else {
+        toast.error(data.error || 'Failed to send message.');
+      }
+    } catch {
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
@@ -90,8 +107,9 @@ const ContactForm = () => {
           className="w-full px-8 py-6 cursor-pointer"
           size="lg"
           variant="default"
+          disabled={isPending}
         >
-          Open in Mail Client 📨
+          {isPending ? 'Sending...' : 'Send Message 📨'}
         </Button>
 
         <Button
@@ -106,7 +124,7 @@ const ContactForm = () => {
               message: '',
             })
           }
-        > 
+        >
           Reset
         </Button>
       </div>
