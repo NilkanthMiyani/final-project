@@ -1,3 +1,4 @@
+import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 import { getProfile } from '@/lib/content';
@@ -11,33 +12,42 @@ const socialLabels: Record<string, string> = {
 
 export async function SiteFooter() {
   const profile = await getProfile();
-
   const socials = Object.entries(profile.socials).filter(([, url]) => url);
 
   return (
-    <footer className="mt-32 border-t border-rule">
-      <div className="mx-auto max-w-5xl px-6 py-12 md:px-10">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+    <footer className="mx-auto mt-32 max-w-6xl px-5 pb-10 sm:px-8">
+      <div className="glass rounded-2xl p-8 sm:p-10">
+        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="display text-2xl">Let’s talk infrastructure.</p>
+            <p className="flex items-center gap-2.5 font-medium">
+              <span
+                className="size-2 rounded-full"
+                style={{
+                  background:
+                    'linear-gradient(135deg, var(--violet), var(--cyan))',
+                }}
+              />
+              {profile.name}
+            </p>
             {profile.email ? (
               <Link
                 href={`mailto:${profile.email}`}
-                className="link-underline mt-3 inline-block font-mono text-sm text-muted-foreground hover:text-foreground"
+                className="mt-3 inline-flex items-center gap-1.5 font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
                 {profile.email}
+                <ArrowUpRight className="size-3.5" />
               </Link>
             ) : null}
           </div>
 
-          <nav className="flex flex-wrap gap-x-6 gap-y-2">
+          <nav className="flex flex-wrap gap-2">
             {socials.map(([key, url]) => (
               <Link
                 key={key}
                 href={url}
                 target="_blank"
                 rel="noreferrer"
-                className="link-underline text-sm text-muted-foreground hover:text-foreground"
+                className="glass rounded-full px-4 py-2 text-xs transition-all duration-300 hover:-translate-y-0.5 hover:text-foreground"
               >
                 {socialLabels[key] ?? key}
               </Link>
@@ -45,7 +55,7 @@ export async function SiteFooter() {
           </nav>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-rule pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-2 border-t border-[var(--glass-border)] pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="label">
             © {new Date().getFullYear()} {profile.name}
           </p>

@@ -14,7 +14,7 @@ export default function AdminPanelLayout({
 }) {
   return (
     <div className="mx-auto max-w-6xl px-6 py-8 md:px-10">
-      <header className="mb-10 flex items-center justify-between border-b border-rule pb-6">
+      <header className="glass mb-10 flex items-center justify-between rounded-2xl px-6 py-5">
         <div>
           <p className="label">Content Admin</p>
           <p className="mt-1 font-mono text-sm">{siteConfig.domain}</p>

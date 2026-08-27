@@ -1,33 +1,38 @@
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
+import { SpotlightCard } from '@/components/spotlight-card';
 import type { Project } from '@/types/content';
 
-/**
- * A project row: title and tagline on the left, stack on the right, the whole
- * row a link. Rows rather than cards keeps the editorial rhythm intact.
- */
 export function ProjectCard({ project }: { project: Project }) {
   return (
-    <Link
-      href={`/projects/${project.slug}`}
-      className="group grid gap-3 border-b border-rule py-7 transition-colors hover:bg-secondary/40 sm:grid-cols-[1fr_auto] sm:items-start sm:gap-10 sm:px-3 sm:-mx-3"
-    >
-      <div>
-        <h3 className="flex items-center gap-1.5 text-[1.0625rem] font-medium leading-snug">
-          {project.title}
-          <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
-        </h3>
-        <p className="prose-editorial mt-2 text-sm">{project.tagline}</p>
-      </div>
+    <SpotlightCard className="h-full">
+      <Link
+        href={`/projects/${project.slug}`}
+        className="flex h-full flex-col p-6 sm:p-7"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-lg leading-snug font-semibold">{project.title}</h3>
+          <span className="glass flex size-8 shrink-0 items-center justify-center rounded-full transition-all duration-300 group-hover:bg-[var(--violet)] group-hover:text-white">
+            <ArrowUpRight className="size-4" />
+          </span>
+        </div>
 
-      <ul className="flex flex-wrap gap-x-3 gap-y-1 sm:max-w-[16rem] sm:justify-end">
-        {project.techStack.slice(0, 4).map((tech) => (
-          <li key={tech} className="font-mono text-[0.6875rem] text-muted-foreground">
-            {tech}
-          </li>
-        ))}
-      </ul>
-    </Link>
+        <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+          {project.tagline}
+        </p>
+
+        <ul className="mt-6 flex flex-wrap gap-2">
+          {project.techStack.slice(0, 4).map((tech) => (
+            <li
+              key={tech}
+              className="rounded-full border border-[var(--glass-border)] px-2.5 py-1 font-mono text-[0.6875rem] text-muted-foreground"
+            >
+              {tech}
+            </li>
+          ))}
+        </ul>
+      </Link>
+    </SpotlightCard>
   );
 }

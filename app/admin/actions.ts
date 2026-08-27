@@ -41,6 +41,18 @@ const lines = (data: FormData, key: string): string[] =>
     .map((line) => line.trim())
     .filter(Boolean);
 
+/** Parses `60% | client hosting spend cut` lines into bento stat tiles. */
+const highlights = (
+  data: FormData,
+  key: string
+): { value: string; label: string }[] =>
+  lines(data, key)
+    .map((line) => {
+      const [value, ...rest] = line.split('|');
+      return { value: (value ?? '').trim(), label: rest.join('|').trim() };
+    })
+    .filter((entry) => entry.value && entry.label);
+
 const slugify = (value: string): string =>
   value
     .toLowerCase()
@@ -199,6 +211,7 @@ export async function saveProfile(
             twitter: text(data, 'twitter'),
             telegram: text(data, 'telegram'),
           },
+          highlights: highlights(data, 'highlights'),
           seoDescription: text(data, 'seoDescription'),
           seoKeywords: lines(data, 'seoKeywords'),
         },

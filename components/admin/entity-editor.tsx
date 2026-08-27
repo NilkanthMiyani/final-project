@@ -75,7 +75,7 @@ export function EntityEditor({
       </div>
 
       {creating ? (
-        <div className="mb-8 border border-rule bg-card p-6">
+        <div className="mb-8 border border-[var(--glass-border)] bg-card p-6">
           <p className="label mb-5">New {noun}</p>
           <EntityForm
             action={actions.save}
@@ -87,7 +87,7 @@ export function EntityEditor({
         </div>
       ) : null}
 
-      <div className="border-t border-rule">
+      <div className="border-t border-[var(--glass-border)]">
         {items.length === 0 ? (
           <p className="py-10 text-sm text-muted-foreground">
             Nothing here yet. Add your first {noun}.
@@ -100,7 +100,7 @@ export function EntityEditor({
           const isDraft = item.published === false;
 
           return (
-            <div key={id} className="border-b border-rule">
+            <div key={id} className="border-b border-[var(--glass-border)]">
               <div className="flex items-center gap-3 py-4">
                 <button
                   type="button"

@@ -22,19 +22,19 @@ export function MessageList({ messages }: { messages: Message[] }) {
 
   if (messages.length === 0) {
     return (
-      <p className="border-t border-rule py-10 text-sm text-muted-foreground">
+      <p className="border-t border-[var(--glass-border)] py-10 text-sm text-muted-foreground">
         No messages yet.
       </p>
     );
   }
 
   return (
-    <div className="border-t border-rule">
+    <div className="border-t border-[var(--glass-border)]">
       {messages.map((message) => {
         const open = openId === message.id;
 
         return (
-          <div key={message.id} className="border-b border-rule">
+          <div key={message.id} className="border-b border-[var(--glass-border)]">
             <div className="flex items-center gap-3 py-4">
               <button
                 type="button"
@@ -104,7 +104,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
 
             {open ? (
               <div className="pb-8">
-                <p className="prose-editorial whitespace-pre-wrap text-sm">
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap text-sm">
                   {message.message}
                 </p>
                 <a

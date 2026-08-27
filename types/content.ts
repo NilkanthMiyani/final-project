@@ -16,6 +16,7 @@ export type Profile = {
     twitter: string;
     telegram: string;
   };
+  highlights: { value: string; label: string }[];
   resumeUrl: string;
   seoDescription: string;
   seoKeywords: string[];

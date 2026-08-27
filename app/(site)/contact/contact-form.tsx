@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 const fieldClass =
-  'w-full border-0 border-b border-rule bg-transparent px-0 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-accent';
+  'w-full rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] px-4 py-3 text-sm outline-none transition-all duration-300 placeholder:text-muted-foreground/60 focus:border-[var(--violet)] focus:ring-2 focus:ring-[var(--violet)]/20';
 
 export function ContactForm() {
   const [pending, setPending] = useState(false);
@@ -44,36 +44,37 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-xl space-y-8">
-      <div>
-        <label htmlFor="fullname" className="label">
-          Name
-        </label>
-        <input
-          id="fullname"
-          name="fullname"
-          required
-          maxLength={120}
-          autoComplete="name"
-          placeholder="Your name"
-          className={fieldClass}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="email" className="label">
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          maxLength={200}
-          autoComplete="email"
-          placeholder="you@company.com"
-          className={fieldClass}
-        />
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="fullname" className="label">
+            Name
+          </label>
+          <input
+            id="fullname"
+            name="fullname"
+            required
+            maxLength={120}
+            autoComplete="name"
+            placeholder="Your name"
+            className={`${fieldClass} mt-2`}
+          />
+        </div>
+        <div>
+          <label htmlFor="email" className="label">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            maxLength={200}
+            autoComplete="email"
+            placeholder="you@company.com"
+            className={`${fieldClass} mt-2`}
+          />
+        </div>
       </div>
 
       <div>
@@ -84,20 +85,16 @@ export function ContactForm() {
           id="message"
           name="message"
           required
-          rows={5}
+          rows={6}
           maxLength={5000}
           placeholder="What are you working on?"
-          className={`${fieldClass} resize-none`}
+          className={`${fieldClass} mt-2 resize-none`}
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="group inline-flex items-center gap-2 border-b border-foreground pb-1 text-sm transition-colors hover:border-accent hover:text-accent disabled:opacity-50"
-      >
+      <button type="submit" disabled={pending} className="btn-primary disabled:opacity-50">
         {pending ? 'Sending…' : 'Send message'}
-        <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+        <ArrowRight className="size-4" />
       </button>
     </form>
   );

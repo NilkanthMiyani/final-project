@@ -1,9 +1,12 @@
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 import { ExperienceItem } from '@/components/experience-item';
+import { Marquee } from '@/components/marquee';
 import { ProjectCard } from '@/components/project-card';
-import { Section } from '@/components/section';
+import { Reveal } from '@/components/reveal';
+import { SectionHeading } from '@/components/section-heading';
+import { SpotlightCard } from '@/components/spotlight-card';
 import {
   getExperience,
   getProfile,
@@ -23,128 +26,216 @@ export default async function HomePage() {
   const featured = projects.filter((project) => project.featured).slice(0, 3);
   const selected = featured.length > 0 ? featured : projects.slice(0, 3);
   const stack = groupSkills(skills);
+  const current = experience.find((item) => item.current) ?? experience[0];
+  const marqueeItems = skills.map((skill) => skill.name);
+  // Guard the shape: a cached payload written before `highlights` existed
+  // deserialises without the field.
+  const highlights = profile.highlights ?? [];
 
   return (
-    <div className="mx-auto max-w-5xl px-6 md:px-10">
-      {/* Hero */}
-      <section className="fade-up py-20 md:py-32">
-        <p className="label">
-          {profile.name} <span className="px-1 opacity-40">/</span> {profile.role}
-        </p>
+    <div className="mx-auto max-w-6xl px-5 sm:px-8">
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section className="flex min-h-[88svh] flex-col justify-center py-24">
+        <Reveal>
+          {profile.availability ? (
+            <span className="pill">
+              <span className="relative flex size-1.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-[var(--cyan)] opacity-75" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-[var(--cyan)]" />
+              </span>
+              {profile.availability}
+            </span>
+          ) : null}
+        </Reveal>
 
-        <h1 className="display mt-8 max-w-3xl text-[2.75rem] sm:text-6xl md:text-7xl">
-          {profile.headline}
-        </h1>
+        <Reveal delay={90}>
+          <h1 className="text-balance-tight mt-7 max-w-4xl text-5xl font-semibold sm:text-7xl md:text-8xl">
+            <span className="gradient-text">{profile.headline}</span>
+          </h1>
+        </Reveal>
 
-        {profile.subheadline ? (
-          <p className="prose-editorial mt-8 text-lg md:text-xl">
+        <Reveal delay={180}>
+          <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">
             {profile.subheadline}
           </p>
-        ) : null}
+        </Reveal>
 
-        <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4">
-          {profile.resumeUrl ? (
-            <Link
-              href={profile.resumeUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="group inline-flex items-center gap-2 border-b border-foreground pb-1 text-sm transition-colors hover:border-accent hover:text-accent"
-            >
-              Résumé
-              <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        <Reveal delay={260}>
+          <div className="mt-10 flex flex-wrap items-center gap-3">
+            <Link href="/contact" className="btn-primary">
+              Let’s talk
+              <ArrowRight className="size-4" />
             </Link>
-          ) : null}
-
-          <Link
-            href="/contact"
-            className="link-underline text-sm text-muted-foreground hover:text-foreground"
-          >
-            Get in touch
-          </Link>
-
-          {profile.availability ? (
-            <p className="label ml-auto hidden sm:block">{profile.availability}</p>
-          ) : null}
-        </div>
+            {profile.resumeUrl ? (
+              <Link
+                href={profile.resumeUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-ghost"
+              >
+                Résumé
+                <ArrowUpRight className="size-4" />
+              </Link>
+            ) : null}
+          </div>
+        </Reveal>
       </section>
 
-      {/* Selected work */}
-      {selected.length > 0 ? (
-        <Section
-          id="work"
-          index="01"
-          title="Selected Work"
-          action={
-            <Link
-              href="/projects"
-              className="link-underline inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-            >
-              All projects
-              <ArrowRight className="size-3.5" />
-            </Link>
-          }
-        >
-          <div className="border-t border-rule">
-            {selected.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        </Section>
-      ) : null}
-
-      {/* Experience */}
-      {experience.length > 0 ? (
-        <Section id="experience" index="02" title="Experience" className="mt-28">
-          <div className="border-t border-rule">
-            {experience.map((item) => (
-              <ExperienceItem key={item.id} item={item} />
-            ))}
-          </div>
-        </Section>
-      ) : null}
-
-      {/* Stack */}
-      {stack.length > 0 ? (
-        <Section id="stack" index="03" title="Stack" className="mt-28">
-          <dl className="border-t border-rule">
-            {stack.map((group) => (
-              <div
-                key={group.category}
-                className="grid gap-2 border-b border-rule py-6 md:grid-cols-[13rem_1fr] md:gap-10"
+      {/* ── Bento ────────────────────────────────────────────────────── */}
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {highlights.map((highlight, index) => (
+          <Reveal key={highlight.label} delay={index * 70}>
+            <SpotlightCard className="h-full p-6">
+              <p
+                className="tnum text-4xl font-semibold sm:text-5xl"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(135deg, var(--violet), var(--cyan))',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }}
               >
-                <dt className="label pt-0.5">{group.category}</dt>
-                <dd className="flex flex-wrap gap-x-4 gap-y-2">
-                  {group.items.map((skill) => (
-                    <span key={skill.id} className="text-sm text-muted-foreground">
-                      {skill.name}
-                    </span>
-                  ))}
-                </dd>
-              </div>
+                {highlight.value}
+              </p>
+              <p className="mt-3 text-sm leading-snug text-muted-foreground">
+                {highlight.label}
+              </p>
+            </SpotlightCard>
+          </Reveal>
+        ))}
+
+        {current ? (
+          <Reveal delay={80} className="sm:col-span-2">
+            <SpotlightCard className="h-full p-7">
+              <span className="label">Currently</span>
+              <p className="mt-4 text-2xl font-semibold">{current.company}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {current.role} · {current.startDate} —{' '}
+                {current.current ? 'Present' : current.endDate}
+              </p>
+              {current.bullets[0] ? (
+                <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
+                  {current.bullets[0]}
+                </p>
+              ) : null}
+            </SpotlightCard>
+          </Reveal>
+        ) : null}
+
+        <Reveal delay={150} className="sm:col-span-2">
+          <SpotlightCard className="flex h-full flex-col justify-between p-7">
+            <div>
+              <span className="label">Toolkit</span>
+              <p className="mt-4 text-2xl font-semibold">
+                {skills.length} tools in rotation
+              </p>
+            </div>
+            <Marquee items={marqueeItems} className="mt-6 -mx-7" duration={45} />
+          </SpotlightCard>
+        </Reveal>
+      </section>
+
+      {/* ── Work ─────────────────────────────────────────────────────── */}
+      {selected.length > 0 ? (
+        <section id="work" className="scroll-mt-28 pt-32">
+          <Reveal>
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <SectionHeading
+                eyebrow="Selected work"
+                title="Infrastructure I’ve built and broken."
+                description="Working repositories — Terraform state, pipeline definitions and manifests included."
+              />
+              <Link
+                href="/projects"
+                className="btn-ghost shrink-0"
+              >
+                All projects
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
+          </Reveal>
+
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {selected.map((project, index) => (
+              <Reveal key={project.id} delay={index * 90}>
+                <ProjectCard project={project} />
+              </Reveal>
             ))}
-          </dl>
-        </Section>
+          </div>
+        </section>
       ) : null}
 
-      {/* About teaser */}
-      {profile.bio.length > 0 ? (
-        <Section
-          index="04"
-          title="About"
-          className="mt-28"
-          action={
-            <Link
-              href="/about"
-              className="link-underline inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-            >
-              Read more
-              <ArrowRight className="size-3.5" />
-            </Link>
-          }
-        >
-          <p className="display max-w-3xl text-2xl md:text-3xl">{profile.bio[0]}</p>
-        </Section>
+      {/* ── Experience ───────────────────────────────────────────────── */}
+      {experience.length > 0 ? (
+        <section id="experience" className="scroll-mt-28 pt-32">
+          <Reveal>
+            <SectionHeading
+              eyebrow="Experience"
+              title="Where I’ve been shipping."
+            />
+          </Reveal>
+
+          <div className="mt-12 space-y-4">
+            {experience.map((item, index) => (
+              <Reveal key={item.id} delay={index * 80}>
+                <ExperienceItem item={item} />
+              </Reveal>
+            ))}
+          </div>
+        </section>
       ) : null}
+
+      {/* ── Stack ────────────────────────────────────────────────────── */}
+      {stack.length > 0 ? (
+        <section id="stack" className="scroll-mt-28 pt-32">
+          <Reveal>
+            <SectionHeading eyebrow="Stack" title="What I reach for." />
+          </Reveal>
+
+          <div className="mt-12 grid gap-4 sm:grid-cols-2">
+            {stack.map((group, index) => (
+              <Reveal key={group.category} delay={index * 60}>
+                <SpotlightCard className="h-full p-6">
+                  <p className="label">{group.category}</p>
+                  <ul className="mt-4 flex flex-wrap gap-2">
+                    {group.items.map((skill) => (
+                      <li
+                        key={skill.id}
+                        className="rounded-full border border-[var(--glass-border)] px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-[var(--violet)] hover:text-foreground"
+                      >
+                        {skill.name}
+                      </li>
+                    ))}
+                  </ul>
+                </SpotlightCard>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {/* ── CTA ──────────────────────────────────────────────────────── */}
+      <section className="pt-32">
+        <Reveal>
+          <SpotlightCard className="overflow-hidden p-10 text-center sm:p-16">
+            <Sparkles className="mx-auto size-6 text-[var(--cyan)]" />
+            <h2 className="text-balance-tight mt-6 text-3xl font-semibold sm:text-5xl">
+              Got an infrastructure problem
+              <br />
+              worth solving?
+            </h2>
+            <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
+              A pipeline that’s become a burden, a cloud bill that keeps climbing,
+              or a role you think I’d fit.
+            </p>
+            <Link href="/contact" className="btn-primary mt-9">
+              Start a conversation
+              <ArrowRight className="size-4" />
+            </Link>
+          </SpotlightCard>
+        </Reveal>
+      </section>
     </div>
   );
 }

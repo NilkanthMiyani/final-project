@@ -35,6 +35,7 @@ export const FALLBACK_PROFILE: Profile = {
     twitter: 'https://x.com/nilkanthmiyani',
     telegram: 'https://t.me/nilkanthmiyani',
   },
+  highlights: [],
   resumeUrl: '/resumenilkanth.pdf',
   seoDescription: 'Portfolio of Nilkanth Miyani, DevOps & Cloud Engineer.',
   seoKeywords: [],
@@ -47,6 +48,19 @@ const str = (value: unknown, fallback = ''): string =>
 
 const list = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : [];
+
+/** Normalises the stored highlight subdocuments into plain pairs. */
+export const highlightList = (
+  value: unknown
+): { value: string; label: string }[] =>
+  Array.isArray(value)
+    ? value
+        .map((entry) => ({
+          value: String((entry as any)?.value ?? ''),
+          label: String((entry as any)?.label ?? ''),
+        }))
+        .filter((entry) => entry.value && entry.label)
+    : [];
 
 /**
  * Wraps a reader in the Next data cache under one tag, so admin writes can
@@ -93,6 +107,7 @@ export const getProfile = cachedReader<Profile>(TAGS.profile, FALLBACK_PROFILE, 
       twitter: str(doc.socials?.twitter),
       telegram: str(doc.socials?.telegram),
     },
+    highlights: highlightList(doc.highlights),
     resumeUrl: str(doc.resumeUrl, FALLBACK_PROFILE.resumeUrl),
     seoDescription: str(doc.seoDescription, FALLBACK_PROFILE.seoDescription),
     seoKeywords: list(doc.seoKeywords),

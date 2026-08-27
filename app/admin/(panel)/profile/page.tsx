@@ -29,6 +29,16 @@ const identity: FieldDef[] = [
   },
 ];
 
+const showcase: FieldDef[] = [
+  {
+    name: 'highlights',
+    label: 'Bento stat tiles',
+    type: 'list',
+    rows: 5,
+    hint: 'One per line as `value | label`, e.g. `60% | client hosting spend cut`. Shown as tiles on the homepage.',
+  },
+];
+
 const contact: FieldDef[] = [
   { name: 'location', label: 'Location', type: 'text' },
   { name: 'email', label: 'Email', type: 'text' },
@@ -65,6 +75,9 @@ export default async function AdminProfilePage() {
   const values: Record<string, unknown> = {
     ...profile,
     ...profile.socials,
+    highlights: profile.highlights.map(
+      (entry) => `${entry.value} | ${entry.label}`
+    ),
   };
 
   return (
@@ -76,6 +89,7 @@ export default async function AdminProfilePage() {
 
       <AdminForm action={saveProfile}>
         <FieldGroup label="Identity" fields={identity} values={values} />
+        <FieldGroup label="Highlights" fields={showcase} values={values} />
         <FieldGroup label="Contact" fields={contact} values={values} />
         <FieldGroup label="Socials" fields={socials} values={values} />
         <FieldGroup label="SEO" fields={seo} values={values} />
@@ -94,7 +108,7 @@ function FieldGroup({
   values: Record<string, unknown>;
 }) {
   return (
-    <fieldset className="mb-10 border-t border-rule pt-6">
+    <fieldset className="mb-10 border-t border-[var(--glass-border)] pt-6">
       <legend className="label mb-5">{label}</legend>
       <div className="grid gap-5 sm:grid-cols-2">
         {fields.map((field) => (

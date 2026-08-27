@@ -42,8 +42,8 @@ export default function LoginPage() {
     <div className="flex min-h-svh items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <p className="label">Restricted</p>
-        <h1 className="display mt-4 text-4xl">Admin</h1>
-        <p className="prose-editorial mt-3 text-sm">
+        <h1 className="font-semibold tracking-tight mt-4 text-4xl">Admin</h1>
+        <p className="text-muted-foreground leading-relaxed mt-3 text-sm">
           Enter the admin password to manage portfolio content.
         </p>
 
@@ -59,7 +59,7 @@ export default function LoginPage() {
             required
             autoFocus
             autoComplete="current-password"
-            className="w-full border-0 border-b border-rule bg-transparent px-0 py-3 text-sm outline-none transition-colors focus:border-accent"
+            className="w-full border-0 border-b border-[var(--glass-border)] bg-transparent px-0 py-3 text-sm outline-none transition-colors focus:border-accent"
           />
 
           {error ? (

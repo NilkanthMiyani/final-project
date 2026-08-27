@@ -11,7 +11,7 @@ export type FieldDef = {
 };
 
 export const inputClass =
-  'w-full border-0 border-b border-rule bg-transparent px-0 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-accent';
+  'w-full border-0 border-b border-[var(--glass-border)] bg-transparent px-0 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-accent';
 
 /**
  * Renders one field from a FieldDef against a plain value object.

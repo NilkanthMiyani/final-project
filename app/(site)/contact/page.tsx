@@ -1,7 +1,10 @@
+import { Mail } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { Section } from '@/components/section';
+import { Reveal } from '@/components/reveal';
+import { SectionHeading } from '@/components/section-heading';
+import { SpotlightCard } from '@/components/spotlight-card';
 import { getProfile } from '@/lib/content';
 
 import { ContactForm } from './contact-form';
@@ -21,45 +24,44 @@ export default async function ContactPage() {
   ].filter((item) => item.value && item.href);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 md:px-10">
-      <header className="fade-up py-20 md:py-28">
-        <p className="label">Contact</p>
-        <h1 className="display mt-6 max-w-2xl text-4xl sm:text-5xl md:text-6xl">
-          Got an infrastructure problem worth solving?
-        </h1>
-        <p className="prose-editorial mt-6">
-          Whether it’s a pipeline that’s become a maintenance burden, a cloud bill
-          that keeps climbing, or a role you think I’d fit — send it over.
-        </p>
+    <div className="mx-auto max-w-4xl px-5 sm:px-8">
+      <header className="pt-36 pb-14">
+        <Reveal>
+          <SectionHeading
+            eyebrow="Contact"
+            title="Got an infrastructure problem worth solving?"
+            description="A pipeline that’s become a maintenance burden, a cloud bill that keeps climbing, or a role you think I’d fit — send it over."
+          />
+        </Reveal>
       </header>
 
-      <Section index="01" title="Send a message">
-        <ContactForm />
-      </Section>
+      <Reveal>
+        <SpotlightCard className="p-7 sm:p-10">
+          <ContactForm />
+        </SpotlightCard>
+      </Reveal>
 
       {direct.length > 0 ? (
-        <Section index="02" title="Or reach me directly" className="mt-24">
-          <dl className="border-t border-rule">
-            {direct.map((item) => (
-              <div
-                key={item.label}
-                className="grid gap-1 border-b border-rule py-5 sm:grid-cols-[9.5rem_1fr] sm:gap-10"
-              >
-                <dt className="label pt-0.5">{item.label}</dt>
-                <dd>
-                  <Link
-                    href={item.href}
-                    target={item.href.startsWith('http') ? '_blank' : undefined}
-                    rel="noreferrer"
-                    className="link-underline font-mono text-sm text-muted-foreground hover:text-foreground"
-                  >
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          {direct.map((item, index) => (
+            <Reveal key={item.label} delay={index * 70}>
+              <SpotlightCard className="h-full">
+                <Link
+                  href={item.href}
+                  target={item.href.startsWith('http') ? '_blank' : undefined}
+                  rel="noreferrer"
+                  className="block p-6"
+                >
+                  <Mail className="size-4 text-[var(--cyan)]" />
+                  <p className="label mt-4">{item.label}</p>
+                  <p className="mt-1.5 truncate font-mono text-sm text-muted-foreground">
                     {item.value}
-                  </Link>
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </Section>
+                  </p>
+                </Link>
+              </SpotlightCard>
+            </Reveal>
+          ))}
+        </div>
       ) : null}
     </div>
   );

@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 
 import { ProjectCard } from '@/components/project-card';
+import { Reveal } from '@/components/reveal';
+import { SectionHeading } from '@/components/section-heading';
+
 import { getProjects } from '@/lib/content';
 
 export const metadata: Metadata = {
@@ -13,28 +16,27 @@ export default async function ProjectsPage() {
   const projects = await getProjects();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 md:px-10">
-      <header className="fade-up py-20 md:py-28">
-        <p className="label">Projects</p>
-        <h1 className="display mt-6 max-w-2xl text-4xl sm:text-5xl md:text-6xl">
-          Infrastructure I’ve built, broken, and rebuilt.
-        </h1>
-        <p className="prose-editorial mt-6">
-          Each one is a working repository — Terraform state, pipeline definitions,
-          and manifests included.
-        </p>
+    <div className="mx-auto max-w-6xl px-5 sm:px-8">
+      <header className="pt-36 pb-16">
+        <Reveal>
+          <SectionHeading
+            eyebrow="Projects"
+            title="Infrastructure I’ve built, broken, and rebuilt."
+            description="Each one is a working repository — Terraform state, pipeline definitions and manifests included."
+          />
+        </Reveal>
       </header>
 
       {projects.length > 0 ? (
-        <div className="border-t border-rule">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project, index) => (
+            <Reveal key={project.id} delay={index * 70}>
+              <ProjectCard project={project} />
+            </Reveal>
           ))}
         </div>
       ) : (
-        <p className="prose-editorial border-t border-rule py-12">
-          No projects published yet.
-        </p>
+        <p className="text-sm text-muted-foreground">No projects published yet.</p>
       )}
     </div>
   );

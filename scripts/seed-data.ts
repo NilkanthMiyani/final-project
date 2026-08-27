@@ -28,6 +28,12 @@ export const profileSeed = {
     twitter: 'https://x.com/nilkanthmiyani',
     telegram: 'https://t.me/nilkanthmiyani',
   },
+  highlights: [
+    { value: '60%', label: 'client hosting spend cut' },
+    { value: '20+', label: 'repos on automated CI/CD' },
+    { value: '5', label: 'clouds in production' },
+    { value: '6', label: 'database engines operated' },
+  ],
   resumeUrl: '/resumenilkanth.pdf',
   seoDescription:
     'Nilkanth Miyani — DevOps Engineer working across AWS, GCP, Azure and Hetzner on Kubernetes, GitOps delivery, CI/CD and infrastructure cost optimization.',

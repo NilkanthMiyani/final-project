@@ -1,5 +1,5 @@
 import connectToDatabase from '@/lib/database';
-import { FALLBACK_PROFILE } from '@/lib/content';
+import { FALLBACK_PROFILE, highlightList } from '@/lib/content';
 import CertificationModel from '@/model/certification.model';
 import EducationModel from '@/model/education.model';
 import ExperienceModel from '@/model/experience.model';
@@ -49,6 +49,7 @@ export async function adminGetProfile(): Promise<Profile> {
       twitter: str(doc.socials?.twitter),
       telegram: str(doc.socials?.telegram),
     },
+    highlights: highlightList(doc.highlights),
     resumeUrl: str(doc.resumeUrl),
     seoDescription: str(doc.seoDescription),
     seoKeywords: list(doc.seoKeywords),

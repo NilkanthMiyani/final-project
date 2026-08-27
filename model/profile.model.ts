@@ -26,6 +26,12 @@ const profileSchema = new Schema(
       telegram: { type: String, default: '' },
     },
 
+    /** Bento stat tiles on the homepage: { value: '60%', label: 'cost cut' }. */
+    highlights: {
+      type: [{ value: String, label: String, _id: false }],
+      default: [],
+    },
+
     resumeUrl: { type: String, default: '' },
 
     seoDescription: { type: String, default: '' },

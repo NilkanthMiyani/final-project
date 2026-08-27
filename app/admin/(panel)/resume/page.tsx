@@ -19,7 +19,7 @@ export default async function AdminResumePage() {
       />
 
       {profile.resumeUrl ? (
-        <div className="mb-10 border border-rule p-5">
+        <div className="mb-10 border border-[var(--glass-border)] p-5">
           <p className="label">Currently live</p>
           <Link
             href={profile.resumeUrl}
@@ -33,7 +33,7 @@ export default async function AdminResumePage() {
         </div>
       ) : null}
 
-      <section className="border-t border-rule pt-6">
+      <section className="border-t border-[var(--glass-border)] pt-6">
         <p className="label mb-5">Upload a new PDF</p>
 
         {blobConfigured ? (
@@ -43,7 +43,7 @@ export default async function AdminResumePage() {
               name="resume"
               accept="application/pdf"
               required
-              className="block w-full text-sm text-muted-foreground file:mr-4 file:border file:border-rule file:bg-transparent file:px-4 file:py-2 file:text-sm file:text-foreground hover:file:bg-secondary"
+              className="block w-full text-sm text-muted-foreground file:mr-4 file:border file:border-[var(--glass-border)] file:bg-transparent file:px-4 file:py-2 file:text-sm file:text-foreground hover:file:bg-secondary"
             />
             <p className="mt-3 font-mono text-[0.6875rem] text-muted-foreground">
               PDF only, up to 5 MB. Uploading replaces the link on the site
@@ -51,7 +51,7 @@ export default async function AdminResumePage() {
             </p>
           </AdminForm>
         ) : (
-          <p className="prose-editorial text-sm">
+          <p className="text-muted-foreground leading-relaxed text-sm">
             Uploading needs <code className="font-mono">BLOB_READ_WRITE_TOKEN</code>{' '}
             in the environment. Create a Blob store in the Vercel dashboard, then
             pull the variable in. Until then, set the link manually below.
@@ -59,7 +59,7 @@ export default async function AdminResumePage() {
         )}
       </section>
 
-      <section className="mt-12 border-t border-rule pt-6">
+      <section className="mt-12 border-t border-[var(--glass-border)] pt-6">
         <p className="label mb-5">Or point at a URL</p>
         <AdminForm action={setResumeUrl} submitLabel="Save link">
           <div className="max-w-xl">
