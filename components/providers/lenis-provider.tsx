@@ -10,6 +10,8 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
         if (!lenisRef.current) {
             lenisRef.current = new Lenis({
                 autoRaf: true,
+                // Lenis owns anchor jumps; the offset clears the fixed header.
+                anchors: { offset: -96 },
             });
         }
 

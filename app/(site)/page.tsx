@@ -35,7 +35,10 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-6xl px-5 sm:px-8">
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="flex min-h-[88svh] flex-col justify-center py-24">
+      {/* Top padding clears the fixed header. Deliberately not min-h +
+          justify-center: centering absorbs the padding, so the headline ends up
+          under the header with dead space below it. */}
+      <section className="pt-36 pb-24 sm:pt-44 sm:pb-28">
         <Reveal>
           {profile.availability ? (
             <span className="pill">

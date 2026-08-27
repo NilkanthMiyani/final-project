@@ -6,16 +6,22 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * Hrefs are root-relative because the admin lives on its own hostname:
+ * middleware rewrites `admin.host/experience` to the `/admin/experience` route.
+ * Linking to `/admin/experience` here would rewrite again to
+ * `/admin/admin/experience` and 404.
+ */
 const links = [
-  { href: '/admin', label: 'Overview' },
-  { href: '/admin/profile', label: 'Profile' },
-  { href: '/admin/experience', label: 'Experience' },
-  { href: '/admin/projects', label: 'Projects' },
-  { href: '/admin/skills', label: 'Skills' },
-  { href: '/admin/education', label: 'Education' },
-  { href: '/admin/certifications', label: 'Certifications' },
-  { href: '/admin/resume', label: 'Résumé' },
-  { href: '/admin/messages', label: 'Messages' },
+  { href: '/', label: 'Overview' },
+  { href: '/profile', label: 'Profile' },
+  { href: '/experience', label: 'Experience' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/skills', label: 'Skills' },
+  { href: '/education', label: 'Education' },
+  { href: '/certifications', label: 'Certifications' },
+  { href: '/resume', label: 'Résumé' },
+  { href: '/messages', label: 'Messages' },
 ];
 
 export function AdminNav() {
@@ -32,8 +38,8 @@ export function AdminNav() {
     <nav className="flex gap-1 overflow-x-auto no-scrollbar md:block md:space-y-0.5">
       {links.map((link) => {
         const active =
-          link.href === '/admin'
-            ? pathname === '/admin'
+          link.href === '/'
+            ? pathname === '/'
             : pathname.startsWith(link.href);
 
         return (

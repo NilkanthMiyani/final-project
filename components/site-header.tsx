@@ -27,10 +27,12 @@ export function SiteHeader() {
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4">
       <div
         className={cn(
-          'flex w-full max-w-3xl items-center justify-between rounded-full transition-all duration-500',
-          scrolled
-            ? 'glass-strong px-3 py-2 shadow-lg shadow-black/5'
-            : 'px-4 py-2.5'
+          // Always painted: at 4-7% the glass tokens let large headline text
+          // read straight through the nav. Scrolling only tightens it.
+          'flex w-full max-w-3xl items-center justify-between rounded-full',
+          'border border-[var(--glass-border)] bg-background/80 backdrop-blur-xl',
+          'transition-all duration-500 supports-[backdrop-filter]:bg-background/65',
+          scrolled ? 'px-3 py-2 shadow-lg shadow-black/20' : 'px-4 py-2.5'
         )}
       >
         <Link
@@ -100,7 +102,7 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <nav className="glass-strong absolute inset-x-4 top-20 rounded-2xl p-2 md:hidden">
+        <nav className="absolute inset-x-4 top-20 rounded-2xl border border-[var(--glass-border)] bg-background/95 p-2 backdrop-blur-xl md:hidden">
           {navItems.map((item) => (
             <Link
               key={item.href}

@@ -27,6 +27,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // On the admin host the routes are served from the root, so an /admin-prefixed
+  // URL (an old bookmark, or a hand-typed one) would rewrite to /admin/admin/*
+  // and 404. Strip the prefix instead.
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    const stripped = pathname.slice('/admin'.length) || '/';
+    return NextResponse.redirect(new URL(`${stripped}${search}`, request.url));
+  }
+
   const isLoginPage = pathname === '/login';
   const isLoginApi = pathname === '/api/admin/login';
   const authed = await verifySession(request.cookies.get(SESSION_COOKIE)?.value);
