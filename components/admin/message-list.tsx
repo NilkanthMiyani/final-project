@@ -46,14 +46,16 @@ export function MessageList({ messages }: { messages: Message[] }) {
                 }}
                 className="min-w-0 flex-1 text-left"
               >
-                <p className="flex items-center gap-2 text-sm">
+                <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
                   {!message.read ? (
                     <span className="size-1.5 shrink-0 rounded-full bg-accent" />
                   ) : null}
                   <span className={cn('truncate', !message.read && 'font-medium')}>
                     {message.fullname}
                   </span>
-                  <span className="truncate font-mono text-xs text-muted-foreground">
+                  {/* Full width on phones so the address wraps instead of
+                      colliding with the name. */}
+                  <span className="w-full truncate font-mono text-xs text-muted-foreground sm:w-auto">
                     {message.email}
                   </span>
                 </p>
@@ -78,7 +80,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
                   title={message.read ? 'Mark unread' : 'Mark read'}
                   disabled={pending}
                   onClick={() => run(() => setMessageRead(message.id, !message.read))}
-                  className="flex size-8 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-25"
+                  className="flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground disabled:opacity-25 sm:size-8"
                 >
                   {message.read ? (
                     <MailOpen className="size-4" />
@@ -95,7 +97,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
                       run(() => deleteMessage(message.id));
                     }
                   }}
-                  className="flex size-8 items-center justify-center text-muted-foreground transition-colors hover:text-destructive disabled:opacity-25"
+                  className="flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-destructive disabled:opacity-25 sm:size-8"
                 >
                   <Trash2 className="size-4" />
                 </button>

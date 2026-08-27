@@ -38,7 +38,7 @@ export default async function HomePage() {
       {/* Top padding clears the fixed header. Deliberately not min-h +
           justify-center: centering absorbs the padding, so the headline ends up
           under the header with dead space below it. */}
-      <section className="pt-36 pb-24 sm:pt-44 sm:pb-28">
+      <section className="pt-28 pb-20 sm:pt-40 sm:pb-28">
         <Reveal>
           {profile.availability ? (
             <span className="pill">
@@ -52,19 +52,19 @@ export default async function HomePage() {
         </Reveal>
 
         <Reveal delay={90}>
-          <h1 className="text-balance-tight mt-7 max-w-4xl text-5xl font-semibold sm:text-7xl md:text-8xl">
+          <h1 className="text-balance-tight mt-6 max-w-4xl text-[2.5rem] font-semibold sm:mt-7 sm:text-6xl md:text-7xl lg:text-8xl">
             <span className="gradient-text">{profile.headline}</span>
           </h1>
         </Reveal>
 
         <Reveal delay={180}>
-          <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:mt-7 sm:text-lg">
             {profile.subheadline}
           </p>
         </Reveal>
 
         <Reveal delay={260}>
-          <div className="mt-10 flex flex-wrap items-center gap-3">
+          <div className="mt-9 flex flex-wrap items-center gap-3 sm:mt-10">
             <Link href="/contact" className="btn-primary">
               Let’s talk
               <ArrowRight className="size-4" />
@@ -90,7 +90,7 @@ export default async function HomePage() {
           <Reveal key={highlight.label} delay={index * 70}>
             <SpotlightCard className="h-full p-6">
               <p
-                className="tnum text-4xl font-semibold sm:text-5xl"
+                className="tnum text-[2.25rem] font-semibold sm:text-5xl"
                 style={{
                   backgroundImage:
                     'linear-gradient(135deg, var(--violet), var(--cyan))',
@@ -141,7 +141,7 @@ export default async function HomePage() {
 
       {/* ── Work ─────────────────────────────────────────────────────── */}
       {selected.length > 0 ? (
-        <section id="work" className="scroll-mt-28 pt-32">
+        <section id="work" className="scroll-mt-24 pt-20 sm:pt-32">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeading
@@ -171,7 +171,7 @@ export default async function HomePage() {
 
       {/* ── Experience ───────────────────────────────────────────────── */}
       {experience.length > 0 ? (
-        <section id="experience" className="scroll-mt-28 pt-32">
+        <section id="experience" className="scroll-mt-24 pt-20 sm:pt-32">
           <Reveal>
             <SectionHeading
               eyebrow="Experience"
@@ -191,7 +191,7 @@ export default async function HomePage() {
 
       {/* ── Stack ────────────────────────────────────────────────────── */}
       {stack.length > 0 ? (
-        <section id="stack" className="scroll-mt-28 pt-32">
+        <section id="stack" className="scroll-mt-24 pt-20 sm:pt-32">
           <Reveal>
             <SectionHeading eyebrow="Stack" title="What I reach for." />
           </Reveal>
@@ -219,14 +219,12 @@ export default async function HomePage() {
       ) : null}
 
       {/* ── CTA ──────────────────────────────────────────────────────── */}
-      <section className="pt-32">
+      <section className="pt-20 sm:pt-32">
         <Reveal>
-          <SpotlightCard className="overflow-hidden p-10 text-center sm:p-16">
+          <SpotlightCard className="overflow-hidden p-7 text-center sm:p-16">
             <Sparkles className="mx-auto size-6 text-[var(--cyan)]" />
-            <h2 className="text-balance-tight mt-6 text-3xl font-semibold sm:text-5xl">
-              Got an infrastructure problem
-              <br />
-              worth solving?
+            <h2 className="text-balance-tight mt-6 text-[1.75rem] font-semibold sm:text-5xl">
+              Got an infrastructure problem worth solving?
             </h2>
             <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
               A pipeline that’s become a burden, a cloud bill that keeps climbing,

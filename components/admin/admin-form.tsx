@@ -47,7 +47,7 @@ export function AdminForm({
       <button
         type="submit"
         disabled={pending}
-        className="mt-10 bg-foreground px-6 py-2.5 text-sm text-background transition-opacity hover:opacity-85 disabled:opacity-40"
+        className="btn-primary mt-10 w-full justify-center sm:w-auto"
       >
         {pending ? 'Saving…' : submitLabel}
       </button>

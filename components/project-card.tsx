@@ -9,7 +9,7 @@ export function ProjectCard({ project }: { project: Project }) {
     <SpotlightCard className="h-full">
       <Link
         href={`/projects/${project.slug}`}
-        className="flex h-full flex-col p-6 sm:p-7"
+        className="flex h-full flex-col p-5 sm:p-7"
       >
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-lg leading-snug font-semibold">{project.title}</h3>

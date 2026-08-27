@@ -50,12 +50,12 @@ export default async function AdminOverviewPage() {
         description="Everything on the public site is edited from here. Changes go live immediately."
       />
 
-      <dl className="grid grid-cols-2 gap-px border border-[var(--glass-border)] bg-[var(--glass-border)] sm:grid-cols-3">
+      <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-border)] sm:grid-cols-3">
         {stats.map((stat) => (
           <Link
             key={stat.label}
             href={stat.href}
-            className="bg-background p-5 transition-colors hover:bg-[var(--glass)]"
+            className="bg-background p-4 transition-colors hover:bg-[var(--glass)] sm:p-5"
           >
             <dt className="label">{stat.label}</dt>
             <dd className="tnum mt-2 font-mono text-2xl">{stat.value}</dd>

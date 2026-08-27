@@ -23,21 +23,24 @@ export function SiteHeader() {
 
   useEffect(() => setOpen(false), [pathname]);
 
+  // Padding and max-width mirror the page container (max-w-6xl px-5 sm:px-8)
+  // so the pill's edges line up with the cards and headings below it. A
+  // narrower pill floats out of alignment with everything on the page.
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4">
+    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-3 sm:px-8 sm:pt-4">
       <div
         className={cn(
           // Always painted: at 4-7% the glass tokens let large headline text
           // read straight through the nav. Scrolling only tightens it.
-          'flex w-full max-w-3xl items-center justify-between rounded-full',
+          'flex w-full max-w-6xl items-center justify-between rounded-full',
           'border border-[var(--glass-border)] bg-background/80 backdrop-blur-xl',
           'transition-all duration-500 supports-[backdrop-filter]:bg-background/65',
-          scrolled ? 'px-3 py-2 shadow-lg shadow-black/20' : 'px-4 py-2.5'
+          scrolled ? 'px-2.5 py-1.5 shadow-lg shadow-black/20 sm:px-3 sm:py-2' : 'px-3 py-2 sm:px-4 sm:py-2.5'
         )}
       >
         <Link
           href="/"
-          className="flex items-center gap-2.5 pl-2 text-sm font-medium transition-opacity hover:opacity-70"
+          className="flex items-center gap-2.5 pl-1 text-sm font-medium transition-opacity hover:opacity-70"
         >
           <span
             className="size-2 rounded-full"
@@ -81,7 +84,7 @@ export function SiteHeader() {
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-label="Toggle menu"
-            className="flex size-9 items-center justify-center md:hidden"
+            className="flex size-10 items-center justify-center md:hidden"
           >
             <span className="relative block h-3 w-4">
               <span
@@ -102,12 +105,12 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <nav className="absolute inset-x-4 top-20 rounded-2xl border border-[var(--glass-border)] bg-background/95 p-2 backdrop-blur-xl md:hidden">
+        <nav className="absolute inset-x-5 top-[4.25rem] rounded-2xl border border-[var(--glass-border)] bg-background/95 p-2 shadow-xl shadow-black/30 backdrop-blur-xl sm:inset-x-8 md:hidden">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="block rounded-xl px-4 py-3 text-sm transition-colors hover:bg-[var(--glass)]"
+              className="block rounded-xl px-4 py-3.5 text-sm transition-colors hover:bg-[var(--glass)]"
             >
               {item.title}
             </Link>

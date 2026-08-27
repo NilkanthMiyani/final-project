@@ -146,6 +146,29 @@
     color: white;
   }
 
+  /*
+   * iOS Safari zooms the viewport when a focused field's text is under 16px.
+   * The design wants 14px inputs, so bump them only on touch-sized screens.
+   */
+  @media (max-width: 639px) {
+    input,
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
+
+  /* Stop the grey flash on tap without removing the focus ring. */
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

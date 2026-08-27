@@ -25,7 +25,7 @@ export default async function ContactPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-5 sm:px-8">
-      <header className="pt-36 pb-14">
+      <header className="pt-28 pb-10 sm:pt-40 sm:pb-14">
         <Reveal>
           <SectionHeading
             eyebrow="Contact"
@@ -36,7 +36,7 @@ export default async function ContactPage() {
       </header>
 
       <Reveal>
-        <SpotlightCard className="p-7 sm:p-10">
+        <SpotlightCard className="p-5 sm:p-10">
           <ContactForm />
         </SpotlightCard>
       </Reveal>

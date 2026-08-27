@@ -23,11 +23,11 @@ export function SectionHeading({
         />
         <span className="font-mono tracking-widest uppercase">{eyebrow}</span>
       </span>
-      <h2 className="text-balance-tight mt-5 text-4xl font-semibold sm:text-5xl">
+      <h2 className="text-balance-tight mt-5 text-[1.75rem] font-semibold sm:text-4xl md:text-5xl">
         {title}
       </h2>
       {description ? (
-        <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
           {description}
         </p>
       ) : null}

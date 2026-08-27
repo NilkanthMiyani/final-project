@@ -15,8 +15,8 @@ export async function SiteFooter() {
   const socials = Object.entries(profile.socials).filter(([, url]) => url);
 
   return (
-    <footer className="mx-auto mt-32 max-w-6xl px-5 pb-10 sm:px-8">
-      <div className="glass rounded-2xl p-8 sm:p-10">
+    <footer className="mx-auto mt-20 max-w-6xl px-5 pb-8 sm:mt-32 sm:px-8 sm:pb-10">
+      <div className="glass rounded-2xl p-6 sm:p-10">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="flex items-center gap-2.5 font-medium">

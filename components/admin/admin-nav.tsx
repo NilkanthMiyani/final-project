@@ -35,37 +35,56 @@ export function AdminNav() {
   }
 
   return (
-    <nav className="flex gap-1 overflow-x-auto no-scrollbar md:block md:space-y-0.5">
-      {links.map((link) => {
-        const active =
-          link.href === '/'
-            ? pathname === '/'
-            : pathname.startsWith(link.href);
+    <div>
+      {/*
+        Mobile: a horizontally scrollable pill row, edge-to-edge so the last
+        item visibly runs off-screen and the row reads as scrollable.
+        Desktop: a static vertical list.
+      */}
+      <nav
+        className={cn(
+          'no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 pb-1',
+          'md:mx-0 md:block md:space-y-1 md:overflow-visible md:px-0 md:pb-0'
+        )}
+      >
+        {links.map((link) => {
+          const active =
+            link.href === '/'
+              ? pathname === '/'
+              : pathname.startsWith(link.href);
 
-        return (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={cn(
-              'block shrink-0 px-3 py-2 text-sm transition-colors md:px-3',
-              active
-                ? 'bg-secondary text-foreground'
-                : 'text-muted-foreground hover:text-foreground'
-            )}
-          >
-            {link.label}
-          </Link>
-        );
-      })}
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              aria-current={active ? 'page' : undefined}
+              className={cn(
+                'shrink-0 rounded-full px-4 py-2.5 text-sm whitespace-nowrap transition-colors',
+                'md:block md:rounded-lg md:py-2',
+                active
+                  ? 'bg-[var(--glass-strong)] text-foreground'
+                  : 'text-muted-foreground hover:bg-[var(--glass)] hover:text-foreground'
+              )}
+            >
+              {link.label}
+            </Link>
+          );
+        })}
+      </nav>
 
+      {/* Sign out sits below the scroller on mobile so it is always reachable. */}
       <button
         type="button"
         onClick={logout}
-        className="mt-4 hidden w-full items-center gap-2 px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:text-destructive md:flex"
+        className={cn(
+          'mt-4 flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm',
+          'border border-[var(--glass-border)] text-muted-foreground transition-colors hover:text-destructive',
+          'md:justify-start md:rounded-lg md:border-0 md:py-2'
+        )}
       >
         <LogOut className="size-3.5" />
         Sign out
       </button>
-    </nav>
+    </div>
   );
 }

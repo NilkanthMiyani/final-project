@@ -9,7 +9,7 @@ function formatRange(item: Experience): string {
 
 export function ExperienceItem({ item }: { item: Experience }) {
   return (
-    <SpotlightCard as="article" className="p-6 sm:p-8">
+    <SpotlightCard as="article" className="p-5 sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h3 className="text-lg font-semibold">

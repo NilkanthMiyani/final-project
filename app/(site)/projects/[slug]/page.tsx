@@ -39,7 +39,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-4xl px-5 sm:px-8">
-      <div className="pt-28">
+      <div className="pt-24 sm:pt-32">
         <Link
           href="/projects"
           className="group inline-flex items-center gap-2 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
@@ -49,13 +49,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         </Link>
       </div>
 
-      <header className="pt-10 pb-14">
+      <header className="pt-8 pb-10 sm:pt-10 sm:pb-14">
         <Reveal>
-          <h1 className="text-balance-tight text-4xl font-semibold sm:text-6xl">
+          <h1 className="text-balance-tight text-[2rem] font-semibold sm:text-5xl md:text-6xl">
             <span className="gradient-text">{project.title}</span>
           </h1>
           {project.tagline ? (
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
               {project.tagline}
             </p>
           ) : null}
@@ -82,7 +82,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
       <div className="space-y-4 pb-8">
         {project.overview ? (
           <Reveal>
-            <SpotlightCard className="p-7 sm:p-9">
+            <SpotlightCard className="p-5 sm:p-9">
               <p className="label">Overview</p>
               <p className="mt-5 leading-relaxed text-muted-foreground">
                 {project.overview}
@@ -93,7 +93,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {project.features.length > 0 ? (
           <Reveal delay={70}>
-            <SpotlightCard className="p-7 sm:p-9">
+            <SpotlightCard className="p-5 sm:p-9">
               <p className="label">What it does</p>
               <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                 {project.features.map((feature, index) => (
@@ -111,7 +111,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {project.outcomes.length > 0 ? (
           <Reveal delay={110}>
-            <SpotlightCard className="p-7 sm:p-9">
+            <SpotlightCard className="p-5 sm:p-9">
               <p className="label">Outcome</p>
               <ul className="mt-5 space-y-3">
                 {project.outcomes.map((outcome, index) => (
@@ -136,7 +136,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {project.techStack.length > 0 ? (
           <Reveal delay={150}>
-            <SpotlightCard className="p-7 sm:p-9">
+            <SpotlightCard className="p-5 sm:p-9">
               <p className="label">Stack</p>
               <ul className="mt-5 flex flex-wrap gap-2">
                 {project.techStack.map((tech) => (

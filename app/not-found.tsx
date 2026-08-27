@@ -5,7 +5,7 @@ export default function NotFound() {
     <div className="flex min-h-svh items-center justify-center px-6 text-center">
       <div>
         <p className="label">404</p>
-        <h1 className="text-balance-tight mt-4 text-6xl font-semibold">
+        <h1 className="text-balance-tight mt-4 text-[2.5rem] font-semibold sm:text-6xl">
           <span className="gradient-text">Nothing here.</span>
         </h1>
         <p className="mx-auto mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">

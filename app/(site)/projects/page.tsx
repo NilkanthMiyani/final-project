@@ -17,7 +17,7 @@ export default async function ProjectsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-5 sm:px-8">
-      <header className="pt-36 pb-16">
+      <header className="pt-28 pb-12 sm:pt-40 sm:pb-16">
         <Reveal>
           <SectionHeading
             eyebrow="Projects"

@@ -30,7 +30,7 @@ export default async function AboutPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-5 sm:px-8">
-      <header className="pt-36 pb-16">
+      <header className="pt-28 pb-12 sm:pt-40 sm:pb-16">
         <Reveal>
           <SectionHeading
             eyebrow="About"
@@ -44,7 +44,7 @@ export default async function AboutPage() {
 
       {profile.bio.length > 0 ? (
         <Reveal>
-          <SpotlightCard className="p-7 sm:p-10">
+          <SpotlightCard className="p-5 sm:p-10">
             <div className="space-y-5">
               {profile.bio.map((paragraph, index) => (
                 <p
@@ -60,14 +60,14 @@ export default async function AboutPage() {
       ) : null}
 
       {education.length > 0 ? (
-        <section className="pt-24">
+        <section className="pt-16 sm:pt-24">
           <Reveal>
             <SectionHeading eyebrow="Education" title="Where I studied." />
           </Reveal>
           <div className="mt-10 space-y-4">
             {education.map((item, index) => (
               <Reveal key={item.id} delay={index * 70}>
-                <SpotlightCard className="p-7">
+                <SpotlightCard className="p-5 sm:p-7">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <h3 className="text-lg font-semibold">{item.degree}</h3>
@@ -95,7 +95,7 @@ export default async function AboutPage() {
       ) : null}
 
       {certifications.length > 0 ? (
-        <section className="pt-24">
+        <section className="pt-16 sm:pt-24">
           <Reveal>
             <SectionHeading eyebrow="Certifications" title="Verified credentials." />
           </Reveal>
@@ -112,7 +112,7 @@ export default async function AboutPage() {
       ) : null}
 
       {stack.length > 0 ? (
-        <section className="pt-24">
+        <section className="pt-16 sm:pt-24">
           <Reveal>
             <SectionHeading eyebrow="Stack" title="The full toolkit." />
           </Reveal>

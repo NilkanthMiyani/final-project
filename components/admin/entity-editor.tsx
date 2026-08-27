@@ -60,14 +60,14 @@ export function EntityEditor({
 
   return (
     <div>
-      <div className="mb-6 flex justify-end">
+      <div className="mb-6 flex">
         <button
           type="button"
           onClick={() => {
             setCreating((value) => !value);
             setOpenId(null);
           }}
-          className="inline-flex items-center gap-2 border-b border-foreground pb-1 text-sm transition-colors hover:border-accent hover:text-accent"
+          className="btn-ghost w-full justify-center sm:ml-auto sm:w-auto"
         >
           <Plus className="size-3.5" />
           {creating ? 'Cancel' : `New ${noun}`}
@@ -75,7 +75,7 @@ export function EntityEditor({
       </div>
 
       {creating ? (
-        <div className="mb-8 border border-[var(--glass-border)] bg-card p-6">
+        <div className="mb-8 rounded-2xl border border-[var(--glass-border)] bg-card p-5 sm:p-6">
           <p className="label mb-5">New {noun}</p>
           <EntityForm
             action={actions.save}
@@ -101,31 +101,36 @@ export function EntityEditor({
 
           return (
             <div key={id} className="border-b border-[var(--glass-border)]">
-              <div className="flex items-center gap-3 py-4">
+              {/*
+                Phones get the title on its own row with the controls beneath,
+                so the tap target for opening a record spans the full width and
+                the icons are not squeezed against a truncated title.
+              */}
+              <div className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:gap-3 sm:py-4">
                 <button
                   type="button"
                   onClick={() => {
                     setOpenId(open ? null : id);
                     setCreating(false);
                   }}
-                  className="min-w-0 flex-1 text-left"
+                  className="min-w-0 flex-1 py-1 text-left"
                 >
                   <p
                     className={cn(
-                      'truncate text-sm font-medium',
+                      'text-sm font-medium sm:truncate',
                       isDraft && 'text-muted-foreground line-through'
                     )}
                   >
                     {String(item[titleKey] ?? 'Untitled')}
                   </p>
                   {subtitleKey && item[subtitleKey] ? (
-                    <p className="label mt-1 truncate normal-case tracking-normal">
+                    <p className="label mt-1 normal-case tracking-normal sm:truncate">
                       {String(item[subtitleKey])}
                     </p>
                   ) : null}
                 </button>
 
-                <div className="flex shrink-0 items-center gap-0.5">
+                <div className="-ml-2 flex shrink-0 items-center gap-0.5 sm:ml-0">
                   <IconButton
                     label="Move up"
                     disabled={pending || index === 0}
@@ -246,18 +251,18 @@ function EntityForm({
         ))}
       </div>
 
-      <div className="mt-8 flex items-center gap-6">
+      <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:gap-6">
         <button
           type="submit"
           disabled={pending}
-          className="bg-foreground px-6 py-2.5 text-sm text-background transition-opacity hover:opacity-85 disabled:opacity-40"
+          className="btn-primary w-full justify-center sm:w-auto"
         >
           {pending ? 'Saving…' : 'Save'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="w-full py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:w-auto sm:py-0"
         >
           Cancel
         </button>
@@ -287,7 +292,10 @@ function IconButton({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'flex size-8 items-center justify-center text-muted-foreground transition-colors disabled:opacity-25',
+        // 40px on touch screens keeps these above the minimum tap target;
+        // desktop can afford the tighter 32px.
+        'flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors sm:size-8',
+        'disabled:opacity-25',
         destructive ? 'hover:text-destructive' : 'hover:text-foreground'
       )}
     >
