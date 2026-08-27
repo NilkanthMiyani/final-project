@@ -1,132 +1,56 @@
+import type { Metadata, Viewport } from 'next';
+
 import { ThemeProvider } from '@/components/theme-provider';
-import { META_THEME_COLORS, siteConfig } from '@/config/site';
-import { LenisProvider } from '@/components/providers/lenis-provider';
-import 'lenis/dist/lenis.css';
-
-import { GoogleAnalytics } from '@next/third-parties/google';
-import { Analytics } from '@vercel/analytics/next';
-
-import { fontSans, fontMono } from '@/lib/fonts';
 import { Toaster } from '@/components/ui/sonner';
-
-import { Metadata, Viewport } from 'next';
-import './globals.css';
+import { META_THEME_COLORS, siteConfig } from '@/config/site';
+import { fontDisplay, fontMono, fontSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
-import { SiteHeader } from '@/components/site-header';
-import { SideNav } from '@/components/side-nav';
-import { docsConfig } from '@/config/docs';
 
-// Server actions removed for static export
-
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
-  keywords: siteConfig.keywords,
-  authors: [
-    {
-      name: 'Nilkanth Miyani',
-      url: 'https://nilkanthprojects.site',
-    },
-  ],
-  creator: 'Nilkanth Miyani',
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
+  title: {
+    default: `${siteConfig.name} — DevOps Engineer`,
+    template: `%s — ${siteConfig.name}`,
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: siteConfig.name,
-    description: siteConfig.description,
-    creator: '@nilkanthmiyani',
-  },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
-  },
+  description:
+    'DevOps Engineer working across AWS, GCP, Azure and Hetzner on Kubernetes, GitOps delivery, CI/CD and infrastructure cost optimization.',
 };
 
 export const viewport: Viewport = {
-  themeColor: META_THEME_COLORS.light,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: META_THEME_COLORS.light },
+    { media: '(prefers-color-scheme: dark)', color: META_THEME_COLORS.dark },
+  ],
 };
 
-interface RootLayoutProps {
+export default function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default function RootLayout({ children }: RootLayoutProps) {
+}) {
   return (
-    <>
-      <html lang="en" suppressHydrationWarning>
-        <head>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-              try {
-                if (localStorage.theme === 'dark' || ((!('theme' in localStorage) || localStorage.theme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.querySelector('meta[name="theme-color"]').setAttribute('content', '${META_THEME_COLORS.dark}')
-                }
-              } catch (_) {}
-            `,
-            }}
-          />
-        </head>
-        <body
-          className={cn(
-            'min-h-svh bg-background font-sans antialiased',
-            fontSans.variable,
-            fontMono.variable
-          )}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          'min-h-svh bg-background font-sans antialiased',
+          fontSans.variable,
+          fontMono.variable,
+          fontDisplay.variable
+        )}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          enableColorScheme
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-            enableColorScheme
-          >
-            <LenisProvider>
-              <div vaul-drawer-wrapper="">
-                <div className="relative flex flex-col min-h-svh bg-background">
-                  <div
-                    data-wrapper=""
-                    className="flex flex-col flex-1 border-grid"
-                  >
-                    <SiteHeader />
-                    <main className="flex flex-col flex-1">
-                      <div className="container-wrapper">
-                        <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
-                          <aside className="border-grid fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 border-r md:sticky md:block">
-                            <div className="h-full py-6 pr-4 overflow-auto no-scrollbar lg:py-8">
-                              <SideNav config={docsConfig} />
-                            </div>
-                          </aside>
-                          <div className="flex flex-col flex-1 py-6 pr-4 lg:py-8">
-                            {children}
-                          </div>
-                        </div>
-                      </div>
-                    </main>
-                  </div>
-                </div>
-              </div>
-            </LenisProvider>
-          </ThemeProvider>
-          <Toaster richColors position="top-center" />
-          <GoogleAnalytics
-            gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''}
-          />
-          <Analytics />
-          <SpeedInsights />
-        </body>
-      </html>
-    </>
+          {children}
+        </ThemeProvider>
+        <Toaster position="top-center" />
+      </body>
+    </html>
   );
 }

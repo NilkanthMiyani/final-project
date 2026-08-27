@@ -1,31 +1,53 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI!;
+/**
+ * Serverless-safe connection cache.
+ *
+ * Every lambda invocation may reuse a warm container, so the connection promise
+ * is stashed on `globalThis` to avoid opening a new pool per request (and to
+ * avoid a connection storm during hot-reload in development).
+ */
+type MongooseCache = {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+};
 
-const connectToDatabase = async () => {
-  const connectionState = mongoose.connection.readyState;
+const globalWithMongoose = globalThis as typeof globalThis & {
+  _mongooseCache?: MongooseCache;
+};
 
-  if (connectionState === 1) {
-    console.log("Database connection has already been established.");
-    return;
-  } 
+const cached: MongooseCache = globalWithMongoose._mongooseCache ?? {
+  conn: null,
+  promise: null,
+};
 
-  if (connectionState === 2) {
-    console.log("Establishing database connection...");
-    return;
+globalWithMongoose._mongooseCache = cached;
+
+const connectToDatabase = async (): Promise<typeof mongoose> => {
+  if (cached.conn) return cached.conn;
+
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error('MONGODB_URI is not set.');
+  }
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(uri, {
+      dbName: 'portfolio',
+      bufferCommands: false,
+    });
   }
 
   try {
-    mongoose.connect(MONGODB_URI!, {
-      dbName: "portfolio",
-      bufferCommands: true,
-    });
-    console.log("Database connection established successfully.");
-  } catch (err: any) {
-    console.log("Error: ", "Connection to database failed");
-    throw new Error("Error: ", err);
+    cached.conn = await cached.promise;
+  } catch (error) {
+    // Clear the failed promise so the next request retries instead of
+    // permanently reusing a rejected connection.
+    cached.promise = null;
+    throw error;
   }
+
+  return cached.conn;
 };
 
 export default connectToDatabase;
- 

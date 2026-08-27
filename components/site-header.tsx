@@ -1,130 +1,107 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRef, useState, useEffect } from "react";
-import { FiMusic } from "react-icons/fi";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import { siteConfig } from "@/config/site";
-import { Button } from "./ui/button";
-import { ModeSwitcher } from "./mode-switcher";
-import { MainNav } from "./main-nav";
-import { MobileNav } from "./mobile-nav";
-import { CommandMenu } from "./command-menu";
-import { Icons } from "./icons";
+import { ModeSwitcher } from '@/components/mode-switcher';
+import { navItems, siteConfig } from '@/config/site';
+import { cn } from '@/lib/utils';
 
 export function SiteHeader() {
-  const [playing, setPlaying] = useState(false);
-  const [time, setTime] = useState(new Date());
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  // Update time every second
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const toggleMusic = () => {
-    if (!audioRef.current) return;
-    if (playing) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setPlaying(!playing);
-  };
-
-  // Format time as HH:MM:SS
-  const formattedTime = time.toLocaleTimeString('en-IN', {
-    timeZone: 'Asia/Kolkata',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
+  // Close the mobile sheet whenever navigation completes.
+  useEffect(() => setOpen(false), [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
-      <div className="container-wrapper">
-        <div className="container flex h-13 items-center">
-          {/* Logo/Name - Left */}
-          <MainNav />
+    <header
+      className={cn(
+        'sticky top-0 z-50 w-full transition-colors duration-300',
+        scrolled
+          ? 'border-b border-rule bg-background/85 backdrop-blur-md'
+          : 'border-b border-transparent'
+      )}
+    >
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6 md:px-10">
+        <Link
+          href="/"
+          className="font-mono text-[0.8125rem] tracking-tight transition-opacity hover:opacity-60"
+        >
+          {siteConfig.name.toLowerCase().replace(' ', '.')}
+        </Link>
 
-          {/* Mobile Nav */}
-          <MobileNav toggleMusic={toggleMusic} playing={playing} />
-
-          {/* Desktop Nav - Right */}
-          <div className="ml-auto flex items-center gap-2 md:gap-3">
-            {/* Command Menu - Hidden on mobile */}
-            <div className="hidden md:block">
-              <CommandMenu />
-            </div>
-
-            {/* Live Clock */}
-            <div className="hidden items-center gap-2 rounded-full border border-border/40 bg-muted/30 px-3 py-1.5 backdrop-blur-sm lg:flex">
-              <div className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
-              </div>
-              <span className="text-xs font-medium tabular-nums tracking-tight text-foreground">
-                {formattedTime}
-              </span>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center gap-1">
-              {/* Music Toggle */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-full transition-all hover:scale-105 hover:bg-muted"
-                onClick={toggleMusic}
-                title={playing ? "Pause Music" : "Play Music"}
+        <nav className="hidden items-center gap-8 md:flex">
+          {navItems.map((item) => {
+            const active =
+              item.href === '/projects'
+                ? pathname.startsWith('/projects')
+                : pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'link-underline text-sm transition-colors',
+                  active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                )}
               >
-                <FiMusic
-                  className={`h-[18px] w-[18px] transition-colors ${
-                    playing ? "text-pink-500" : "text-muted-foreground"
-                  }`}
-                />
-              </Button>
+                {item.title}
+              </Link>
+            );
+          })}
+          <ModeSwitcher />
+        </nav>
 
-              {/* Theme Toggle */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-full transition-all hover:scale-105 hover:bg-muted"
-                asChild
-              >
-                <div>
-                  <ModeSwitcher className="h-[18px] w-[18px]" />
-                </div>
-              </Button>
-
-              {/* GitHub */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-full transition-all hover:scale-105 hover:bg-muted"
-                asChild
-              >
-                <Link 
-                  href={siteConfig.links.github} 
-                  target="_blank" 
-                  rel="noreferrer"
-                >
-                  <Icons.gitHub className="h-[18px] w-[18px]" />
-                  <span className="sr-only">GitHub</span>
-                </Link>
-              </Button>
-            </div>
-          </div>
+        <div className="flex items-center gap-1 md:hidden">
+          <ModeSwitcher />
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-label="Toggle menu"
+            className="flex h-9 w-9 items-center justify-center"
+          >
+            <span className="relative block h-3 w-4">
+              <span
+                className={cn(
+                  'absolute left-0 block h-px w-4 bg-foreground transition-transform duration-300',
+                  open ? 'top-1.5 rotate-45' : 'top-0.5'
+                )}
+              />
+              <span
+                className={cn(
+                  'absolute left-0 block h-px w-4 bg-foreground transition-transform duration-300',
+                  open ? 'top-1.5 -rotate-45' : 'top-2.5'
+                )}
+              />
+            </span>
+          </button>
         </div>
       </div>
 
-      {/* Persistent Audio */}
-      <audio ref={audioRef} src="/music/theme.mp3" loop preload="auto" />
+      {open ? (
+        <nav className="border-t border-rule bg-background px-6 pb-6 pt-2 md:hidden">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="block border-b border-rule/60 py-3.5 text-sm last:border-0"
+            >
+              {item.title}
+            </Link>
+          ))}
+        </nav>
+      ) : null}
     </header>
   );
 }

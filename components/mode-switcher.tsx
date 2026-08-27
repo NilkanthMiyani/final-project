@@ -1,36 +1,35 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { MoonIcon, SunIcon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { MoonIcon, SunIcon } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import * as React from 'react';
 
-import { META_THEME_COLORS } from "@/config/site";
-import { Button } from "./ui/button";
-import { useMetaColor } from "@/hooks/use-meta-color";
-import { cn } from "@/lib/utils";
+import { META_THEME_COLORS } from '@/config/site';
+import { useMetaColor } from '@/hooks/use-meta-color';
+import { cn } from '@/lib/utils';
 
 export function ModeSwitcher({ className }: { className?: string }) {
   const { setTheme, resolvedTheme } = useTheme();
   const { setMetaColor } = useMetaColor();
 
   const toggleTheme = React.useCallback(() => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
-    setMetaColor(
-      resolvedTheme === "dark"
-        ? META_THEME_COLORS.light
-        : META_THEME_COLORS.dark
-    );
+    const next = resolvedTheme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    setMetaColor(META_THEME_COLORS[next]);
   }, [resolvedTheme, setTheme, setMetaColor]);
 
   return (
-    <Button
-      variant="ghost"
-      className="w-8 h-8 px-0 group/toggle"
+    <button
+      type="button"
       onClick={toggleTheme}
+      className={cn(
+        'flex h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground',
+        className
+      )}
     >
-      <SunIcon className={cn("hidden [html.dark_&]:block", className)} />
-      <MoonIcon className={cn("hidden [html.light_&]:block", className)} />
+      <SunIcon className="hidden size-4 [html.dark_&]:block" />
+      <MoonIcon className="hidden size-4 [html.light_&]:block" />
       <span className="sr-only">Toggle theme</span>
-    </Button>
+    </button>
   );
 }
