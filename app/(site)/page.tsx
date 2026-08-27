@@ -70,7 +70,7 @@ export default async function HomePage() {
               <ArrowRight className="size-4" />
             </Link>
             {profile.resumeUrl ? (
-              <Link
+              <a
                 href={profile.resumeUrl}
                 target="_blank"
                 rel="noreferrer"
@@ -78,19 +78,19 @@ export default async function HomePage() {
               >
                 Résumé
                 <ArrowUpRight className="size-4" />
-              </Link>
+              </a>
             ) : null}
           </div>
         </Reveal>
       </section>
 
       {/* ── Bento ────────────────────────────────────────────────────── */}
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {highlights.map((highlight, index) => (
           <Reveal key={highlight.label} delay={index * 70}>
-            <SpotlightCard className="h-full p-6">
+            <SpotlightCard className="h-full p-4 sm:p-6">
               <p
-                className="tnum text-[2.25rem] font-semibold sm:text-5xl"
+                className="tnum text-[1.875rem] font-semibold sm:text-4xl lg:text-5xl"
                 style={{
                   backgroundImage:
                     'linear-gradient(135deg, var(--violet), var(--cyan))',
@@ -101,7 +101,7 @@ export default async function HomePage() {
               >
                 {highlight.value}
               </p>
-              <p className="mt-3 text-sm leading-snug text-muted-foreground">
+              <p className="mt-2 text-xs leading-snug text-muted-foreground sm:mt-3 sm:text-sm">
                 {highlight.label}
               </p>
             </SpotlightCard>
@@ -109,8 +109,8 @@ export default async function HomePage() {
         ))}
 
         {current ? (
-          <Reveal delay={80} className="sm:col-span-2">
-            <SpotlightCard className="h-full p-7">
+          <Reveal delay={80} className="col-span-2">
+            <SpotlightCard className="h-full p-5 sm:p-7">
               <span className="label">Currently</span>
               <p className="mt-4 text-2xl font-semibold">{current.company}</p>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -126,15 +126,15 @@ export default async function HomePage() {
           </Reveal>
         ) : null}
 
-        <Reveal delay={150} className="sm:col-span-2">
-          <SpotlightCard className="flex h-full flex-col justify-between p-7">
+        <Reveal delay={150} className="col-span-2">
+          <SpotlightCard className="flex h-full flex-col justify-between p-5 sm:p-7">
             <div>
               <span className="label">Toolkit</span>
               <p className="mt-4 text-2xl font-semibold">
                 {skills.length} tools in rotation
               </p>
             </div>
-            <Marquee items={marqueeItems} className="mt-6 -mx-7" duration={45} />
+            <Marquee items={marqueeItems} className="-mx-5 mt-5 sm:-mx-7 sm:mt-6" duration={45} />
           </SpotlightCard>
         </Reveal>
       </section>
@@ -199,7 +199,7 @@ export default async function HomePage() {
           <div className="mt-12 grid gap-4 sm:grid-cols-2">
             {stack.map((group, index) => (
               <Reveal key={group.category} delay={index * 60}>
-                <SpotlightCard className="h-full p-6">
+                <SpotlightCard className="h-full p-4 sm:p-6">
                   <p className="label">{group.category}</p>
                   <ul className="mt-4 flex flex-wrap gap-2">
                     {group.items.map((skill) => (
