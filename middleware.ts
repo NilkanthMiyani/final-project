@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { SESSION_COOKIE, verifySession } from '@/lib/auth';
+import { MAINTENANCE_HTML } from '@/lib/maintenance';
 
 /**
  * Routes the two hostnames of a single deployment:
@@ -20,6 +21,25 @@ export async function middleware(request: NextRequest) {
   const onAdminHost = isAdminHost(request.headers.get('host'));
 
   if (!onAdminHost) {
+    /*
+     * Maintenance switch. Public hostname only — the admin host is exempt so
+     * content stays editable while the site is down.
+     *
+     * Served as 503 with Retry-After rather than a 200 holding page, so search
+     * engines treat this as temporary and keep the real pages indexed. Turn it
+     * off by removing MAINTENANCE_MODE from the environment and redeploying.
+     */
+    if (process.env.MAINTENANCE_MODE === '1') {
+      return new NextResponse(MAINTENANCE_HTML, {
+        status: 503,
+        headers: {
+          'content-type': 'text/html; charset=utf-8',
+          'retry-after': '86400',
+          'cache-control': 'no-store, must-revalidate',
+        },
+      });
+    }
+
     // Keep the admin surface off the public hostname entirely.
     if (pathname === '/admin' || pathname.startsWith('/admin/')) {
       return NextResponse.rewrite(new URL('/404', request.url));
