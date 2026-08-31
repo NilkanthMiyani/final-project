@@ -11,8 +11,8 @@ export default function AdminPanelLoading() {
   return (
     <div aria-busy="true" aria-live="polite">
       <div className="mb-8">
-        <div className="h-6 w-40 bg-[var(--surface)]" />
-        <div className="mt-3 h-3.5 w-72 max-w-full bg-[var(--surface)]" />
+        <div className="h-6 w-40 bg-[var(--line)]" />
+        <div className="mt-3 h-3.5 w-72 max-w-full bg-[var(--line)]" />
       </div>
 
       <div className="border-t border-[var(--line)]">
@@ -23,20 +23,20 @@ export default function AdminPanelLoading() {
           >
             <div className="min-w-0 flex-1">
               <div
-                className="h-3.5 bg-[var(--surface)]"
+                className="h-3.5 bg-[var(--line)]"
                 style={{ width: `${58 - row * 7}%` }}
               />
               <div
-                className="mt-2 h-3 bg-[var(--surface)]"
+                className="mt-2 h-3 bg-[var(--line)]"
                 style={{ width: `${38 - row * 4}%` }}
               />
             </div>
-            <div className="h-3.5 w-16 shrink-0 bg-[var(--surface)]" />
+            <div className="h-3.5 w-16 shrink-0 bg-[var(--line)]" />
           </div>
         ))}
       </div>
 
-      <p className="mt-6 text-xs text-[var(--muted-foreground)]">loading…</p>
+      <p className="mt-6 text-xs text-[var(--subtle)]">Loading…</p>
     </div>
   );
 }

@@ -26,23 +26,19 @@ export default async function AboutPage() {
   const stack = groupSkills(skills);
 
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6">
-      <header className="pt-24 pb-10 sm:pt-32 sm:pb-14">
+    <div className="mx-auto max-w-2xl px-6 sm:px-8">
+      <header className="pt-32 pb-12 sm:pt-40 sm:pb-16">
         <SectionHeading
           as="h1"
-          eyebrow="about"
           title={profile.name}
           description={[profile.role, profile.location].filter(Boolean).join(' · ')}
         />
       </header>
 
       {profile.bio.length > 0 ? (
-        <section className="space-y-4 border-t border-[var(--line)] py-8">
+        <section className="space-y-5 border-t border-[var(--line)] py-10">
           {profile.bio.map((paragraph, index) => (
-            <p
-              key={index}
-              className="prose-body text-sm text-[var(--muted-foreground)] sm:text-base"
-            >
+            <p key={index} className="leading-relaxed text-[var(--muted)]">
               {paragraph}
             </p>
           ))}
@@ -50,120 +46,106 @@ export default async function AboutPage() {
       ) : null}
 
       {education.length > 0 ? (
-        <section className="pt-10 sm:pt-16">
-          <SectionHeading eyebrow="education" title="Where I studied." />
-          <div className="mt-8 border-t border-[var(--line)]">
+        <Section label="Education">
+          <div className="divide-y divide-[var(--line)]">
             {education.map((item) => (
-              <article
-                key={item.id}
-                className="grid gap-2 border-b border-[var(--line)] py-6 md:grid-cols-[11rem_1fr] md:gap-8"
-              >
-                <div>
-                  <p className="tnum text-xs text-[var(--muted-foreground)]">
-                    {[item.startDate, item.endDate].filter(Boolean).join(' → ')}
+              <article key={item.id} className="py-6">
+                <p className="tnum text-xs text-[var(--subtle)]">
+                  {[item.startDate, item.endDate].filter(Boolean).join(' — ')}
+                </p>
+                <h3 className="mt-2 font-medium">{item.degree}</h3>
+                <p className="mt-1 text-sm text-[var(--muted)]">
+                  {item.institution}
+                  {item.grade ? ` · ${item.grade}` : ''}
+                </p>
+                {item.description ? (
+                  <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
+                    {item.description}
                   </p>
-                  {item.grade ? (
-                    <p className="mt-1.5 text-xs text-[var(--accent)]">
-                      {item.grade}
-                    </p>
-                  ) : null}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-sm font-medium sm:text-base">
-                    {item.degree}
-                  </h3>
-                  <p className="key mt-1.5">{item.institution}</p>
-                  {item.description ? (
-                    <p className="prose-body mt-3 text-sm text-[var(--muted-foreground)]">
-                      {item.description}
-                    </p>
-                  ) : null}
-                </div>
+                ) : null}
               </article>
             ))}
           </div>
-        </section>
+        </Section>
       ) : null}
 
       {certifications.length > 0 ? (
-        <section className="pt-10 sm:pt-16">
-          <SectionHeading eyebrow="certifications" title="Verified credentials." />
-          <div className="mt-8 border-t border-[var(--line)]">
-            {certifications.map((cert) => (
-              <CertRow key={cert.id} cert={cert} />
-            ))}
+        <Section label="Certifications">
+          <div className="divide-y divide-[var(--line)]">
+            {certifications.map((cert) => {
+              const body = (
+                <>
+                  {cert.issuedDate ? (
+                    <p className="tnum text-xs text-[var(--subtle)]">
+                      {cert.issuedDate}
+                    </p>
+                  ) : null}
+                  <h3 className="mt-2 font-medium">
+                    {cert.name}
+                    {cert.credentialUrl ? (
+                      <span className="ml-2 text-sm font-normal text-[var(--subtle)]">
+                        ↗
+                      </span>
+                    ) : null}
+                  </h3>
+                  <p className="mt-1 text-sm text-[var(--muted)]">{cert.issuer}</p>
+                  {cert.description ? (
+                    <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
+                      {cert.description}
+                    </p>
+                  ) : null}
+                </>
+              );
+
+              return cert.credentialUrl ? (
+                <Link
+                  key={cert.id}
+                  href={cert.credentialUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="-mx-3 block rounded-sm px-3 py-6 transition-colors hover:bg-[var(--hover)]"
+                >
+                  {body}
+                </Link>
+              ) : (
+                <article key={cert.id} className="py-6">
+                  {body}
+                </article>
+              );
+            })}
           </div>
-        </section>
+        </Section>
       ) : null}
 
       {stack.length > 0 ? (
-        <section className="pt-10 sm:pt-16">
-          <SectionHeading eyebrow="stack" title="The full toolkit." />
-          <dl className="mt-8 border-t border-[var(--line)]">
+        <Section label="Stack">
+          <dl className="space-y-5">
             {stack.map((group) => (
-              <div
-                key={group.category}
-                className="grid gap-2 border-b border-[var(--line)] py-5 md:grid-cols-[11rem_1fr] md:gap-8"
-              >
-                <dt className="key pt-1">{group.category}</dt>
-                <dd className="flex flex-wrap gap-1.5">
-                  {group.items.map((skill) => (
-                    <span key={skill.id} className="tag">
-                      {skill.name}
-                    </span>
-                  ))}
+              <div key={group.category}>
+                <dt className="text-xs text-[var(--subtle)]">{group.category}</dt>
+                <dd className="mt-1.5 text-sm leading-relaxed text-[var(--muted)]">
+                  {group.items.map((skill) => skill.name).join(' · ')}
                 </dd>
               </div>
             ))}
           </dl>
-        </section>
+        </Section>
       ) : null}
     </div>
   );
 }
 
-type Cert = Awaited<ReturnType<typeof getCertifications>>[number];
-
-/** Wrapped in a link only when there is a credential to verify. */
-function CertRow({ cert }: { cert: Cert }) {
-  const body = (
-    <>
-      <div>
-        <p className="tnum text-xs text-[var(--muted-foreground)]">
-          {cert.issuedDate || '—'}
-        </p>
-      </div>
-      <div className="min-w-0">
-        <h3 className="text-sm font-medium sm:text-base">
-          <span className="mr-1.5 text-[var(--accent)]">✓</span>
-          {cert.name}
-          {cert.credentialUrl ? (
-            <span className="ml-2 text-xs text-[var(--muted-foreground)]">↗</span>
-          ) : null}
-        </h3>
-        <p className="key mt-1.5">{cert.issuer}</p>
-        {cert.description ? (
-          <p className="prose-body mt-3 text-sm text-[var(--muted-foreground)]">
-            {cert.description}
-          </p>
-        ) : null}
-      </div>
-    </>
-  );
-
-  const className =
-    'grid gap-2 border-b border-[var(--line)] py-6 md:grid-cols-[11rem_1fr] md:gap-8';
-
-  return cert.credentialUrl ? (
-    <Link
-      href={cert.credentialUrl}
-      target="_blank"
-      rel="noreferrer"
-      className={`${className} transition-colors hover:bg-[var(--surface)]`}
-    >
-      {body}
-    </Link>
-  ) : (
-    <article className={className}>{body}</article>
+function Section({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="border-t border-[var(--line)] py-12">
+      <h2 className="eyebrow mb-4">{label}</h2>
+      {children}
+    </section>
   );
 }

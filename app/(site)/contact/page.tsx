@@ -15,46 +15,48 @@ export default async function ContactPage() {
   const profile = await getProfile();
 
   const direct = [
-    { label: 'email', value: profile.email, href: `mailto:${profile.email}` },
-    { label: 'linkedin', value: 'in/nilkanthmiyani', href: profile.socials.linkedin },
-    { label: 'github', value: 'NilkanthMiyani', href: profile.socials.github },
+    { label: 'Email', value: profile.email, href: `mailto:${profile.email}` },
+    { label: 'LinkedIn', value: 'in/nilkanthmiyani', href: profile.socials.linkedin },
+    { label: 'GitHub', value: 'NilkanthMiyani', href: profile.socials.github },
   ].filter((item) => item.value && item.href);
 
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6">
-      <header className="pt-24 pb-10 sm:pt-32 sm:pb-12">
+    <div className="mx-auto max-w-2xl px-6 sm:px-8">
+      <header className="pt-32 pb-12 sm:pt-40 sm:pb-14">
         <SectionHeading
           as="h1"
-          eyebrow="contact"
-          title="Got an infrastructure problem worth solving?"
+          title="Get in touch"
           description="A pipeline that's become a maintenance burden, a cloud bill that keeps climbing, or a role you think I'd fit — send it over."
         />
       </header>
 
-      <div className="panel p-5 sm:p-8">
+      <div className="border-t border-[var(--line)] py-10">
         <ContactForm />
       </div>
 
       {direct.length > 0 ? (
-        <dl className="mt-8 border-t border-[var(--line)]">
-          {direct.map((item) => (
-            <div
-              key={item.label}
-              className="grid grid-cols-[6rem_1fr] items-baseline gap-3 border-b border-[var(--line)] py-4"
-            >
-              <dt className="key">{item.label}</dt>
-              <dd className="min-w-0">
-                <Link
-                  href={item.href}
-                  target={item.href.startsWith('http') ? '_blank' : undefined}
-                  rel="noreferrer"
-                  className="block truncate text-sm text-[var(--muted-foreground)] hover:text-[var(--accent)]"
-                >
-                  {item.value}
-                </Link>
-              </dd>
-            </div>
-          ))}
+        <dl className="border-t border-[var(--line)] py-10">
+          <p className="eyebrow mb-4">Or reach me directly</p>
+          <div className="space-y-3">
+            {direct.map((item) => (
+              <div
+                key={item.label}
+                className="flex items-baseline justify-between gap-4"
+              >
+                <dt className="text-sm text-[var(--subtle)]">{item.label}</dt>
+                <dd className="min-w-0">
+                  <Link
+                    href={item.href}
+                    target={item.href.startsWith('http') ? '_blank' : undefined}
+                    rel="noreferrer"
+                    className="link block truncate text-sm"
+                  >
+                    {item.value}
+                  </Link>
+                </dd>
+              </div>
+            ))}
+          </div>
         </dl>
       ) : null}
     </div>

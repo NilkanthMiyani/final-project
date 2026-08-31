@@ -6,12 +6,9 @@ export function PageTitle({
   description: string;
 }) {
   return (
-    <div className="mb-8">
-      <h1 className="text-xl font-medium tracking-tight sm:text-2xl">
-        <span className="mr-2 text-[var(--accent)]">$</span>
-        {title.toLowerCase()}
-      </h1>
-      <p className="prose-body mt-2 text-sm text-[var(--muted-foreground)]">
+    <div className="mb-10">
+      <h1 className="display text-2xl font-medium">{title}</h1>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
         {description}
       </p>
     </div>

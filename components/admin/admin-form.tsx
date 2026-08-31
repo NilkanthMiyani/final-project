@@ -47,7 +47,7 @@ export function AdminForm({
       <button
         type="submit"
         disabled={pending}
-        className="btn-accent mt-10 w-full justify-center sm:w-auto"
+        className="btn mt-10 w-full justify-center sm:w-auto"
       >
         {pending ? 'Saving…' : submitLabel}
       </button>

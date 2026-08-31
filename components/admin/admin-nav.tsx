@@ -12,15 +12,15 @@ import { cn } from '@/lib/utils';
  * `/admin/admin/experience` and 404.
  */
 const links = [
-  { href: '/', label: 'overview' },
-  { href: '/profile', label: 'profile' },
-  { href: '/experience', label: 'experience' },
-  { href: '/projects', label: 'projects' },
-  { href: '/skills', label: 'skills' },
-  { href: '/education', label: 'education' },
-  { href: '/certifications', label: 'certifications' },
-  { href: '/resume', label: 'resume' },
-  { href: '/messages', label: 'messages' },
+  { href: '/', label: 'Overview' },
+  { href: '/profile', label: 'Profile' },
+  { href: '/experience', label: 'Experience' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/skills', label: 'Skills' },
+  { href: '/education', label: 'Education' },
+  { href: '/certifications', label: 'Certifications' },
+  { href: '/resume', label: 'Résumé' },
+  { href: '/messages', label: 'Messages' },
 ];
 
 export function AdminNav() {
@@ -42,8 +42,8 @@ export function AdminNav() {
       */}
       <nav
         className={cn(
-          'no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 pb-2',
-          'md:mx-0 md:block md:space-y-0.5 md:overflow-visible md:px-0 md:pb-0'
+          'no-scrollbar -mx-6 flex gap-5 overflow-x-auto px-6 pb-2',
+          'md:mx-0 md:block md:space-y-2.5 md:overflow-visible md:px-0 md:pb-0'
         )}
       >
         {links.map((link) => {
@@ -58,16 +58,12 @@ export function AdminNav() {
               href={link.href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'shrink-0 px-3 py-2 text-[0.8125rem] whitespace-nowrap transition-colors',
-                'md:block',
+                'shrink-0 text-sm whitespace-nowrap transition-colors md:block',
                 active
-                  ? 'text-[var(--accent)] md:bg-[var(--surface)]'
-                  : 'text-[var(--muted-foreground)] hover:text-foreground md:hover:bg-[var(--surface)]'
+                  ? 'text-foreground'
+                  : 'text-[var(--muted)] hover:text-foreground'
               )}
             >
-              <span className={cn('mr-2', active ? 'opacity-100' : 'opacity-0')}>
-                ▸
-              </span>
               {link.label}
             </Link>
           );
@@ -79,13 +75,11 @@ export function AdminNav() {
         type="button"
         onClick={logout}
         className={cn(
-          'mt-4 w-full border border-[var(--line)] px-3 py-2 text-[0.8125rem] text-[var(--muted-foreground)]',
-          'transition-colors hover:border-[var(--destructive)] hover:text-[var(--destructive)]',
-          'md:border-0 md:px-3 md:text-left'
+          'mt-8 text-sm text-[var(--subtle)] transition-colors',
+          'hover:text-[var(--destructive)] md:mt-10'
         )}
       >
-        <span className="mr-2 opacity-0 md:inline">▸</span>
-        sign out
+        Sign out
       </button>
     </div>
   );

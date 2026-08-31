@@ -27,7 +27,7 @@ export default async function AdminSkillsPage() {
       />
 
       {categories.length > 0 ? (
-        <p className="mb-6 font-mono text-xs text-muted-foreground">
+        <p className="mb-6 text-xs text-[var(--muted)]">
           Categories in use: {categories.join(' · ')}
         </p>
       ) : null}

@@ -5,65 +5,59 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
   --color-line: var(--line);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-destructive: var(--destructive);
   --color-border: var(--line);
-  --color-ring: var(--accent);
+  --color-destructive: var(--destructive);
+  --color-muted-foreground: var(--muted);
+  --color-ring: var(--foreground);
 
-  /* Mono is the default typeface everywhere; prose opts out via .prose-body. */
-  --font-sans: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 
-  /* Terminals do not have rounded corners. */
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
 }
 
 /*
- * Terminal system. One accent (phosphor green), hard 1px rules, no blur, no
- * gradients, no shadows. Every surface is either the page or a bordered panel.
+ * Minimal system. No accent hue anywhere — hierarchy comes from three text
+ * colours (foreground, muted, subtle), one hairline, and space. There are no
+ * cards, no fills, no shadows and no motion beyond a colour fade.
+ *
+ * The greys carry a trace of warmth (chroma 0.003 at hue 85) rather than being
+ * mathematically neutral. Dead grey reads clinical on a large light surface;
+ * this is the difference between paper and a spreadsheet.
+ *
+ * Light is the default. Minimal wants air, and a dark portfolio is the thing
+ * every other engineer already ships.
  */
 :root {
-  --background: oklch(0.148 0.006 165);
-  --foreground: oklch(0.935 0.008 160);
-  --surface: oklch(0.185 0.007 165);
-  --surface-hover: oklch(0.225 0.008 165);
+  --background: oklch(0.991 0.002 85);
+  --foreground: oklch(0.205 0.004 85);
+  --muted: oklch(0.505 0.004 85);
+  --subtle: oklch(0.665 0.004 85);
+  --line: oklch(0.905 0.003 85);
+  --hover: oklch(0.968 0.003 85);
 
-  --muted-foreground: oklch(0.618 0.012 165);
-  --line: oklch(0.295 0.011 165);
-  --line-strong: oklch(0.395 0.014 165);
-
-  --accent: oklch(0.79 0.168 148);
-  --accent-foreground: oklch(0.148 0.006 165);
-  --accent-dim: oklch(0.79 0.168 148 / 12%);
-
-  --destructive: oklch(0.68 0.185 25);
-
-  color-scheme: dark;
-}
-
-.light {
-  --background: oklch(0.978 0.004 150);
-  --foreground: oklch(0.205 0.012 165);
-  --surface: oklch(1 0 0);
-  --surface-hover: oklch(0.955 0.006 150);
-
-  --muted-foreground: oklch(0.505 0.014 165);
-  --line: oklch(0.865 0.008 150);
-  --line-strong: oklch(0.735 0.012 155);
-
-  --accent: oklch(0.505 0.135 150);
-  --accent-foreground: oklch(0.99 0.003 150);
-  --accent-dim: oklch(0.505 0.135 150 / 10%);
-
-  --destructive: oklch(0.52 0.2 25);
+  /* The one non-grey in the system, and only ever for destructive admin
+     actions and validation errors. It never appears on the public site. */
+  --destructive: oklch(0.545 0.19 27);
 
   color-scheme: light;
+}
+
+.dark {
+  --background: oklch(0.165 0.003 85);
+  --foreground: oklch(0.955 0.002 85);
+  --muted: oklch(0.655 0.004 85);
+  --subtle: oklch(0.495 0.004 85);
+  --line: oklch(0.278 0.004 85);
+  --hover: oklch(0.215 0.004 85);
+
+  --destructive: oklch(0.675 0.175 25);
+
+  color-scheme: dark;
 }
 
 @layer base {
@@ -73,22 +67,19 @@
 
   html {
     -webkit-text-size-adjust: 100%;
-    /* Native scrolling only. No smooth-scroll library. */
-    scroll-behavior: auto;
   }
 
   body {
-    font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
     background: var(--background);
     color: var(--foreground);
-    font-feature-settings: 'calt' 1;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
 
   ::selection {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--foreground);
+    color: var(--background);
   }
 
   /* iOS zooms a focused field whose text is under 16px. */
@@ -106,23 +97,23 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
+    outline: 1.5px solid var(--foreground);
+    outline-offset: 3px;
   }
 
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--background);
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
     background: var(--line);
-    border: 2px solid var(--background);
+    border-radius: 99px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--line-strong);
+    background: var(--subtle);
   }
   * {
     scrollbar-width: thin;
@@ -131,101 +122,80 @@
 }
 
 @layer components {
-  /* Running prose opts out of mono. */
-  .prose-body {
-    font-family: var(--font-prose), ui-sans-serif, system-ui, sans-serif;
-    line-height: 1.7;
-  }
-
-  /* Bordered surface. Replaces the old glass pane — solid, no backdrop-filter. */
-  .panel {
-    background: var(--surface);
-    border: 1px solid var(--line);
-  }
-
-  /* Section label: `~/work` style path marker. */
-  .path {
+  /*
+   * Section label. Small and quiet — it names the block without competing
+   * with the heading under it.
+   */
+  .eyebrow {
     font-size: 0.75rem;
-    letter-spacing: 0.04em;
-    color: var(--muted-foreground);
-  }
-  .path::before {
-    content: '~/';
-    color: var(--accent);
+    color: var(--subtle);
   }
 
-  /* Small uppercase key, used for the left column of definition rows. */
-  .key {
-    font-size: 0.6875rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted-foreground);
-  }
-
-  /* Shell prompt marker before a line of output. */
-  .prompt::before {
-    content: '> ';
-    color: var(--accent);
-  }
-
+  /*
+   * The site's only button. A hairline outline, no fill, no lift. `.link-btn`
+   * is the same shape without the border, for the secondary action beside it.
+   */
   .btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    border: 1px solid var(--line-strong);
-    padding: 0.625rem 1.125rem;
-    font-size: 0.8125rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.5625rem 1rem;
+    font-size: 0.875rem;
     color: var(--foreground);
-    transition: background-color 0.12s linear, border-color 0.12s linear;
+    transition: border-color 0.15s ease;
   }
   .btn:hover {
-    background: var(--surface-hover);
     border-color: var(--foreground);
   }
 
-  .btn-accent {
+  .link-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    border: 1px solid var(--accent);
-    background: var(--accent);
-    color: var(--accent-foreground);
-    padding: 0.625rem 1.125rem;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    transition: opacity 0.12s linear;
+    padding: 0.5625rem 0.25rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+    transition: color 0.15s ease;
   }
-  .btn-accent:hover {
-    opacity: 0.85;
-  }
-  .btn-accent:disabled {
-    opacity: 0.4;
+  .link-btn:hover {
+    color: var(--foreground);
   }
 
-  /* Inline tag for a technology name. */
-  .tag {
-    border: 1px solid var(--line);
-    padding: 0.1875rem 0.5rem;
-    font-size: 0.6875rem;
-    color: var(--muted-foreground);
+  /* Inline text link: underlined only on hover, never coloured. */
+  .link {
+    color: var(--muted);
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  .link:hover {
+    color: var(--foreground);
+    text-decoration-line: underline;
+    text-decoration-color: var(--line);
   }
 
-  /* Text input: a single underline, like a field in a TUI. */
   .field {
     width: 100%;
-    border: 1px solid var(--line);
-    background: var(--background);
-    padding: 0.625rem 0.75rem;
-    font-size: 0.8125rem;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
+    padding: 0.5rem 0;
+    font-size: 0.9375rem;
+    color: var(--foreground);
     outline: none;
-    transition: border-color 0.12s linear;
+    transition: border-color 0.15s ease;
   }
   .field::placeholder {
-    color: var(--muted-foreground);
-    opacity: 0.6;
+    color: var(--subtle);
   }
   .field:focus {
-    border-color: var(--accent);
+    border-bottom-color: var(--foreground);
+  }
+  .field:focus-visible {
+    outline: none;
   }
 }
 
@@ -242,12 +212,9 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Faint blueprint grid, used behind the hero only. */
-  .grid-lines {
-    background-image:
-      linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px);
-    background-size: 40px 40px;
-    opacity: 0.35;
+  /* Display sizes need the tracking pulled in to stop them reading loose. */
+  .display {
+    letter-spacing: -0.025em;
+    text-wrap: balance;
   }
 }

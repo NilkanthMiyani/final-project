@@ -33,7 +33,7 @@ export function Field({
           type="checkbox"
           name={field.name}
           defaultChecked={Boolean(value)}
-          className="size-4 accent-[var(--accent)]"
+          className="size-4 accent-[var(--foreground)]"
         />
         <span className="text-sm">{field.label}</span>
       </label>
@@ -51,7 +51,7 @@ export function Field({
   return (
     <div className={cn(field.wide || isMultiline ? 'sm:col-span-2' : undefined)}>
       <label className="block">
-        <span className="key block">{field.label}</span>
+        <span className="block text-xs text-[var(--subtle)]">{field.label}</span>
 
         {isMultiline ? (
           <textarea
@@ -59,7 +59,7 @@ export function Field({
             rows={field.rows ?? (field.type === 'list' ? 5 : 3)}
             defaultValue={defaultValue}
             placeholder={field.placeholder ?? ''}
-            className="field mt-2 resize-y"
+            className="field mt-1 resize-y"
           />
         ) : (
           <input
@@ -67,13 +67,13 @@ export function Field({
             type={field.type === 'url' ? 'url' : 'text'}
             defaultValue={defaultValue}
             placeholder={field.placeholder ?? ''}
-            className="field mt-2"
+            className="field mt-1"
           />
         )}
       </label>
 
       {field.hint ? (
-        <p className="mt-1.5 text-[0.6875rem] text-[var(--muted-foreground)]">
+        <p className="mt-1.5 text-[0.6875rem] text-[var(--muted)]">
           {field.hint}
         </p>
       ) : null}

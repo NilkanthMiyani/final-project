@@ -106,13 +106,13 @@ export function EntityEditor({
           }}
           className="btn w-full justify-center sm:ml-auto sm:w-auto"
         >
-          {creating ? 'cancel' : `+ new ${noun}`}
+          {creating ? 'Cancel' : `New ${noun}`}
         </button>
       </div>
 
       {creating ? (
-        <div className="panel mb-8 p-5 sm:p-6">
-          <p className="key">new {noun}</p>
+        <div className="mb-8 rounded-sm border border-[var(--line)] p-5 sm:p-6">
+          <p className="eyebrow">New {noun}</p>
           <div className="mt-5">
             <EntityForm
               action={actions.save}
@@ -127,7 +127,7 @@ export function EntityEditor({
 
       <div className="border-t border-[var(--line)]">
         {ordered.length === 0 ? (
-          <p className="py-10 text-sm text-[var(--muted-foreground)]">
+          <p className="py-10 text-sm text-[var(--muted)]">
             Nothing here yet. Add your first {noun}.
           </p>
         ) : null}
@@ -161,23 +161,23 @@ export function EntityEditor({
                   className="min-w-0 flex-1 py-1 text-left"
                 >
                   <p className="flex items-baseline gap-2 text-sm">
-                    <span className="text-[var(--accent)]">
-                      {open ? '▾' : '▸'}
+                    <span className="text-[var(--subtle)]">
+                      {open ? '–' : '+'}
                     </span>
                     <span
                       className={cn(
                         'min-w-0 font-medium sm:truncate',
-                        isDraft && 'text-[var(--muted-foreground)] line-through'
+                        isDraft && 'text-[var(--muted)] line-through'
                       )}
                     >
                       {String(item[titleKey] ?? 'Untitled')}
                     </span>
                     {isDraft ? (
-                      <span className="tag shrink-0">draft</span>
+                      <span className="shrink-0 text-xs text-[var(--subtle)]">Draft</span>
                     ) : null}
                   </p>
                   {subtitleKey && item[subtitleKey] ? (
-                    <p className="mt-1 pl-5 text-xs text-[var(--muted-foreground)] sm:truncate">
+                    <p className="mt-1 pl-5 text-xs text-[var(--muted)] sm:truncate">
                       {String(item[subtitleKey])}
                     </p>
                   ) : null}
@@ -208,7 +208,7 @@ export function EntityEditor({
                         if (toggle) run(id, () => toggle(id));
                       }}
                     >
-                      {isDraft ? 'off' : 'on'}
+                      {isDraft ? 'Off' : 'On'}
                     </IconButton>
                   ) : null}
 
@@ -304,16 +304,16 @@ function EntityForm({
         <button
           type="submit"
           disabled={pending}
-          className="btn-accent w-full justify-center sm:w-auto"
+          className="btn w-full justify-center sm:w-auto"
         >
-          {pending ? 'saving…' : 'save'}
+          {pending ? 'Saving…' : 'Save'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="w-full py-2.5 text-sm text-[var(--muted-foreground)] transition-colors hover:text-foreground sm:w-auto sm:py-0"
+          className="w-full py-2.5 text-sm text-[var(--muted)] transition-colors hover:text-foreground sm:w-auto sm:py-0"
         >
-          cancel
+          Cancel
         </button>
       </div>
     </form>
@@ -343,11 +343,11 @@ function IconButton({
       className={cn(
         // 40px on touch screens keeps these above the minimum tap target;
         // desktop can afford the tighter 32px.
-        'flex size-10 items-center justify-center text-xs text-[var(--muted-foreground)] transition-colors sm:size-8',
+        'flex size-10 items-center justify-center text-xs text-[var(--muted)] transition-colors sm:size-8',
         'disabled:opacity-25',
         destructive
           ? 'hover:text-[var(--destructive)]'
-          : 'hover:text-[var(--accent)]'
+          : 'hover:text-[var(--foreground)]'
       )}
     >
       {children}

@@ -41,10 +41,10 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="fullname" className="key block">
+          <label htmlFor="fullname" className="block text-xs text-[var(--subtle)]">
             Name
           </label>
           <input
@@ -54,11 +54,11 @@ export function ContactForm() {
             maxLength={120}
             autoComplete="name"
             placeholder="Your name"
-            className="field mt-2"
+            className="field mt-1"
           />
         </div>
         <div>
-          <label htmlFor="email" className="key block">
+          <label htmlFor="email" className="block text-xs text-[var(--subtle)]">
             Email
           </label>
           <input
@@ -69,13 +69,13 @@ export function ContactForm() {
             maxLength={200}
             autoComplete="email"
             placeholder="you@company.com"
-            className="field mt-2"
+            className="field mt-1"
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor="message" className="key block">
+        <label htmlFor="message" className="block text-xs text-[var(--subtle)]">
           Message
         </label>
         <textarea
@@ -85,12 +85,12 @@ export function ContactForm() {
           rows={6}
           maxLength={5000}
           placeholder="What are you working on?"
-          className="field mt-2 resize-y"
+          className="field mt-1 resize-y"
         />
       </div>
 
-      <button type="submit" disabled={pending} className="btn-accent">
-        {pending ? 'sending…' : 'send message'}
+      <button type="submit" disabled={pending} className="btn disabled:opacity-50">
+        {pending ? 'Sending…' : 'Send message'}
       </button>
     </form>
   );

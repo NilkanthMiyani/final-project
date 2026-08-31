@@ -41,19 +41,15 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-svh items-center justify-center px-6">
       <div className="w-full max-w-sm">
-        <p className="text-sm text-[var(--muted-foreground)]">
-          <span className="text-[var(--accent)]">$</span> sudo -u admin
-        </p>
-        <h1 className="mt-4 text-2xl font-medium tracking-tight">
-          authentication required
-        </h1>
-        <p className="prose-body mt-3 text-sm text-[var(--muted-foreground)]">
+        <p className="eyebrow">Restricted</p>
+        <h1 className="display mt-3 text-2xl font-medium">Admin</h1>
+        <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
           Enter the admin password to manage portfolio content.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-10">
           <label className="block">
-            <span className="key block">password</span>
+            <span className="block text-xs text-[var(--subtle)]">Password</span>
             <input
               type="password"
               value={password}
@@ -61,20 +57,20 @@ export default function LoginPage() {
               required
               autoFocus
               autoComplete="current-password"
-              className="field mt-2"
+              className="field mt-1"
             />
           </label>
 
           {error ? (
-            <p className="mt-4 font-mono text-xs text-[var(--destructive)]">{error}</p>
+            <p className="mt-4 text-xs text-[var(--destructive)]">{error}</p>
           ) : null}
 
           <button
             type="submit"
             disabled={pending || !password}
-            className="btn-accent mt-8 w-full justify-center"
+            className="btn mt-8 w-full justify-center disabled:opacity-50"
           >
-            {pending ? 'checking…' : 'unlock'}
+            {pending ? 'Checking…' : 'Unlock'}
           </button>
         </form>
       </div>

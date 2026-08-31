@@ -30,113 +30,95 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   if (!project) notFound();
 
   const links = [
-    { label: 'source', url: project.links.github },
-    { label: 'live', url: project.links.live },
+    { label: 'Source', url: project.links.github },
+    { label: 'Live site', url: project.links.live },
   ].filter((link) => link.url);
 
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6">
-      <div className="pt-24 sm:pt-32">
-        <Link
-          href="/projects"
-          className="text-xs text-[var(--muted-foreground)] hover:text-[var(--accent)]"
-        >
-          ← cd ../projects
+    <div className="mx-auto max-w-2xl px-6 sm:px-8">
+      <div className="pt-28 sm:pt-36">
+        <Link href="/projects" className="link text-sm">
+          ← Projects
         </Link>
       </div>
 
-      <header className="border-b border-[var(--line)] pt-8 pb-10">
-        <p className="path">projects/{project.slug}</p>
-        <h1 className="mt-4 text-2xl leading-tight font-medium tracking-tight sm:text-4xl">
+      <header className="pt-8 pb-12">
+        <h1 className="display text-3xl leading-tight font-medium sm:text-4xl">
           {project.title}
         </h1>
         {project.tagline ? (
-          <p className="prose-body mt-4 max-w-2xl text-sm text-[var(--muted-foreground)] sm:text-base">
+          <p className="mt-5 text-lg leading-relaxed text-[var(--muted)]">
             {project.tagline}
           </p>
         ) : null}
 
         {links.length > 0 ? (
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap items-center gap-3">
             {links.map((link, index) => (
               <Link
                 key={link.label}
                 href={link.url}
                 target="_blank"
                 rel="noreferrer"
-                className={index === 0 ? 'btn-accent' : 'btn'}
+                className={index === 0 ? 'btn' : 'link-btn'}
               >
-                {link.label} ↗
+                {link.label}
               </Link>
             ))}
           </div>
         ) : null}
       </header>
 
-      <div className="pb-8">
-        {project.overview ? (
-          <Block label="overview">
-            <p className="prose-body text-sm text-[var(--muted-foreground)]">
-              {project.overview}
-            </p>
-          </Block>
-        ) : null}
+      {project.overview ? (
+        <Block label="Overview">
+          <p className="leading-relaxed text-[var(--muted)]">{project.overview}</p>
+        </Block>
+      ) : null}
 
-        {project.features.length > 0 ? (
-          <Block label="what it does">
-            <ul className="space-y-2.5">
-              {project.features.map((feature, index) => (
-                <li
-                  key={index}
-                  className="grid grid-cols-[2rem_1fr] items-baseline text-sm"
-                >
-                  <span className="tnum text-xs text-[var(--accent)]">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <span className="prose-body text-[var(--muted-foreground)]">
-                    {feature}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Block>
-        ) : null}
+      {project.features.length > 0 ? (
+        <Block label="What it does">
+          <ul className="space-y-2.5">
+            {project.features.map((feature, index) => (
+              <li
+                key={index}
+                className="grid grid-cols-[1.5rem_1fr] text-sm leading-relaxed"
+              >
+                <span className="tnum text-[var(--subtle)]">{index + 1}</span>
+                <span className="text-[var(--muted)]">{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </Block>
+      ) : null}
 
-        {project.outcomes.length > 0 ? (
-          <Block label="outcome">
-            <ul className="space-y-2.5">
-              {project.outcomes.map((outcome, index) => (
-                <li
-                  key={index}
-                  className="grid grid-cols-[1rem_1fr] items-baseline text-sm"
-                >
-                  <span className="text-[var(--accent)]">+</span>
-                  <span className="prose-body text-[var(--muted-foreground)]">
-                    {outcome}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Block>
-        ) : null}
+      {project.outcomes.length > 0 ? (
+        <Block label="Outcome">
+          <ul className="space-y-2.5">
+            {project.outcomes.map((outcome, index) => (
+              <li
+                key={index}
+                className="grid grid-cols-[0.875rem_1fr] text-sm leading-relaxed"
+              >
+                <span className="text-[var(--subtle)]">·</span>
+                <span className="text-[var(--muted)]">{outcome}</span>
+              </li>
+            ))}
+          </ul>
+        </Block>
+      ) : null}
 
-        {project.techStack.length > 0 ? (
-          <Block label="stack">
-            <ul className="flex flex-wrap gap-1.5">
-              {project.techStack.map((tech) => (
-                <li key={tech} className="tag">
-                  {tech}
-                </li>
-              ))}
-            </ul>
-          </Block>
-        ) : null}
-      </div>
+      {project.techStack.length > 0 ? (
+        <Block label="Stack">
+          <p className="text-sm leading-relaxed text-[var(--muted)]">
+            {project.techStack.join(' · ')}
+          </p>
+        </Block>
+      ) : null}
     </div>
   );
 }
 
-/** Label column on desktop, stacked label on phones. */
+/** Label above, content below. One hairline per block. */
 function Block({
   label,
   children,
@@ -145,9 +127,9 @@ function Block({
   children: React.ReactNode;
 }) {
   return (
-    <section className="grid gap-3 border-b border-[var(--line)] py-7 md:grid-cols-[9rem_1fr] md:gap-8">
-      <p className="key pt-0.5">{label}</p>
-      <div className="min-w-0">{children}</div>
+    <section className="border-t border-[var(--line)] py-8">
+      <h2 className="eyebrow mb-4">{label}</h2>
+      {children}
     </section>
   );
 }

@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { META_THEME_COLORS, siteConfig } from '@/config/site';
-import { fontMono, fontProse } from '@/lib/fonts';
+import { fontSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 
 import './globals.css';
@@ -32,16 +32,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          'min-h-svh bg-background antialiased',
-          fontMono.variable,
-          fontProse.variable
-        )}
-      >
+      <body className={cn('min-h-svh bg-background antialiased', fontSans.variable)}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
           enableColorScheme
