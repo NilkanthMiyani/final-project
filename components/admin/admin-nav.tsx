@@ -1,6 +1,5 @@
 'use client';
 
-import { LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -13,15 +12,15 @@ import { cn } from '@/lib/utils';
  * `/admin/admin/experience` and 404.
  */
 const links = [
-  { href: '/', label: 'Overview' },
-  { href: '/profile', label: 'Profile' },
-  { href: '/experience', label: 'Experience' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/skills', label: 'Skills' },
-  { href: '/education', label: 'Education' },
-  { href: '/certifications', label: 'Certifications' },
-  { href: '/resume', label: 'Résumé' },
-  { href: '/messages', label: 'Messages' },
+  { href: '/', label: 'overview' },
+  { href: '/profile', label: 'profile' },
+  { href: '/experience', label: 'experience' },
+  { href: '/projects', label: 'projects' },
+  { href: '/skills', label: 'skills' },
+  { href: '/education', label: 'education' },
+  { href: '/certifications', label: 'certifications' },
+  { href: '/resume', label: 'resume' },
+  { href: '/messages', label: 'messages' },
 ];
 
 export function AdminNav() {
@@ -37,14 +36,14 @@ export function AdminNav() {
   return (
     <div>
       {/*
-        Mobile: a horizontally scrollable pill row, edge-to-edge so the last
-        item visibly runs off-screen and the row reads as scrollable.
+        Mobile: a horizontally scrollable row, edge-to-edge so the last item
+        visibly runs off-screen and the row reads as scrollable.
         Desktop: a static vertical list.
       */}
       <nav
         className={cn(
-          'no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 pb-1',
-          'md:mx-0 md:block md:space-y-1 md:overflow-visible md:px-0 md:pb-0'
+          'no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 pb-2',
+          'md:mx-0 md:block md:space-y-0.5 md:overflow-visible md:px-0 md:pb-0'
         )}
       >
         {links.map((link) => {
@@ -59,13 +58,16 @@ export function AdminNav() {
               href={link.href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'shrink-0 rounded-full px-4 py-2.5 text-sm whitespace-nowrap transition-colors',
-                'md:block md:rounded-lg md:py-2',
+                'shrink-0 px-3 py-2 text-[0.8125rem] whitespace-nowrap transition-colors',
+                'md:block',
                 active
-                  ? 'bg-[var(--glass-strong)] text-foreground'
-                  : 'text-muted-foreground hover:bg-[var(--glass)] hover:text-foreground'
+                  ? 'text-[var(--accent)] md:bg-[var(--surface)]'
+                  : 'text-[var(--muted-foreground)] hover:text-foreground md:hover:bg-[var(--surface)]'
               )}
             >
+              <span className={cn('mr-2', active ? 'opacity-100' : 'opacity-0')}>
+                ▸
+              </span>
               {link.label}
             </Link>
           );
@@ -77,13 +79,13 @@ export function AdminNav() {
         type="button"
         onClick={logout}
         className={cn(
-          'mt-4 flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm',
-          'border border-[var(--glass-border)] text-muted-foreground transition-colors hover:text-destructive',
-          'md:justify-start md:rounded-lg md:border-0 md:py-2'
+          'mt-4 w-full border border-[var(--line)] px-3 py-2 text-[0.8125rem] text-[var(--muted-foreground)]',
+          'transition-colors hover:border-[var(--destructive)] hover:text-[var(--destructive)]',
+          'md:border-0 md:px-3 md:text-left'
         )}
       >
-        <LogOut className="size-3.5" />
-        Sign out
+        <span className="mr-2 opacity-0 md:inline">▸</span>
+        sign out
       </button>
     </div>
   );

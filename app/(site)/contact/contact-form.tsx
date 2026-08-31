@@ -1,11 +1,8 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-const fieldClass =
-  'w-full rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] px-4 py-3 text-sm outline-none transition-all duration-300 placeholder:text-muted-foreground/60 focus:border-[var(--violet)] focus:ring-2 focus:ring-[var(--violet)]/20';
 
 export function ContactForm() {
   const [pending, setPending] = useState(false);
@@ -47,7 +44,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="fullname" className="label">
+          <label htmlFor="fullname" className="key block">
             Name
           </label>
           <input
@@ -57,11 +54,11 @@ export function ContactForm() {
             maxLength={120}
             autoComplete="name"
             placeholder="Your name"
-            className={`${fieldClass} mt-2`}
+            className="field mt-2"
           />
         </div>
         <div>
-          <label htmlFor="email" className="label">
+          <label htmlFor="email" className="key block">
             Email
           </label>
           <input
@@ -72,13 +69,13 @@ export function ContactForm() {
             maxLength={200}
             autoComplete="email"
             placeholder="you@company.com"
-            className={`${fieldClass} mt-2`}
+            className="field mt-2"
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor="message" className="label">
+        <label htmlFor="message" className="key block">
           Message
         </label>
         <textarea
@@ -88,13 +85,12 @@ export function ContactForm() {
           rows={6}
           maxLength={5000}
           placeholder="What are you working on?"
-          className={`${fieldClass} mt-2 resize-none`}
+          className="field mt-2 resize-y"
         />
       </div>
 
-      <button type="submit" disabled={pending} className="btn-primary disabled:opacity-50">
-        {pending ? 'Sending…' : 'Send message'}
-        <ArrowRight className="size-4" />
+      <button type="submit" disabled={pending} className="btn-accent">
+        {pending ? 'sending…' : 'send message'}
       </button>
     </form>
   );

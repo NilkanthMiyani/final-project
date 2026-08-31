@@ -1,155 +1,97 @@
 @import 'tailwindcss';
-@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
   --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-violet: var(--violet);
-  --color-cyan: var(--cyan);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 6px);
-  --radius-2xl: calc(var(--radius) + 12px);
+  --color-destructive: var(--destructive);
+  --color-border: var(--line);
+  --color-ring: var(--accent);
+
+  /* Mono is the default typeface everywhere; prose opts out via .prose-body. */
+  --font-sans: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Terminals do not have rounded corners. */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
 }
 
 /*
- * Dark-first aurora system. Violet -> cyan is the signature gradient; every
- * surface is a translucent pane layered over the aurora rather than a solid fill.
+ * Terminal system. One accent (phosphor green), hard 1px rules, no blur, no
+ * gradients, no shadows. Every surface is either the page or a bordered panel.
  */
 :root {
-  --radius: 0.875rem;
+  --background: oklch(0.148 0.006 165);
+  --foreground: oklch(0.935 0.008 160);
+  --surface: oklch(0.185 0.007 165);
+  --surface-hover: oklch(0.225 0.008 165);
 
-  --background: oklch(0.145 0.021 274);
-  --foreground: oklch(0.971 0.006 275);
+  --muted-foreground: oklch(0.618 0.012 165);
+  --line: oklch(0.295 0.011 165);
+  --line-strong: oklch(0.395 0.014 165);
 
-  --card: oklch(0.205 0.024 274);
-  --card-foreground: oklch(0.971 0.006 275);
-  --popover: oklch(0.185 0.023 274);
-  --popover-foreground: oklch(0.971 0.006 275);
+  --accent: oklch(0.79 0.168 148);
+  --accent-foreground: oklch(0.148 0.006 165);
+  --accent-dim: oklch(0.79 0.168 148 / 12%);
 
-  --primary: oklch(0.971 0.006 275);
-  --primary-foreground: oklch(0.145 0.021 274);
-
-  --secondary: oklch(0.245 0.025 274);
-  --secondary-foreground: oklch(0.971 0.006 275);
-
-  --muted: oklch(0.245 0.025 274);
-  --muted-foreground: oklch(0.687 0.024 274);
-
-  --violet: oklch(0.646 0.219 295);
-  --cyan: oklch(0.782 0.132 201);
-
-  --accent: var(--violet);
-  --accent-foreground: oklch(0.145 0.021 274);
-
-  --destructive: oklch(0.665 0.201 24);
-
-  --border: oklch(1 0 0 / 9%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.646 0.219 295);
-
-  /* Glass panes */
-  --glass: oklch(1 0 0 / 4%);
-  --glass-strong: oklch(1 0 0 / 7%);
-  --glass-border: oklch(1 0 0 / 10%);
-
-  --aurora-1: oklch(0.55 0.24 295 / 45%);
-  --aurora-2: oklch(0.65 0.17 215 / 38%);
-  --aurora-3: oklch(0.6 0.2 330 / 30%);
+  --destructive: oklch(0.68 0.185 25);
 
   color-scheme: dark;
 }
 
 .light {
-  --background: oklch(0.988 0.004 275);
-  --foreground: oklch(0.19 0.025 274);
+  --background: oklch(0.978 0.004 150);
+  --foreground: oklch(0.205 0.012 165);
+  --surface: oklch(1 0 0);
+  --surface-hover: oklch(0.955 0.006 150);
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.19 0.025 274);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.19 0.025 274);
+  --muted-foreground: oklch(0.505 0.014 165);
+  --line: oklch(0.865 0.008 150);
+  --line-strong: oklch(0.735 0.012 155);
 
-  --primary: oklch(0.24 0.025 274);
-  --primary-foreground: oklch(0.99 0.004 275);
+  --accent: oklch(0.505 0.135 150);
+  --accent-foreground: oklch(0.99 0.003 150);
+  --accent-dim: oklch(0.505 0.135 150 / 10%);
 
-  --secondary: oklch(0.962 0.008 275);
-  --secondary-foreground: oklch(0.24 0.025 274);
-
-  --muted: oklch(0.962 0.008 275);
-  --muted-foreground: oklch(0.487 0.021 274);
-
-  --violet: oklch(0.53 0.235 295);
-  --cyan: oklch(0.6 0.13 205);
-
-  --accent: var(--violet);
-  --accent-foreground: oklch(0.99 0.004 275);
-
-  --destructive: oklch(0.55 0.21 25);
-
-  --border: oklch(0.2 0.02 274 / 10%);
-  --input: oklch(0.2 0.02 274 / 16%);
-  --ring: oklch(0.53 0.235 295);
-
-  --glass: oklch(1 0 0 / 70%);
-  --glass-strong: oklch(1 0 0 / 85%);
-  --glass-border: oklch(0.2 0.02 274 / 8%);
-
-  --aurora-1: oklch(0.7 0.19 295 / 22%);
-  --aurora-2: oklch(0.78 0.14 215 / 20%);
-  --aurora-3: oklch(0.75 0.16 330 / 16%);
+  --destructive: oklch(0.52 0.2 25);
 
   color-scheme: light;
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--line);
   }
 
   html {
     -webkit-text-size-adjust: 100%;
-    /* No scroll-behavior here: Lenis drives smooth scrolling, and running both
-       desyncs anchor jumps. */
+    /* Native scrolling only. No smooth-scroll library. */
+    scroll-behavior: auto;
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-synthesis-weight: none;
-    text-rendering: optimizeLegibility;
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--background);
+    color: var(--foreground);
+    font-feature-settings: 'calt' 1;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
 
   ::selection {
-    background: var(--violet);
-    color: white;
+    background: var(--accent);
+    color: var(--accent-foreground);
   }
 
-  /*
-   * iOS Safari zooms the viewport when a focused field's text is under 16px.
-   * The design wants 14px inputs, so bump them only on touch-sized screens.
-   */
+  /* iOS zooms a focused field whose text is under 16px. */
   @media (max-width: 639px) {
     input,
     textarea,
@@ -158,148 +100,132 @@
     }
   }
 
-  /* Stop the grey flash on tap without removing the focus ring. */
   a,
   button {
     -webkit-tap-highlight-color: transparent;
   }
 
   :focus-visible {
-    outline: 2px solid var(--ring);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--background);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--input);
-    border-radius: 99px;
+    background: var(--line);
+    border: 2px solid var(--background);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--muted-foreground);
+    background: var(--line-strong);
   }
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--input) transparent;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
+    scrollbar-color: var(--line) transparent;
   }
 }
 
 @layer components {
-  /* Frosted pane used for every card, tile and floating surface. */
-  .glass {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
+  /* Running prose opts out of mono. */
+  .prose-body {
+    font-family: var(--font-prose), ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.7;
   }
 
-  .glass-strong {
-    background: var(--glass-strong);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  /* Bordered surface. Replaces the old glass pane — solid, no backdrop-filter. */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
   }
 
-  /* Signature violet -> cyan text treatment. Used once or twice per page. */
-  .gradient-text {
-    background-image: linear-gradient(
-      110deg,
-      var(--foreground) 5%,
-      var(--violet) 45%,
-      var(--cyan) 75%,
-      var(--foreground) 100%
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shimmer 8s linear infinite;
+  /* Section label: `~/work` style path marker. */
+  .path {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--muted-foreground);
+  }
+  .path::before {
+    content: '~/';
+    color: var(--accent);
   }
 
-  /* Small uppercase mono label. */
-  .label {
-    font-family: var(--font-mono), ui-monospace, monospace;
+  /* Small uppercase key, used for the left column of definition rows. */
+  .key {
     font-size: 0.6875rem;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted-foreground);
   }
 
-  /* Pill with a live status dot. */
-  .pill {
-    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+  /* Shell prompt marker before a line of output. */
+  .prompt::before {
+    content: '> ';
+    color: var(--accent);
   }
 
-  /* Gradient-bordered surface: a gradient sheet masked to a 1px ring. */
-  .gradient-ring {
-    position: relative;
-  }
-  .gradient-ring::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      140deg,
-      var(--violet),
-      transparent 40%,
-      transparent 60%,
-      var(--cyan)
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.45s ease;
-    pointer-events: none;
-  }
-  .gradient-ring:hover::before {
-    opacity: 1;
-  }
-
-  /* Primary call to action. */
-  .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300;
-    background: linear-gradient(135deg, var(--violet), oklch(0.6 0.19 250));
-    color: white;
-    box-shadow: 0 4px 24px -6px var(--violet);
-  }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 32px -8px var(--violet);
-  }
-
-  .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-300;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--line-strong);
+    padding: 0.625rem 1.125rem;
+    font-size: 0.8125rem;
     color: var(--foreground);
+    transition: background-color 0.12s linear, border-color 0.12s linear;
   }
-  .btn-ghost:hover {
-    background: var(--glass-strong);
-    transform: translateY(-2px);
+  .btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--foreground);
+  }
+
+  .btn-accent {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--accent-foreground);
+    padding: 0.625rem 1.125rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: opacity 0.12s linear;
+  }
+  .btn-accent:hover {
+    opacity: 0.85;
+  }
+  .btn-accent:disabled {
+    opacity: 0.4;
+  }
+
+  /* Inline tag for a technology name. */
+  .tag {
+    border: 1px solid var(--line);
+    padding: 0.1875rem 0.5rem;
+    font-size: 0.6875rem;
+    color: var(--muted-foreground);
+  }
+
+  /* Text input: a single underline, like a field in a TUI. */
+  .field {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--background);
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+    outline: none;
+    transition: border-color 0.12s linear;
+  }
+  .field::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.6;
+  }
+  .field:focus {
+    border-color: var(--accent);
   }
 }
 
@@ -316,48 +242,12 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Tight optical tracking for very large headings. */
-  .text-balance-tight {
-    text-wrap: balance;
-    letter-spacing: -0.035em;
-    line-height: 0.98;
-  }
-
-  .mask-fade-x {
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      #000 12%,
-      #000 88%,
-      transparent
-    );
-  }
-}
-
-@keyframes shimmer {
-  to {
-    background-position: 200% center;
-  }
-}
-
-@keyframes aurora-drift {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(6%, -8%) scale(1.12);
-  }
-  66% {
-    transform: translate(-5%, 6%) scale(0.94);
-  }
-}
-
-@keyframes marquee-x {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
+  /* Faint blueprint grid, used behind the hero only. */
+  .grid-lines {
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.35;
   }
 }

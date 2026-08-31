@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { META_THEME_COLORS, siteConfig } from '@/config/site';
-import { fontMono, fontSans } from '@/lib/fonts';
+import { fontMono, fontProse } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 
 import './globals.css';
@@ -34,9 +34,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'min-h-svh bg-background font-sans antialiased',
-          fontSans.variable,
-          fontMono.variable
+          'min-h-svh bg-background antialiased',
+          fontMono.variable,
+          fontProse.variable
         )}
       >
         <ThemeProvider
@@ -48,7 +48,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
-        <Toaster position="top-center" theme="dark" />
+        <Toaster position="bottom-right" />
       </body>
     </html>
   );

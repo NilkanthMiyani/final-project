@@ -9,13 +9,14 @@ export const siteConfig = {
 };
 
 export const navItems = [
-  { title: 'Work', href: '/#work' },
-  { title: 'Projects', href: '/projects' },
-  { title: 'About', href: '/about' },
-  { title: 'Contact', href: '/contact' },
+  { title: 'work', href: '/#work' },
+  { title: 'projects', href: '/projects' },
+  { title: 'about', href: '/about' },
+  { title: 'contact', href: '/contact' },
 ];
 
+/** Must track --background in globals.css for both themes. */
 export const META_THEME_COLORS = {
-  light: '#fcfbf8',
-  dark: '#1c1a18',
+  light: '#f8faf7',
+  dark: '#121513',
 };

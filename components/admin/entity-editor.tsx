@@ -1,14 +1,13 @@
 'use client';
 
 import {
-  ChevronDown,
-  ChevronUp,
-  Eye,
-  EyeOff,
-  Plus,
-  Trash2,
-} from 'lucide-react';
-import { useActionState, useEffect, useRef, useState, useTransition } from 'react';
+  useActionState,
+  useEffect,
+  useOptimistic,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import { toast } from 'sonner';
 
 import type { ActionResult, FormAction } from '@/app/admin/actions';
@@ -34,9 +33,25 @@ type EntityEditorProps = {
   };
 };
 
+/** Swaps a row with its neighbour, for the optimistic reorder. */
+function swap(items: Item[], id: string, direction: 'up' | 'down'): Item[] {
+  const from = items.findIndex((item) => item.id === id);
+  const to = direction === 'up' ? from - 1 : from + 1;
+  if (from < 0 || to < 0 || to >= items.length) return items;
+
+  const next = items.slice();
+  [next[from], next[to]] = [next[to]!, next[from]!];
+  return next;
+}
+
 /**
  * List-plus-inline-form editor shared by every collection. Rows collapse to a
  * summary; opening one reveals the form built from `fields`.
+ *
+ * Reordering is applied optimistically and only the row being acted on is
+ * disabled. Previously every arrow click round-tripped to the server before the
+ * list moved, with a single `pending` flag that greyed out every control on the
+ * page while it did — so a three-step reorder felt like three freezes.
  */
 export function EntityEditor({
   items,
@@ -48,13 +63,35 @@ export function EntityEditor({
 }: EntityEditorProps) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
-  const [pending, startTransition] = useTransition();
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [, startTransition] = useTransition();
 
-  function run(fn: () => Promise<ActionResult>): void {
+  const [ordered, applyMove] = useOptimistic(
+    items,
+    (state: Item[], move: { id: string; direction: 'up' | 'down' }) =>
+      swap(state, move.id, move.direction)
+  );
+
+  function run(id: string, fn: () => Promise<ActionResult>): void {
     startTransition(async () => {
-      const result = await fn();
-      if (result.ok) toast.success(result.message);
-      else toast.error(result.message);
+      setBusyId(id);
+      try {
+        const result = await fn();
+        if (result.ok) toast.success(result.message);
+        else toast.error(result.message);
+      } finally {
+        setBusyId(null);
+      }
+    });
+  }
+
+  function move(id: string, direction: 'up' | 'down'): void {
+    startTransition(async () => {
+      // Inside the transition, so React holds the optimistic order until the
+      // server render carrying the real order arrives.
+      applyMove({ id, direction });
+      const result = await actions.move(id, direction);
+      if (!result.ok) toast.error(result.message);
     });
   }
 
@@ -67,40 +104,48 @@ export function EntityEditor({
             setCreating((value) => !value);
             setOpenId(null);
           }}
-          className="btn-ghost w-full justify-center sm:ml-auto sm:w-auto"
+          className="btn w-full justify-center sm:ml-auto sm:w-auto"
         >
-          <Plus className="size-3.5" />
-          {creating ? 'Cancel' : `New ${noun}`}
+          {creating ? 'cancel' : `+ new ${noun}`}
         </button>
       </div>
 
       {creating ? (
-        <div className="mb-8 rounded-2xl border border-[var(--glass-border)] bg-card p-5 sm:p-6">
-          <p className="label mb-5">New {noun}</p>
-          <EntityForm
-            action={actions.save}
-            fields={fields}
-            item={null}
-            onDone={() => setCreating(false)}
-            onCancel={() => setCreating(false)}
-          />
+        <div className="panel mb-8 p-5 sm:p-6">
+          <p className="key">new {noun}</p>
+          <div className="mt-5">
+            <EntityForm
+              action={actions.save}
+              fields={fields}
+              item={null}
+              onDone={() => setCreating(false)}
+              onCancel={() => setCreating(false)}
+            />
+          </div>
         </div>
       ) : null}
 
-      <div className="border-t border-[var(--glass-border)]">
-        {items.length === 0 ? (
-          <p className="py-10 text-sm text-muted-foreground">
+      <div className="border-t border-[var(--line)]">
+        {ordered.length === 0 ? (
+          <p className="py-10 text-sm text-[var(--muted-foreground)]">
             Nothing here yet. Add your first {noun}.
           </p>
         ) : null}
 
-        {items.map((item, index) => {
+        {ordered.map((item, index) => {
           const id = item.id;
           const open = openId === id;
           const isDraft = item.published === false;
+          const busy = busyId === id;
 
           return (
-            <div key={id} className="border-b border-[var(--glass-border)]">
+            <div
+              key={id}
+              className={cn(
+                'border-b border-[var(--line)] transition-opacity',
+                busy && 'opacity-50'
+              )}
+            >
               {/*
                 Phones get the title on its own row with the controls beneath,
                 so the tap target for opening a record spans the full width and
@@ -115,73 +160,77 @@ export function EntityEditor({
                   }}
                   className="min-w-0 flex-1 py-1 text-left"
                 >
-                  <p
-                    className={cn(
-                      'text-sm font-medium sm:truncate',
-                      isDraft && 'text-muted-foreground line-through'
-                    )}
-                  >
-                    {String(item[titleKey] ?? 'Untitled')}
+                  <p className="flex items-baseline gap-2 text-sm">
+                    <span className="text-[var(--accent)]">
+                      {open ? '▾' : '▸'}
+                    </span>
+                    <span
+                      className={cn(
+                        'min-w-0 font-medium sm:truncate',
+                        isDraft && 'text-[var(--muted-foreground)] line-through'
+                      )}
+                    >
+                      {String(item[titleKey] ?? 'Untitled')}
+                    </span>
+                    {isDraft ? (
+                      <span className="tag shrink-0">draft</span>
+                    ) : null}
                   </p>
                   {subtitleKey && item[subtitleKey] ? (
-                    <p className="label mt-1 normal-case tracking-normal sm:truncate">
+                    <p className="mt-1 pl-5 text-xs text-[var(--muted-foreground)] sm:truncate">
                       {String(item[subtitleKey])}
                     </p>
                   ) : null}
                 </button>
 
-                <div className="-ml-2 flex shrink-0 items-center gap-0.5 sm:ml-0">
+                <div className="-ml-2 flex shrink-0 items-center gap-0.5 pl-3 sm:ml-0 sm:pl-0">
                   <IconButton
                     label="Move up"
-                    disabled={pending || index === 0}
-                    onClick={() => run(() => actions.move(id, 'up'))}
+                    disabled={busy || index === 0}
+                    onClick={() => move(id, 'up')}
                   >
-                    <ChevronUp className="size-4" />
+                    ↑
                   </IconButton>
                   <IconButton
                     label="Move down"
-                    disabled={pending || index === items.length - 1}
-                    onClick={() => run(() => actions.move(id, 'down'))}
+                    disabled={busy || index === ordered.length - 1}
+                    onClick={() => move(id, 'down')}
                   >
-                    <ChevronDown className="size-4" />
+                    ↓
                   </IconButton>
 
                   {actions.toggle ? (
                     <IconButton
                       label={isDraft ? 'Publish' : 'Move to draft'}
-                      disabled={pending}
+                      disabled={busy}
                       onClick={() => {
                         const toggle = actions.toggle;
-                        if (toggle) run(() => toggle(id));
+                        if (toggle) run(id, () => toggle(id));
                       }}
                     >
-                      {isDraft ? (
-                        <EyeOff className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
-                      )}
+                      {isDraft ? 'off' : 'on'}
                     </IconButton>
                   ) : null}
 
                   <IconButton
                     label={`Delete ${noun}`}
-                    disabled={pending}
+                    disabled={busy}
                     destructive
                     onClick={() => {
                       if (
                         window.confirm(`Delete this ${noun}? This cannot be undone.`)
                       ) {
-                        run(() => actions.remove(id));
+                        run(id, () => actions.remove(id));
                       }
                     }}
                   >
-                    <Trash2 className="size-4" />
+                    ✕
                   </IconButton>
                 </div>
               </div>
 
               {open ? (
-                <div className="pb-8">
+                <div className="pb-8 pl-5">
                   <EntityForm
                     action={actions.save}
                     fields={fields}
@@ -251,20 +300,20 @@ function EntityForm({
         ))}
       </div>
 
-      <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:gap-6">
+      <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:gap-4">
         <button
           type="submit"
           disabled={pending}
-          className="btn-primary w-full justify-center sm:w-auto"
+          className="btn-accent w-full justify-center sm:w-auto"
         >
-          {pending ? 'Saving…' : 'Save'}
+          {pending ? 'saving…' : 'save'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="w-full py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:w-auto sm:py-0"
+          className="w-full py-2.5 text-sm text-[var(--muted-foreground)] transition-colors hover:text-foreground sm:w-auto sm:py-0"
         >
-          Cancel
+          cancel
         </button>
       </div>
     </form>
@@ -294,9 +343,11 @@ function IconButton({
       className={cn(
         // 40px on touch screens keeps these above the minimum tap target;
         // desktop can afford the tighter 32px.
-        'flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors sm:size-8',
+        'flex size-10 items-center justify-center text-xs text-[var(--muted-foreground)] transition-colors sm:size-8',
         'disabled:opacity-25',
-        destructive ? 'hover:text-destructive' : 'hover:text-foreground'
+        destructive
+          ? 'hover:text-[var(--destructive)]'
+          : 'hover:text-[var(--accent)]'
       )}
     >
       {children}

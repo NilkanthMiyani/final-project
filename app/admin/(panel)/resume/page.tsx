@@ -19,13 +19,13 @@ export default async function AdminResumePage() {
       />
 
       {profile.resumeUrl ? (
-        <div className="mb-10 border border-[var(--glass-border)] p-5">
-          <p className="label">Currently live</p>
+        <div className="mb-10 border border-[var(--line)] p-5">
+          <p className="key">Currently live</p>
           <Link
             href={profile.resumeUrl}
             target="_blank"
             rel="noreferrer"
-            className="group mt-2 inline-flex items-center gap-1.5 break-all font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="group mt-2 inline-flex items-center gap-1.5 break-all font-mono text-sm text-[var(--muted-foreground)] transition-colors hover:text-foreground"
           >
             {profile.resumeUrl}
             <ArrowUpRight className="size-3.5 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -33,8 +33,8 @@ export default async function AdminResumePage() {
         </div>
       ) : null}
 
-      <section className="border-t border-[var(--glass-border)] pt-6">
-        <p className="label mb-5">Upload a new PDF</p>
+      <section className="border-t border-[var(--line)] pt-6">
+        <p className="key mb-5">Upload a new PDF</p>
 
         {blobConfigured ? (
           <AdminForm action={uploadResume} submitLabel="Upload" resetOnSuccess>
@@ -43,15 +43,15 @@ export default async function AdminResumePage() {
               name="resume"
               accept="application/pdf"
               required
-              className="block w-full text-sm text-muted-foreground file:mr-4 file:border file:border-[var(--glass-border)] file:bg-transparent file:px-4 file:py-2 file:text-sm file:text-foreground hover:file:bg-secondary"
+              className="block w-full text-sm text-[var(--muted-foreground)] file:mr-4 file:border file:border-[var(--line)] file:bg-transparent file:px-4 file:py-2 file:text-sm file:text-foreground hover:file:bg-[var(--surface-hover)]"
             />
-            <p className="mt-3 font-mono text-[0.6875rem] text-muted-foreground">
+            <p className="mt-3 font-mono text-[0.6875rem] text-[var(--muted-foreground)]">
               PDF only, up to 5 MB. Uploading replaces the link on the site
               immediately.
             </p>
           </AdminForm>
         ) : (
-          <p className="text-muted-foreground leading-relaxed text-sm">
+          <p className="text-[var(--muted-foreground)] leading-relaxed text-sm">
             Uploading needs <code className="font-mono">BLOB_READ_WRITE_TOKEN</code>{' '}
             in the environment. Create a Blob store in the Vercel dashboard, then
             pull the variable in. Until then, set the link manually below.
@@ -59,8 +59,8 @@ export default async function AdminResumePage() {
         )}
       </section>
 
-      <section className="mt-12 border-t border-[var(--glass-border)] pt-6">
-        <p className="label mb-5">Or point at a URL</p>
+      <section className="mt-12 border-t border-[var(--line)] pt-6">
+        <p className="key mb-5">Or point at a URL</p>
         <AdminForm action={setResumeUrl} submitLabel="Save link">
           <div className="max-w-xl">
             <Field

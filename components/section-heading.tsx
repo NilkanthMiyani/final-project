@@ -1,33 +1,31 @@
 import { cn } from '@/lib/utils';
 
-/** Section eyebrow plus display heading, shared by every block on the site. */
+/**
+ * Section marker plus heading. The eyebrow is rendered as a filesystem path
+ * (`~/work`), which is what gives each block its place in the terminal metaphor.
+ */
 export function SectionHeading({
   eyebrow,
   title,
   description,
   className,
+  /** `h1` when this heading is the page's own title; `h2` for a section. */
+  as: Heading = 'h2',
 }: {
   eyebrow: string;
   title: string;
   description?: string;
   className?: string;
+  as?: 'h1' | 'h2';
 }) {
   return (
     <div className={cn('max-w-2xl', className)}>
-      <span className="pill">
-        <span
-          className="size-1.5 rounded-full"
-          style={{
-            background: 'linear-gradient(135deg, var(--violet), var(--cyan))',
-          }}
-        />
-        <span className="font-mono tracking-widest uppercase">{eyebrow}</span>
-      </span>
-      <h2 className="text-balance-tight mt-5 text-[1.75rem] font-semibold sm:text-4xl md:text-5xl">
+      <p className="path">{eyebrow}</p>
+      <Heading className="mt-3 text-xl font-medium tracking-tight sm:text-2xl">
         {title}
-      </h2>
+      </Heading>
       {description ? (
-        <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+        <p className="prose-body mt-3 text-sm text-[var(--muted-foreground)]">
           {description}
         </p>
       ) : null}

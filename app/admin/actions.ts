@@ -59,10 +59,20 @@ const slugify = (value: string): string =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
-/** Invalidates the public cache for one collection and the pages that show it. */
+/**
+ * Invalidates the public cache for one collection and the pages that show it.
+ *
+ * Deliberately NOT `revalidatePath('/', 'layout')`. That form invalidates every
+ * route in the deployment — including the admin panel itself and the client
+ * router cache — so a single save made every subsequent admin click a cold
+ * render. Only the four public routes actually read this content.
+ */
 function refresh(tag: string): void {
   revalidateTag(tag);
-  revalidatePath('/', 'layout');
+  revalidatePath('/');
+  revalidatePath('/about');
+  revalidatePath('/projects');
+  revalidatePath('/projects/[slug]', 'page');
 }
 
 function ok(message: string): ActionResult {

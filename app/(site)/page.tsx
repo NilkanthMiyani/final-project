@@ -1,12 +1,8 @@
-import { ArrowRight, ArrowUpRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 import { ExperienceItem } from '@/components/experience-item';
-import { Marquee } from '@/components/marquee';
-import { ProjectCard } from '@/components/project-card';
-import { Reveal } from '@/components/reveal';
+import { ProjectRow } from '@/components/project-row';
 import { SectionHeading } from '@/components/section-heading';
-import { SpotlightCard } from '@/components/spotlight-card';
 import {
   getExperience,
   getProfile,
@@ -23,220 +19,208 @@ export default async function HomePage() {
     getSkills(),
   ]);
 
-  const featured = projects.filter((project) => project.featured).slice(0, 3);
-  const selected = featured.length > 0 ? featured : projects.slice(0, 3);
+  const featured = projects.filter((project) => project.featured);
+  const selected = (featured.length > 0 ? featured : projects).slice(0, 5);
   const stack = groupSkills(skills);
   const current = experience.find((item) => item.current) ?? experience[0];
-  const marqueeItems = skills.map((skill) => skill.name);
   // Guard the shape: a cached payload written before `highlights` existed
   // deserialises without the field.
   const highlights = profile.highlights ?? [];
 
   return (
-    <div className="mx-auto max-w-6xl px-5 sm:px-8">
-      {/* ── Hero ─────────────────────────────────────────────────────── */}
-      {/* Top padding clears the fixed header. Deliberately not min-h +
-          justify-center: centering absorbs the padding, so the headline ends up
-          under the header with dead space below it. */}
-      <section className="pt-28 pb-20 sm:pt-40 sm:pb-28">
-        <Reveal>
-          {profile.availability ? (
-            <span className="pill">
-              <span className="relative flex size-1.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-[var(--cyan)] opacity-75" />
-                <span className="relative inline-flex size-1.5 rounded-full bg-[var(--cyan)]" />
-              </span>
-              {profile.availability}
-            </span>
+    <div className="mx-auto max-w-5xl px-4 sm:px-6">
+      {/* ── Hero: a `whoami` record ──────────────────────────────────── */}
+      <section className="relative pt-24 pb-14 sm:pt-32 sm:pb-20">
+        {/* Blueprint grid, clipped to the hero and masked off at the bottom. */}
+        <div
+          aria-hidden
+          className="grid-lines pointer-events-none absolute inset-x-0 -top-12 bottom-0 -z-10"
+          style={{
+            maskImage: 'linear-gradient(to bottom, #000, transparent 85%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, #000, transparent 85%)',
+          }}
+        />
+
+        <p className="text-sm text-[var(--muted-foreground)]">
+          <span className="text-[var(--accent)]">$</span> whoami
+        </p>
+
+        <dl className="mt-6 space-y-2.5 text-sm">
+          <Row label="name" value={profile.name} />
+          <Row label="role" value={profile.role} />
+          {profile.location ? (
+            <Row label="based" value={profile.location} />
           ) : null}
-        </Reveal>
+          {profile.availability ? (
+            <div className="grid grid-cols-[4.5rem_1fr] gap-3 sm:grid-cols-[5.5rem_1fr]">
+              <dt className="key pt-0.5">status</dt>
+              <dd className="flex items-center gap-2 text-[var(--accent)]">
+                <span className="size-1.5 bg-[var(--accent)]" />
+                {profile.availability}
+              </dd>
+            </div>
+          ) : null}
+        </dl>
 
-        <Reveal delay={90}>
-          <h1 className="text-balance-tight mt-6 max-w-4xl text-[2.5rem] font-semibold sm:mt-7 sm:text-6xl md:text-7xl lg:text-8xl">
-            <span className="gradient-text">{profile.headline}</span>
-          </h1>
-        </Reveal>
+        <h1 className="mt-10 max-w-3xl text-2xl leading-snug font-medium tracking-tight sm:text-4xl sm:leading-tight">
+          {profile.headline}
+        </h1>
 
-        <Reveal delay={180}>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:mt-7 sm:text-lg">
+        {profile.subheadline ? (
+          <p className="prose-body mt-4 max-w-xl text-sm text-[var(--muted-foreground)] sm:text-base">
             {profile.subheadline}
           </p>
-        </Reveal>
-
-        <Reveal delay={260}>
-          <div className="mt-9 flex flex-wrap items-center gap-3 sm:mt-10">
-            <Link href="/contact" className="btn-primary">
-              Let’s talk
-              <ArrowRight className="size-4" />
-            </Link>
-            {profile.resumeUrl ? (
-              <a
-                href={profile.resumeUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-ghost"
-              >
-                Résumé
-                <ArrowUpRight className="size-4" />
-              </a>
-            ) : null}
-          </div>
-        </Reveal>
-      </section>
-
-      {/* ── Bento ────────────────────────────────────────────────────── */}
-      <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {highlights.map((highlight, index) => (
-          <Reveal key={highlight.label} delay={index * 70}>
-            <SpotlightCard className="h-full p-4 sm:p-6">
-              <p
-                className="tnum text-[1.875rem] font-semibold sm:text-4xl lg:text-5xl"
-                style={{
-                  backgroundImage:
-                    'linear-gradient(135deg, var(--violet), var(--cyan))',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  color: 'transparent',
-                }}
-              >
-                {highlight.value}
-              </p>
-              <p className="mt-2 text-xs leading-snug text-muted-foreground sm:mt-3 sm:text-sm">
-                {highlight.label}
-              </p>
-            </SpotlightCard>
-          </Reveal>
-        ))}
-
-        {current ? (
-          <Reveal delay={80} className="col-span-2">
-            <SpotlightCard className="h-full p-5 sm:p-7">
-              <span className="label">Currently</span>
-              <p className="mt-4 text-2xl font-semibold">{current.company}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {current.role} · {current.startDate} —{' '}
-                {current.current ? 'Present' : current.endDate}
-              </p>
-              {current.bullets[0] ? (
-                <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
-                  {current.bullets[0]}
-                </p>
-              ) : null}
-            </SpotlightCard>
-          </Reveal>
         ) : null}
 
-        <Reveal delay={150} className="col-span-2">
-          <SpotlightCard className="flex h-full flex-col justify-between p-5 sm:p-7">
-            <div>
-              <span className="label">Toolkit</span>
-              <p className="mt-4 text-2xl font-semibold">
-                {skills.length} tools in rotation
+        <div className="mt-9 flex flex-wrap items-center gap-3">
+          <Link href="/contact" className="btn-accent">
+            ./contact
+          </Link>
+          {profile.resumeUrl ? (
+            <a
+              href={profile.resumeUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="btn"
+            >
+              cat resume.pdf
+            </a>
+          ) : null}
+        </div>
+      </section>
+
+      {/* ── Metrics: one bordered strip, cells divided by rules ──────── */}
+      {highlights.length > 0 ? (
+        <section className="grid grid-cols-2 border-t border-l border-[var(--line)] sm:grid-cols-4">
+          {highlights.map((highlight) => (
+            <div
+              key={highlight.label}
+              className="border-r border-b border-[var(--line)] p-4 sm:p-5"
+            >
+              <p className="tnum text-xl font-medium text-[var(--accent)] sm:text-2xl">
+                {highlight.value}
+              </p>
+              <p className="mt-1.5 text-xs leading-snug text-[var(--muted-foreground)]">
+                {highlight.label}
               </p>
             </div>
-            <Marquee items={marqueeItems} className="-mx-5 mt-5 sm:-mx-7 sm:mt-6" duration={45} />
-          </SpotlightCard>
-        </Reveal>
-      </section>
-
-      {/* ── Work ─────────────────────────────────────────────────────── */}
-      {selected.length > 0 ? (
-        <section id="work" className="scroll-mt-24 pt-20 sm:pt-32">
-          <Reveal>
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeading
-                eyebrow="Selected work"
-                title="Infrastructure I’ve built and broken."
-                description="Working repositories — Terraform state, pipeline definitions and manifests included."
-              />
-              <Link
-                href="/projects"
-                className="btn-ghost shrink-0"
-              >
-                All projects
-                <ArrowRight className="size-4" />
-              </Link>
-            </div>
-          </Reveal>
-
-          <div className="mt-12 grid gap-4 md:grid-cols-3">
-            {selected.map((project, index) => (
-              <Reveal key={project.id} delay={index * 90}>
-                <ProjectCard project={project} />
-              </Reveal>
-            ))}
-          </div>
+          ))}
         </section>
       ) : null}
 
-      {/* ── Experience ───────────────────────────────────────────────── */}
-      {experience.length > 0 ? (
-        <section id="experience" className="scroll-mt-24 pt-20 sm:pt-32">
-          <Reveal>
-            <SectionHeading
-              eyebrow="Experience"
-              title="Where I’ve been shipping."
-            />
-          </Reveal>
-
-          <div className="mt-12 space-y-4">
-            {experience.map((item, index) => (
-              <Reveal key={item.id} delay={index * 80}>
-                <ExperienceItem item={item} />
-              </Reveal>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {/* ── Stack ────────────────────────────────────────────────────── */}
-      {stack.length > 0 ? (
-        <section id="stack" className="scroll-mt-24 pt-20 sm:pt-32">
-          <Reveal>
-            <SectionHeading eyebrow="Stack" title="What I reach for." />
-          </Reveal>
-
-          <div className="mt-12 grid gap-4 sm:grid-cols-2">
-            {stack.map((group, index) => (
-              <Reveal key={group.category} delay={index * 60}>
-                <SpotlightCard className="h-full p-4 sm:p-6">
-                  <p className="label">{group.category}</p>
-                  <ul className="mt-4 flex flex-wrap gap-2">
-                    {group.items.map((skill) => (
-                      <li
-                        key={skill.id}
-                        className="rounded-full border border-[var(--glass-border)] px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-[var(--violet)] hover:text-foreground"
-                      >
-                        {skill.name}
-                      </li>
-                    ))}
-                  </ul>
-                </SpotlightCard>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {/* ── CTA ──────────────────────────────────────────────────────── */}
-      <section className="pt-20 sm:pt-32">
-        <Reveal>
-          <SpotlightCard className="overflow-hidden p-7 text-center sm:p-16">
-            <Sparkles className="mx-auto size-6 text-[var(--cyan)]" />
-            <h2 className="text-balance-tight mt-6 text-[1.75rem] font-semibold sm:text-5xl">
-              Got an infrastructure problem worth solving?
-            </h2>
-            <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
-              A pipeline that’s become a burden, a cloud bill that keeps climbing,
-              or a role you think I’d fit.
+      {/* ── Currently ───────────────────────────────────────────────── */}
+      {current ? (
+        <section className="mt-10">
+          <div className="panel p-5 sm:p-6">
+            <p className="key">currently</p>
+            <p className="mt-3 text-base font-medium">
+              {current.role}
+              <span className="text-[var(--muted-foreground)]">
+                {' '}
+                @ {current.company}
+              </span>
             </p>
-            <Link href="/contact" className="btn-primary mt-9">
-              Start a conversation
-              <ArrowRight className="size-4" />
+            <p className="tnum mt-1 text-xs text-[var(--muted-foreground)]">
+              {current.startDate} → {current.current ? 'present' : current.endDate}
+            </p>
+            {current.bullets[0] ? (
+              <p className="prose-body mt-4 text-sm text-[var(--muted-foreground)]">
+                {current.bullets[0]}
+              </p>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {/* ── Work ────────────────────────────────────────────────────── */}
+      {selected.length > 0 ? (
+        <section id="work" className="scroll-mt-16 pt-16 sm:pt-24">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <SectionHeading
+              eyebrow="work"
+              title="Infrastructure I've built and broken."
+              description="Working repositories — Terraform state, pipeline definitions and manifests included."
+            />
+            <Link
+              href="/projects"
+              className="text-sm text-[var(--muted-foreground)] hover:text-[var(--accent)]"
+            >
+              ls -a →
             </Link>
-          </SpotlightCard>
-        </Reveal>
+          </div>
+
+          <div className="mt-8 border-t border-[var(--line)]">
+            {selected.map((project, index) => (
+              <ProjectRow key={project.id} project={project} index={index} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {/* ── Experience ──────────────────────────────────────────────── */}
+      {experience.length > 0 ? (
+        <section id="experience" className="scroll-mt-16 pt-16 sm:pt-24">
+          <SectionHeading eyebrow="experience" title="Where I've been shipping." />
+          <div className="mt-8 border-t border-[var(--line)]">
+            {experience.map((item) => (
+              <ExperienceItem key={item.id} item={item} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {/* ── Stack ───────────────────────────────────────────────────── */}
+      {stack.length > 0 ? (
+        <section id="stack" className="scroll-mt-16 pt-16 sm:pt-24">
+          <SectionHeading eyebrow="stack" title="What I reach for." />
+          <dl className="mt-8 border-t border-[var(--line)]">
+            {stack.map((group) => (
+              <div
+                key={group.category}
+                className="grid gap-2 border-b border-[var(--line)] py-5 md:grid-cols-[11rem_1fr] md:gap-8"
+              >
+                <dt className="key pt-1">{group.category}</dt>
+                <dd className="flex flex-wrap gap-1.5">
+                  {group.items.map((skill) => (
+                    <span key={skill.id} className="tag">
+                      {skill.name}
+                    </span>
+                  ))}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ) : null}
+
+      {/* ── CTA ─────────────────────────────────────────────────────── */}
+      <section className="pt-16 sm:pt-24">
+        <div className="panel p-6 sm:p-10">
+          <p className="text-sm text-[var(--muted-foreground)]">
+            <span className="text-[var(--accent)]">$</span> ./start-a-conversation
+          </p>
+          <h2 className="mt-4 max-w-xl text-lg leading-snug font-medium sm:text-2xl">
+            Got an infrastructure problem worth solving?
+          </h2>
+          <p className="prose-body mt-3 max-w-md text-sm text-[var(--muted-foreground)]">
+            A pipeline that&rsquo;s become a burden, a cloud bill that keeps
+            climbing, or a role you think I&rsquo;d fit.
+          </p>
+          <Link href="/contact" className="btn-accent mt-7">
+            get in touch
+          </Link>
+        </div>
       </section>
+    </div>
+  );
+}
+
+/** One aligned key/value line of the hero record. */
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[4.5rem_1fr] gap-3 sm:grid-cols-[5.5rem_1fr]">
+      <dt className="key pt-0.5">{label}</dt>
+      <dd>{value}</dd>
     </div>
   );
 }

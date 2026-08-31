@@ -7,8 +7,13 @@ export function PageTitle({
 }) {
   return (
     <div className="mb-8">
-      <h1 className="font-semibold tracking-tight text-3xl">{title}</h1>
-      <p className="text-muted-foreground leading-relaxed mt-2 text-sm">{description}</p>
+      <h1 className="text-xl font-medium tracking-tight sm:text-2xl">
+        <span className="mr-2 text-[var(--accent)]">$</span>
+        {title.toLowerCase()}
+      </h1>
+      <p className="prose-body mt-2 text-sm text-[var(--muted-foreground)]">
+        {description}
+      </p>
     </div>
   );
 }

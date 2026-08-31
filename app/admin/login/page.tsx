@@ -41,37 +41,40 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-svh items-center justify-center px-6">
       <div className="w-full max-w-sm">
-        <p className="label">Restricted</p>
-        <h1 className="font-semibold tracking-tight mt-4 text-4xl">Admin</h1>
-        <p className="text-muted-foreground leading-relaxed mt-3 text-sm">
+        <p className="text-sm text-[var(--muted-foreground)]">
+          <span className="text-[var(--accent)]">$</span> sudo -u admin
+        </p>
+        <h1 className="mt-4 text-2xl font-medium tracking-tight">
+          authentication required
+        </h1>
+        <p className="prose-body mt-3 text-sm text-[var(--muted-foreground)]">
           Enter the admin password to manage portfolio content.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-10">
-          <label htmlFor="password" className="label">
-            Password
+          <label className="block">
+            <span className="key block">password</span>
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+              autoFocus
+              autoComplete="current-password"
+              className="field mt-2"
+            />
           </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-            autoFocus
-            autoComplete="current-password"
-            className="w-full border-0 border-b border-[var(--glass-border)] bg-transparent px-0 py-3 text-sm outline-none transition-colors focus:border-accent"
-          />
 
           {error ? (
-            <p className="mt-4 font-mono text-xs text-destructive">{error}</p>
+            <p className="mt-4 font-mono text-xs text-[var(--destructive)]">{error}</p>
           ) : null}
 
           <button
             type="submit"
             disabled={pending || !password}
-            className="mt-8 w-full bg-foreground py-3 text-sm text-background transition-opacity hover:opacity-85 disabled:opacity-40"
+            className="btn-accent mt-8 w-full justify-center"
           >
-            {pending ? 'Checking…' : 'Unlock'}
+            {pending ? 'checking…' : 'unlock'}
           </button>
         </form>
       </div>

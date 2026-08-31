@@ -156,3 +156,58 @@ export async function adminGetMessages(): Promise<Message[]> {
     createdAt: doc.createdAt ? new Date(doc.createdAt).toISOString() : '',
   }));
 }
+
+/**
+ * Counts and draft titles for the overview, in one round of parallel queries.
+ *
+ * The overview previously called all seven readers, which pulled every field of
+ * every document — including 200 whole contact messages — to render six
+ * numbers. These are `countDocuments` plus two narrow projections instead.
+ */
+export type AdminSummary = {
+  counts: {
+    experience: number;
+    projects: number;
+    skills: number;
+    education: number;
+    certifications: number;
+    messages: number;
+  };
+  unread: number;
+  drafts: string[];
+};
+
+export async function adminGetSummary(): Promise<AdminSummary> {
+  await connectToDatabase();
+
+  const [
+    experience,
+    projects,
+    skills,
+    education,
+    certifications,
+    messages,
+    unread,
+    draftExperience,
+    draftProjects,
+  ] = await Promise.all([
+    ExperienceModel.countDocuments(),
+    ProjectModel.countDocuments(),
+    SkillModel.countDocuments(),
+    EducationModel.countDocuments(),
+    CertificationModel.countDocuments(),
+    MessageModel.countDocuments(),
+    MessageModel.countDocuments({ read: { $ne: true } }),
+    ExperienceModel.find({ published: false }, { company: 1 }).lean(),
+    ProjectModel.find({ published: false }, { title: 1 }).lean(),
+  ]);
+
+  return {
+    counts: { experience, projects, skills, education, certifications, messages },
+    unread,
+    drafts: [
+      ...(draftExperience as any[]).map((doc) => str(doc.company)),
+      ...(draftProjects as any[]).map((doc) => str(doc.title)),
+    ].filter(Boolean),
+  };
+}

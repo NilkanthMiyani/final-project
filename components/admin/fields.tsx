@@ -10,12 +10,14 @@ export type FieldDef = {
   wide?: boolean;
 };
 
-export const inputClass =
-  'w-full border-0 border-b border-[var(--glass-border)] bg-transparent px-0 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-accent';
-
 /**
  * Renders one field from a FieldDef against a plain value object.
  * `list` fields serialise a string[] as one item per line.
+ *
+ * The control is nested inside its `<label>` rather than linked by `htmlFor`.
+ * The previous version generated the id with `Math.random()`, which produced a
+ * different value on the server and on the client — a hydration mismatch on
+ * every form, and a fresh id on every re-render.
  */
 export function Field({
   field,
@@ -24,8 +26,6 @@ export function Field({
   field: FieldDef;
   value: unknown;
 }) {
-  const id = `${field.name}-${Math.random().toString(36).slice(2, 8)}`;
-
   if (field.type === 'checkbox') {
     return (
       <label className="flex cursor-pointer items-center gap-3 py-2">
@@ -50,32 +50,30 @@ export function Field({
 
   return (
     <div className={cn(field.wide || isMultiline ? 'sm:col-span-2' : undefined)}>
-      <label htmlFor={id} className="label">
-        {field.label}
+      <label className="block">
+        <span className="key block">{field.label}</span>
+
+        {isMultiline ? (
+          <textarea
+            name={field.name}
+            rows={field.rows ?? (field.type === 'list' ? 5 : 3)}
+            defaultValue={defaultValue}
+            placeholder={field.placeholder ?? ''}
+            className="field mt-2 resize-y"
+          />
+        ) : (
+          <input
+            name={field.name}
+            type={field.type === 'url' ? 'url' : 'text'}
+            defaultValue={defaultValue}
+            placeholder={field.placeholder ?? ''}
+            className="field mt-2"
+          />
+        )}
       </label>
 
-      {isMultiline ? (
-        <textarea
-          id={id}
-          name={field.name}
-          rows={field.rows ?? (field.type === 'list' ? 5 : 3)}
-          defaultValue={defaultValue}
-          placeholder={field.placeholder ?? ''}
-          className={cn(inputClass, 'resize-y')}
-        />
-      ) : (
-        <input
-          id={id}
-          name={field.name}
-          type={field.type === 'url' ? 'url' : 'text'}
-          defaultValue={defaultValue}
-          placeholder={field.placeholder ?? ''}
-          className={inputClass}
-        />
-      )}
-
       {field.hint ? (
-        <p className="mt-1.5 font-mono text-[0.6875rem] text-muted-foreground">
+        <p className="mt-1.5 text-[0.6875rem] text-[var(--muted-foreground)]">
           {field.hint}
         </p>
       ) : null}

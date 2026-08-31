@@ -2,17 +2,20 @@ import Link from 'next/link';
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-svh items-center justify-center px-6 text-center">
-      <div>
-        <p className="label">404</p>
-        <h1 className="text-balance-tight mt-4 text-[2.5rem] font-semibold sm:text-6xl">
-          <span className="gradient-text">Nothing here.</span>
-        </h1>
-        <p className="mx-auto mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground">
-          That page doesn’t exist, or it moved somewhere more sensible.
+    <div className="flex min-h-svh items-center justify-center px-6">
+      <div className="w-full max-w-md">
+        <p className="text-sm text-[var(--muted-foreground)]">
+          <span className="text-[var(--accent)]">$</span> cd .
         </p>
-        <Link href="/" className="btn-primary mt-9">
-          Back home
+        <p className="mt-3 text-sm text-[var(--destructive)]">
+          error: 404 — no such file or directory
+        </p>
+        <h1 className="mt-6 text-xl font-medium sm:text-2xl">Nothing here.</h1>
+        <p className="prose-body mt-3 text-sm text-[var(--muted-foreground)]">
+          That page doesn&rsquo;t exist, or it moved somewhere more sensible.
+        </p>
+        <Link href="/" className="btn-accent mt-8">
+          cd ~
         </Link>
       </div>
     </div>

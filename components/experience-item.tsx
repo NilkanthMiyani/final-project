@@ -1,61 +1,55 @@
-import { SpotlightCard } from '@/components/spotlight-card';
 import type { Experience } from '@/types/content';
 
 function formatRange(item: Experience): string {
-  if (item.current) return `${item.startDate} — Present`;
+  if (item.current) return `${item.startDate} → present`;
   if (!item.endDate || item.endDate === item.startDate) return item.startDate;
-  return `${item.startDate} — ${item.endDate}`;
+  return `${item.startDate} → ${item.endDate}`;
 }
 
+/**
+ * One role, laid out as a log entry: the date range holds its own column so
+ * the timeline reads down the left edge, with the record beside it.
+ */
 export function ExperienceItem({ item }: { item: Experience }) {
   return (
-    <SpotlightCard as="article" className="p-5 sm:p-8">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h3 className="text-lg font-semibold">
-            {item.role}
-            <span className="text-muted-foreground"> · {item.company}</span>
-          </h3>
-          <p className="label mt-2">
-            {[item.employmentType, item.location].filter(Boolean).join(' · ')}
+    <article className="grid gap-3 border-b border-[var(--line)] py-6 md:grid-cols-[11rem_1fr] md:gap-8">
+      <div className="md:pt-0.5">
+        <p className="tnum text-xs text-[var(--muted-foreground)]">
+          {formatRange(item)}
+        </p>
+        {item.current ? (
+          <p className="mt-1.5 flex items-center gap-1.5 text-xs text-[var(--accent)]">
+            <span className="size-1.5 bg-[var(--accent)]" />
+            active
           </p>
-        </div>
-
-        <div className="flex flex-col items-start gap-2 sm:items-end">
-          <span className="tnum font-mono text-xs text-muted-foreground">
-            {formatRange(item)}
-          </span>
-          {item.current ? (
-            <span className="pill text-[0.6875rem]">
-              <span className="relative flex size-1.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-[var(--cyan)] opacity-75" />
-                <span className="relative inline-flex size-1.5 rounded-full bg-[var(--cyan)]" />
-              </span>
-              Current
-            </span>
-          ) : null}
-        </div>
+        ) : null}
       </div>
 
-      {item.bullets.length > 0 ? (
-        <ul className="mt-6 space-y-3">
-          {item.bullets.map((bullet, index) => (
-            <li
-              key={index}
-              className="relative pl-6 text-sm leading-relaxed text-muted-foreground"
-            >
-              <span
-                className="absolute left-0 top-[0.55em] size-1.5 rounded-full"
-                style={{
-                  background:
-                    'linear-gradient(135deg, var(--violet), var(--cyan))',
-                }}
-              />
-              {bullet}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-    </SpotlightCard>
+      <div className="min-w-0">
+        <h3 className="text-sm font-medium sm:text-base">
+          {item.role}
+          <span className="text-[var(--muted-foreground)]"> @ {item.company}</span>
+        </h3>
+        {[item.employmentType, item.location].filter(Boolean).length > 0 ? (
+          <p className="key mt-1.5">
+            {[item.employmentType, item.location].filter(Boolean).join(' · ')}
+          </p>
+        ) : null}
+
+        {item.bullets.length > 0 ? (
+          <ul className="mt-4 space-y-2">
+            {item.bullets.map((bullet, index) => (
+              <li
+                key={index}
+                className="prose-body grid grid-cols-[1rem_1fr] text-sm text-[var(--muted-foreground)]"
+              >
+                <span className="font-mono text-[var(--line-strong)]">–</span>
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    </article>
   );
 }
