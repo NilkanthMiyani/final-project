@@ -36,8 +36,12 @@ async function main(): Promise<void> {
     throw new Error('MONGODB_URI is not set. Add it to .env.local first.');
   }
 
-  await mongoose.connect(uri, { dbName: 'portfolio' });
-  console.log('Connected to portfolio database.');
+  // Must match the app's MONGODB_DB. Hardcoding 'portfolio' here would point
+  // every copy of this repo at the same database — and `--reset` would then
+  // wipe another site's content.
+  const dbName = process.env.MONGODB_DB || 'portfolio';
+  await mongoose.connect(uri, { dbName });
+  console.log(`Connected to the ${dbName} database.`);
 
   if (reset) {
     await Promise.all([
