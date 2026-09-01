@@ -21,7 +21,6 @@ export const docsConfig = {
         { title: 'Experience', href: '/experience', items: [] },
         { title: 'Education', href: '/education', items: [] },
         { title: 'Contact', href: '/contact', items: [] },
-        { title: 'Stats', href: '/stats', items: [] },
       ],
     },
   ],

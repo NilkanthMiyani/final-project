@@ -10,8 +10,12 @@ import {
 } from 'react';
 import { toast } from 'sonner';
 
+import { ChevronDown, ChevronUp, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
+
 import type { ActionResult, FormAction } from '@/app/admin/actions';
 import { Field, type FieldDef } from '@/components/admin/fields';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 type Item = Record<string, unknown> & { id: string };
@@ -98,21 +102,29 @@ export function EntityEditor({
   return (
     <div>
       <div className="mb-6 flex">
-        <button
+        <Button
           type="button"
+          variant={creating ? 'ghost' : 'outline'}
           onClick={() => {
             setCreating((value) => !value);
             setOpenId(null);
           }}
-          className="btn w-full justify-center sm:ml-auto sm:w-auto"
+          className="w-full rounded-md sm:ml-auto sm:w-auto"
         >
-          {creating ? 'Cancel' : `New ${noun}`}
-        </button>
+          {creating ? (
+            'Cancel'
+          ) : (
+            <>
+              <Plus className="size-3.5" />
+              New {noun}
+            </>
+          )}
+        </Button>
       </div>
 
       {creating ? (
-        <div className="mb-8 rounded-sm border border-border p-5 sm:p-6">
-          <p className="eyebrow">New {noun}</p>
+        <div className="mb-8 rounded-xl border border-border/40 p-5 sm:p-6">
+          <p className="mb-1 text-sm font-semibold tracking-tight">New {noun}</p>
           <div className="mt-5">
             <EntityForm
               action={actions.save}
@@ -162,7 +174,11 @@ export function EntityEditor({
                 >
                   <p className="flex items-baseline gap-2 text-sm">
                     <span className="text-muted-foreground">
-                      {open ? '–' : '+'}
+                      {open ? (
+                        <ChevronUp className="size-3.5" />
+                      ) : (
+                        <ChevronDown className="size-3.5" />
+                      )}
                     </span>
                     <span
                       className={cn(
@@ -173,7 +189,9 @@ export function EntityEditor({
                       {String(item[titleKey] ?? 'Untitled')}
                     </span>
                     {isDraft ? (
-                      <span className="shrink-0 text-xs text-muted-foreground">Draft</span>
+                      <Badge variant="outline" className="shrink-0 text-xs font-normal">
+                        Draft
+                      </Badge>
                     ) : null}
                   </p>
                   {subtitleKey && item[subtitleKey] ? (
@@ -189,14 +207,14 @@ export function EntityEditor({
                     disabled={busy || index === 0}
                     onClick={() => move(id, 'up')}
                   >
-                    ↑
+                    <ChevronUp className="size-4" />
                   </IconButton>
                   <IconButton
                     label="Move down"
                     disabled={busy || index === ordered.length - 1}
                     onClick={() => move(id, 'down')}
                   >
-                    ↓
+                    <ChevronDown className="size-4" />
                   </IconButton>
 
                   {actions.toggle ? (
@@ -208,7 +226,11 @@ export function EntityEditor({
                         if (toggle) run(id, () => toggle(id));
                       }}
                     >
-                      {isDraft ? 'Off' : 'On'}
+                      {isDraft ? (
+                        <EyeOff className="size-4" />
+                      ) : (
+                        <Eye className="size-4" />
+                      )}
                     </IconButton>
                   ) : null}
 
@@ -224,7 +246,7 @@ export function EntityEditor({
                       }
                     }}
                   >
-                    ✕
+                    <Trash2 className="size-4" />
                   </IconButton>
                 </div>
               </div>
@@ -301,20 +323,21 @@ function EntityForm({
       </div>
 
       <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:gap-4">
-        <button
+        <Button
           type="submit"
           disabled={pending}
-          className="btn w-full justify-center sm:w-auto"
+          className="w-full rounded-md sm:w-auto"
         >
           {pending ? 'Saving…' : 'Save'}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="ghost"
           onClick={onCancel}
-          className="w-full py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:w-auto sm:py-0"
+          className="w-full rounded-md sm:w-auto"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );
@@ -334,8 +357,10 @@ function IconButton({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
+      size="icon"
       title={label}
       aria-label={label}
       onClick={onClick}
@@ -343,14 +368,12 @@ function IconButton({
       className={cn(
         // 40px on touch screens keeps these above the minimum tap target;
         // desktop can afford the tighter 32px.
-        'flex size-10 items-center justify-center text-xs text-muted-foreground transition-colors sm:size-8',
+        'size-10 rounded-full text-muted-foreground sm:size-8',
         'disabled:opacity-25',
-        destructive
-          ? 'hover:text-destructive'
-          : 'hover:text-foreground'
+        destructive ? 'hover:text-destructive' : 'hover:text-foreground'
       )}
     >
       {children}
-    </button>
+    </Button>
   );
 }

@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 import type { ActionResult, FormAction } from '@/app/admin/actions';
+import { Button } from '@/components/ui/button';
 
 /**
  * Binds a server action to a form natively, so the fields post in React's own
@@ -44,13 +45,9 @@ export function AdminForm({
   return (
     <form ref={formRef} action={formAction}>
       {children}
-      <button
-        type="submit"
-        disabled={pending}
-        className="btn mt-10 w-full justify-center sm:w-auto"
-      >
+      <Button type="submit" disabled={pending} className="mt-8 rounded-md">
         {pending ? 'Saving…' : submitLabel}
-      </button>
+      </Button>
     </form>
   );
 }

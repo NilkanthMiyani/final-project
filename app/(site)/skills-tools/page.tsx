@@ -31,11 +31,6 @@ const SkillsToolsPage = async () => {
         </PageHeaderDescription>
       </PageHeader>
 
-      {/*
-        Grouped by category rather than one flat wall of badges: the categories
-        already exist in the database, and they turn a list into a claim about
-        what the work actually covers.
-      */}
       <div className="my-6 flex flex-col gap-6">
         {stack.map((group) => (
           <div key={group.category}>

@@ -19,12 +19,12 @@ export default async function AdminResumePage() {
 
       {profile.resumeUrl ? (
         <div className="mb-10">
-          <p className="eyebrow">Currently live</p>
+          <p className="text-sm font-semibold tracking-tight">Currently live</p>
           <Link
             href={profile.resumeUrl}
             target="_blank"
             rel="noreferrer"
-            className="link mt-2 inline-block break-all text-sm"
+            className="mt-2 inline-block break-all text-sm text-primary underline-offset-4 hover:underline"
           >
             {profile.resumeUrl}
           </Link>
@@ -32,7 +32,7 @@ export default async function AdminResumePage() {
       ) : null}
 
       <section className="border-t border-border pt-6">
-        <p className="eyebrow mb-5">Upload a new PDF</p>
+        <p className="mb-5 text-sm font-semibold tracking-tight">Upload a new PDF</p>
 
         {blobConfigured ? (
           <AdminForm action={uploadResume} submitLabel="Upload" resetOnSuccess>
@@ -58,7 +58,7 @@ export default async function AdminResumePage() {
       </section>
 
       <section className="mt-12 border-t border-border pt-6">
-        <p className="eyebrow mb-5">Or point at a URL</p>
+        <p className="mb-5 text-sm font-semibold tracking-tight">Or point at a URL</p>
         <AdminForm action={setResumeUrl} submitLabel="Save link">
           <div className="max-w-xl">
             <Field

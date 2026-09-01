@@ -1,47 +1,36 @@
-import Link from 'next/link';
-
-import { AdminNav } from '@/components/admin/admin-nav';
-import { ModeSwitcher } from '@/components/mode-switcher';
-import { siteConfig } from '@/config/site';
+import { AdminHeader } from '@/components/admin/admin-header';
+import { SideNav } from '@/components/side-nav';
+import { adminDocsConfig } from '@/config/admin-docs';
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * Same docs shell as the public site — sticky header, sticky section nav,
+ * dashed grid frame — so editing content looks like the place it will appear.
+ */
 export default function AdminPanelLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-svh">
-      {/* Solid bar — the old header used backdrop-filter over a scrolling
-          document, which repaints a blurred layer on every frame. */}
-      <header className="border-b border-border">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-6 sm:px-8">
-          <p className="min-w-0 truncate text-sm font-medium">
-            Admin
-            <span className="ml-2 font-normal text-muted-foreground">
-              {siteConfig.domain}
-            </span>
-          </p>
-          <div className="flex shrink-0 items-center gap-3">
-            <Link
-              href={siteConfig.url}
-              target="_blank"
-              rel="noreferrer"
-              className="link text-sm"
-            >
-              View site
-            </Link>
-            <ModeSwitcher />
+    <div className="relative flex min-h-svh flex-col bg-background">
+      <div data-wrapper="" className="border-grid flex flex-1 flex-col">
+        <AdminHeader />
+        <main className="flex flex-1 flex-col">
+          <div className="container-wrapper">
+            <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
+              <aside className="border-grid fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 border-r md:sticky md:block">
+                <div className="no-scrollbar h-full overflow-auto py-6 pr-4 lg:py-8">
+                  <SideNav config={adminDocsConfig} />
+                </div>
+              </aside>
+              <div className="flex flex-1 flex-col py-6 pr-4 lg:py-8">
+                {children}
+              </div>
+            </div>
           </div>
-        </div>
-      </header>
-
-      <div className="mx-auto grid max-w-5xl gap-10 px-6 py-10 sm:px-8 sm:py-14 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-16">
-        <aside className="md:sticky md:top-8 md:self-start">
-          <AdminNav />
-        </aside>
-        <div className="min-w-0">{children}</div>
+        </main>
       </div>
     </div>
   );

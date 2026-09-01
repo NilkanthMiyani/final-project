@@ -109,7 +109,7 @@ function FieldGroup({
 }) {
   return (
     <fieldset className="mb-12 border-t border-border pt-8">
-      <legend className="eyebrow mb-6">{label}</legend>
+      <legend className="mb-6 text-sm font-semibold tracking-tight">{label}</legend>
       <div className="grid gap-5 sm:grid-cols-2">
         {fields.map((field) => (
           <Field key={field.name} field={field} value={values[field.name]} />

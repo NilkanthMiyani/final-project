@@ -1,3 +1,10 @@
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from '@/components/page-header';
+
+/** Thin wrapper so admin pages use the same header component as the site. */
 export function PageTitle({
   title,
   description,
@@ -6,11 +13,9 @@ export function PageTitle({
   description: string;
 }) {
   return (
-    <div className="mb-10">
-      <h1 className="text-2xl font-medium">{title}</h1>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-        {description}
-      </p>
-    </div>
+    <PageHeader className="mb-8">
+      <PageHeaderHeading>{title}</PageHeaderHeading>
+      <PageHeaderDescription>{description}</PageHeaderDescription>
+    </PageHeader>
   );
 }

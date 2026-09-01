@@ -3,6 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
 export default function LoginPage() {
   const router = useRouter();
   const [password, setPassword] = useState('');
@@ -41,37 +45,38 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-svh items-center justify-center px-6">
       <div className="w-full max-w-sm">
-        <p className="eyebrow">Restricted</p>
-        <h1 className="mt-3 text-2xl font-medium">Admin</h1>
+        <p className="text-sm text-muted-foreground">Restricted</p>
+        <h1 className="mt-3 text-2xl font-bold tracking-tighter sm:text-3xl">
+          Admin
+        </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           Enter the admin password to manage portfolio content.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-10">
-          <label className="block">
-            <span className="block text-xs text-muted-foreground">Password</span>
-            <input
+          <Label className="flex flex-col items-start gap-2">
+            <span>Password</span>
+            <Input
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
               autoFocus
               autoComplete="current-password"
-              className="field mt-1"
             />
-          </label>
+          </Label>
 
           {error ? (
             <p className="mt-4 text-xs text-destructive">{error}</p>
           ) : null}
 
-          <button
+          <Button
             type="submit"
             disabled={pending || !password}
-            className="btn mt-8 w-full justify-center disabled:opacity-50"
+            className="mt-8 w-full rounded-md"
           >
             {pending ? 'Checking…' : 'Unlock'}
-          </button>
+          </Button>
         </form>
       </div>
     </div>
