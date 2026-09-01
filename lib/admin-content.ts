@@ -212,3 +212,20 @@ export async function adminGetSummary(): Promise<AdminSummary> {
     ].filter(Boolean),
   };
 }
+
+/**
+ * Just the header label.
+ *
+ * The panel layout renders on every admin navigation, and pulling the whole
+ * profile document to read one string added a second Mongo round trip to every
+ * click on top of the page's own queries.
+ */
+export async function adminGetBrand(): Promise<string> {
+  await connectToDatabase();
+  const doc: any = await ProfileModel.findOne(
+    { key: 'primary' },
+    { name: 1, brandName: 1 }
+  ).lean();
+
+  return str(doc?.brandName) || str(doc?.name);
+}

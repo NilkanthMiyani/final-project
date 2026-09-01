@@ -1,5 +1,6 @@
 'use client';
 
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -30,14 +31,19 @@ export default function LoginPage() {
       if (!response.ok) {
         setError(result.error ?? 'Login failed.');
         setPassword('');
+        setPending(false);
         return;
       }
 
       router.replace('/');
       router.refresh();
+      // Deliberately no `setPending(false)` here. The navigation that follows
+      // takes about a second — the panel is force-dynamic and hits Mongo — and
+      // clearing the flag in a `finally` put the button back to "Unlock" the
+      // instant the fetch resolved, leaving that second looking like a failed
+      // click. The pending state now holds until this page unmounts.
     } catch {
       setError('Network error. Try again.');
-    } finally {
       setPending(false);
     }
   }
@@ -75,7 +81,14 @@ export default function LoginPage() {
             disabled={pending || !password}
             className="mt-8 w-full rounded-md"
           >
-            {pending ? 'Checking…' : 'Unlock'}
+            {pending ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Signing in…
+              </>
+            ) : (
+              'Unlock'
+            )}
           </Button>
         </form>
       </div>

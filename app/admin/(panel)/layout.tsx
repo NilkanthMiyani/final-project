@@ -1,7 +1,7 @@
 import { AdminHeader } from '@/components/admin/admin-header';
-import { SideNav } from '@/components/side-nav';
+import { AdminSideNav } from '@/components/admin/admin-side-nav';
 import { adminDocsConfig } from '@/config/admin-docs';
-import { adminGetProfile } from '@/lib/admin-content';
+import { adminGetBrand } from '@/lib/admin-content';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,8 +14,7 @@ export default async function AdminPanelLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const profile = await adminGetProfile();
-  const brand = profile.brandName || profile.name;
+  const brand = await adminGetBrand();
 
   return (
     <div className="relative flex min-h-svh flex-col bg-background">
@@ -26,7 +25,7 @@ export default async function AdminPanelLayout({
             <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
               <aside className="border-grid fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 border-r md:sticky md:block">
                 <div className="no-scrollbar h-full overflow-auto py-6 pr-4 lg:py-8">
-                  <SideNav config={adminDocsConfig} />
+                  <AdminSideNav config={adminDocsConfig} />
                 </div>
               </aside>
               <div className="flex flex-1 flex-col py-6 pr-4 lg:py-8">
