@@ -9,7 +9,6 @@ import {
 } from '@/components/page-header';
 import Pager from '@/components/pager';
 import { Button } from '@/components/ui/button';
-import { siteConfig } from '@/config/site';
 import { getProfile } from '@/lib/content';
 
 const IntroductionPage = async () => {
@@ -30,13 +29,13 @@ const IntroductionPage = async () => {
         ))}
         <PageActions>
           <Button asChild size="sm" className="rounded-md">
-            <Link href={profile.resumeUrl || siteConfig.links.resume} target="_blank">
+            <Link href={profile.resumeUrl} target="_blank">
               Get Resume
               <ExternalLink className="size-3" strokeWidth={2} />
             </Link>
           </Button>
           <Button asChild size="sm" variant="ghost" className="rounded-md">
-            <Link href={profile.email ? `mailto:${profile.email}` : siteConfig.links.email}>
+            <Link href={`mailto:${profile.email}`}>
               <Mail className="size-4" />
               Send Mail
             </Link>

@@ -1,5 +1,6 @@
 import { unstable_cache } from 'next/cache';
 
+import { siteConfig } from '@/config/site';
 import connectToDatabase from '@/lib/database';
 import CertificationModel from '@/model/certification.model';
 import EducationModel from '@/model/education.model';
@@ -17,28 +18,33 @@ import {
   type Skill,
 } from '@/types/content';
 
-/** Shown before the database is seeded so the site never renders empty. */
+/**
+ * Shown before the database is seeded so the site never renders empty.
+ *
+ * Derived from siteConfig rather than hardcoded: this is what a brand-new
+ * deployment renders on its very first request, so baking one person's name and
+ * links in here would put them on someone else's site.
+ */
 export const FALLBACK_PROFILE: Profile = {
-  name: 'Nilkanth Miyani',
-  brandName: 'Nilkanth Miyani',
-  role: 'DevOps Engineer',
-  headline: 'I cut client hosting spend by 60%.',
-  subheadline:
-    'Multi-cloud infrastructure, GitOps delivery, and the pipelines underneath.',
+  name: siteConfig.name,
+  brandName: siteConfig.name,
+  role: '',
+  headline: '',
+  subheadline: '',
   bio: [],
-  location: 'Surat, Gujarat',
-  email: 'miyaninilkanth2@gmail.com',
+  location: '',
+  email: siteConfig.contact.email,
   phone: '',
   availability: '',
   socials: {
-    github: 'https://github.com/NilkanthMiyani',
-    linkedin: 'https://www.linkedin.com/in/nilkanthmiyani/',
-    twitter: 'https://x.com/nilkanthmiyani',
-    telegram: 'https://t.me/nilkanthmiyani',
+    github: siteConfig.contact.github,
+    linkedin: siteConfig.contact.linkedin,
+    twitter: '',
+    telegram: '',
   },
   highlights: [],
-  resumeUrl: '/resumenilkanth.pdf',
-  seoDescription: 'Portfolio of Nilkanth Miyani, DevOps & Cloud Engineer.',
+  resumeUrl: '',
+  seoDescription: siteConfig.description,
   seoKeywords: [],
 };
 

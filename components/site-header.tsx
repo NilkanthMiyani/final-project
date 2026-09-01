@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import { FiMusic } from "react-icons/fi";
 
-import { siteConfig } from "@/config/site";
 import { Button } from "./ui/button";
 import { ModeSwitcher } from "./mode-switcher";
 import { MainNav } from "./main-nav";
@@ -12,12 +11,21 @@ import { MobileNav } from "./mobile-nav";
 import { CommandMenu } from "./command-menu";
 import { Icons } from "./icons";
 
+export type Identity = {
+  /** Header label, admin-editable, falling back to the profile name. */
+  brand: string;
+  github: string;
+  linkedin: string;
+  resume: string;
+};
+
 /**
- * `brand` is the admin-editable header label, resolved by the server layout.
- * It is threaded down as a prop rather than read from siteConfig so the value
- * stays editable without a redeploy.
+ * Identity is resolved from the database by the server layout and threaded down
+ * as props rather than read from siteConfig: two sites run from this one repo,
+ * and each must show its own links without a code change or a redeploy.
  */
-export function SiteHeader({ brand }: { brand: string }) {
+export function SiteHeader({ identity }: { identity: Identity }) {
+  const { brand, github, linkedin, resume } = identity;
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(new Date());
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -55,7 +63,7 @@ export function SiteHeader({ brand }: { brand: string }) {
       <div className="container-wrapper">
         <div className="container flex h-13 items-center">
           {/* Logo/Name - Left */}
-          <MainNav brand={brand} />
+          <MainNav brand={brand} linkedin={linkedin} resume={resume} />
 
           {/* Mobile Nav */}
           <MobileNav brand={brand} toggleMusic={toggleMusic} playing={playing} />
@@ -115,7 +123,7 @@ export function SiteHeader({ brand }: { brand: string }) {
                 asChild
               >
                 <Link 
-                  href={siteConfig.links.github} 
+                  href={github} 
                   target="_blank" 
                   rel="noreferrer"
                 >

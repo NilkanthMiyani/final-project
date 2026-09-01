@@ -33,7 +33,11 @@ const connectToDatabase = async (): Promise<typeof mongoose> => {
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(uri, {
-      dbName: 'portfolio',
+      // Both sites share this cluster and this connection user, so the
+      // database name is the only thing separating their content. Without it
+      // they would both write the same `profile` singleton and the two
+      // portfolios would render identically.
+      dbName: process.env.MONGODB_DB || 'portfolio',
       bufferCommands: false,
     });
   }

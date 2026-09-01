@@ -13,6 +13,7 @@ import MessageModel from '@/model/message.model';
 import ProfileModel from '@/model/profile.model';
 import ProjectModel from '@/model/project.model';
 import SkillModel from '@/model/skill.model';
+import { STORAGE_NAMESPACE } from '@/config/site';
 import { TAGS } from '@/types/content';
 
 export type ActionResult = { ok: boolean; message: string };
@@ -478,9 +479,23 @@ export async function deleteMessage(id: string): Promise<ActionResult> {
 
 const MAX_RESUME_BYTES = 5 * 1024 * 1024;
 
-/** True for URLs this app uploaded to its own Vercel Blob store. */
+/**
+ * True only for blobs this site uploaded.
+ *
+ * The Blob store is shared with the other portfolio running from this repo, and
+ * a blob token grants delete on the whole store — there is no path scoping. So
+ * the namespace check is the only thing stopping one site's upload from
+ * deleting the other's résumé. Match the prefix, not just the host.
+ */
 function isManagedBlob(url: string): boolean {
-  return /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\//.test(url);
+  if (!/^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\//.test(url)) {
+    return false;
+  }
+  try {
+    return new URL(url).pathname.startsWith(`/${STORAGE_NAMESPACE}/resume/`);
+  } catch {
+    return false;
+  }
 }
 
 export async function uploadResume(
@@ -519,7 +534,7 @@ export async function uploadResume(
 
     // `addRandomSuffix` sidesteps CDN caching of a replaced object at a fixed
     // path — a resume uploaded to the same key would keep serving the old PDF.
-    const blob = await put(`resume/${file.name}`, file, {
+    const blob = await put(`${STORAGE_NAMESPACE}/resume/${file.name}`, file, {
       access: 'public',
       addRandomSuffix: true,
       contentType: 'application/pdf',

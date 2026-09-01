@@ -1,12 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { SESSION_COOKIE, verifySession } from '@/lib/auth';
-import { MAINTENANCE_HTML } from '@/lib/maintenance';
+import { siteConfig } from '@/config/site';
+import { maintenanceHtml } from '@/lib/maintenance';
 
 /**
  * Routes the two hostnames of a single deployment:
  *
- *   admin.nilkanthprojects.site/*  ->  /admin/*   (session-gated)
- *   nilkanthprojects.site/admin*   ->  404        (admin is subdomain-only)
+ *   admin.<domain>/*  ->  /admin/*   (session-gated)
+ *   <domain>/admin*   ->  404        (admin is subdomain-only)
+ *
+ * Host matching is by the `admin.` prefix rather than a literal domain, so this
+ * works unchanged for every site running from this repo.
  *
  * `admin.localhost:3000` resolves in browsers without an /etc/hosts entry, so
  * the same split works in development.
@@ -35,14 +39,24 @@ export async function middleware(request: NextRequest) {
     const isPreview = host.endsWith('.vercel.app');
 
     if (process.env.MAINTENANCE_MODE === '1' && !isPreview) {
-      return new NextResponse(MAINTENANCE_HTML, {
-        status: 503,
-        headers: {
-          'content-type': 'text/html; charset=utf-8',
-          'retry-after': '86400',
-          'cache-control': 'no-store, must-revalidate',
-        },
-      });
+      // From siteConfig, not the database: middleware runs on the Edge
+      // runtime, where Mongoose cannot. Each deployment sets its own values.
+      return new NextResponse(
+        maintenanceHtml({
+          name: siteConfig.name,
+          email: siteConfig.contact.email,
+          linkedin: siteConfig.contact.linkedin,
+          github: siteConfig.contact.github,
+        }),
+        {
+          status: 503,
+          headers: {
+            'content-type': 'text/html; charset=utf-8',
+            'retry-after': '86400',
+            'cache-control': 'no-store, must-revalidate',
+          },
+        }
+      );
     }
 
     // Keep the admin surface off the public hostname entirely.

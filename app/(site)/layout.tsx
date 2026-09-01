@@ -54,14 +54,22 @@ export default async function SiteLayout({
   void setViewsServerAction();
 
   const profile = await getProfile();
-  const brand = profile.brandName || profile.name;
+
+  // Everything the chrome needs to identify this site, resolved once here so
+  // the client components never reach for a build-time constant.
+  const identity = {
+    brand: profile.brandName || profile.name,
+    github: profile.socials.github,
+    linkedin: profile.socials.linkedin,
+    resume: profile.resumeUrl,
+  };
 
   return (
     <LenisProvider>
       <div vaul-drawer-wrapper="">
         <div className="relative flex min-h-svh flex-col bg-background">
           <div data-wrapper="" className="border-grid flex flex-1 flex-col">
-            <SiteHeader brand={brand} />
+            <SiteHeader identity={identity} />
             <main className="flex flex-1 flex-col">
               <div className="container-wrapper">
                 <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">

@@ -3,12 +3,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { ExternalLink } from "lucide-react";
 import { Icons } from "./icons";
 
-export function MainNav({ brand }: { brand: string }) {
+export function MainNav({
+  brand,
+  linkedin,
+  resume,
+}: {
+  brand: string;
+  linkedin: string;
+  resume: string;
+}) {
   const pathname = usePathname();
 
   return (
@@ -34,7 +41,7 @@ export function MainNav({ brand }: { brand: string }) {
 
         <Link
           target="_blank"
-          href={siteConfig.links.linkedin}
+          href={linkedin}
           className="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
         >
           LinkedIn
@@ -42,7 +49,7 @@ export function MainNav({ brand }: { brand: string }) {
         </Link>
 
         <Link
-          href={siteConfig.links.resume}
+          href={resume}
           target="_blank"
           className="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
         >

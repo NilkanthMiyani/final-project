@@ -5,11 +5,22 @@
  * Node route handlers. Password hashing lives in `lib/auth-node.ts` because
  * scrypt is Node-only, and it is only ever needed on the login route.
  */
+import { STORAGE_NAMESPACE } from '@/config/site';
+
 
 export const SESSION_COOKIE = 'np_admin_session';
 export const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
-type SessionPayload = { exp: number };
+/**
+ * `site` binds a token to the deployment that issued it.
+ *
+ * Two portfolios run from this repo on shared infrastructure. Without this
+ * claim a session is nothing but a signed expiry, so a token minted on one
+ * admin would verify on the other — the hostname split is routing, not
+ * authorization, and a cookie can simply be pasted across. With it, the two
+ * admins reject each other's sessions even if they share a secret.
+ */
+type SessionPayload = { exp: number; site: string };
 
 const encoder = new TextEncoder();
 
@@ -52,6 +63,7 @@ async function getKey(): Promise<CryptoKey> {
 export async function signSession(): Promise<string> {
   const payload: SessionPayload = {
     exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE,
+    site: STORAGE_NAMESPACE,
   };
   const body = base64UrlEncode(encoder.encode(JSON.stringify(payload)));
   const signature = await crypto.subtle.sign(
@@ -86,6 +98,8 @@ export async function verifySession(
     const payload = JSON.parse(
       new TextDecoder().decode(base64UrlDecode(body))
     ) as SessionPayload;
+
+    if (payload.site !== STORAGE_NAMESPACE) return false;
 
     return (
       typeof payload.exp === 'number' && payload.exp > Math.floor(Date.now() / 1000)

@@ -9,13 +9,46 @@
  * Colours mirror the minimal system in globals.css, resolved to hex so the page
  * has no dependency on the app's CSS being built or loaded.
  */
-export const MAINTENANCE_HTML = `<!doctype html>
+export type MaintenanceIdentity = {
+  name: string;
+  email: string;
+  linkedin: string;
+  github: string;
+};
+
+const escapeHtml = (value: string): string =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+/**
+ * Built per request rather than exported as a constant: two sites run from this
+ * repo, and each one's holding page must carry its own contact details. A
+ * hardcoded page would have advertised the wrong person during an outage.
+ */
+export function maintenanceHtml(identity: MaintenanceIdentity): string {
+  const name = escapeHtml(identity.name);
+  const email = escapeHtml(identity.email);
+  const linkedin = escapeHtml(identity.linkedin);
+  const github = escapeHtml(identity.github);
+
+  const links = [
+    email && `<a href="mailto:${email}">${email}</a>`,
+    linkedin && `<a href="${linkedin}" rel="noreferrer">LinkedIn</a>`,
+    github && `<a href="${github}" rel="noreferrer">GitHub</a>`,
+  ]
+    .filter(Boolean)
+    .join('\n      ');
+
+  return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Back soon — Nilkanth Miyani</title>
+<title>Back soon — ${name}</title>
 <style>
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
@@ -63,10 +96,9 @@ export const MAINTENANCE_HTML = `<!doctype html>
     </p>
     <hr>
     <div class="links">
-      <a href="mailto:miyaninilkanth2@gmail.com">miyaninilkanth2@gmail.com</a>
-      <a href="https://www.linkedin.com/in/nilkanthmiyani/" rel="noreferrer">LinkedIn</a>
-      <a href="https://github.com/NilkanthMiyani" rel="noreferrer">GitHub</a>
+      ${links}
     </div>
   </main>
 </body>
 </html>`;
+}

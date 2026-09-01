@@ -1,40 +1,60 @@
 /**
- * Build-time constants only. Everything that changes — name, headline, socials,
- * resume link — lives in MongoDB and is read through `lib/content.ts`.
+ * Build-time constants for one deployment.
+ *
+ * Two sites run from this same repository and Vercel account, so nothing here
+ * may be hardcoded to a person — each value falls back to this site's own
+ * settings but is overridable per Vercel project via the environment.
+ *
+ * Anything that changes often — headline, bio, socials, résumé link — lives in
+ * MongoDB and is read through `lib/content.ts` instead.
  */
+const env = {
+  name: process.env.NEXT_PUBLIC_SITE_NAME,
+  domain: process.env.NEXT_PUBLIC_SITE_DOMAIN,
+  url: process.env.NEXT_PUBLIC_SITE_URL,
+  description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION,
+  githubUsername: process.env.NEXT_PUBLIC_GITHUB_USERNAME,
+};
+
+const domain = env.domain || 'nilkanthprojects.site';
+
 export const siteConfig = {
-  name: 'Nilkanth Miyani',
-  domain: 'nilkanthprojects.site',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://nilkanthprojects.site',
+  name: env.name || 'Nilkanth Miyani',
+  domain,
+  url: env.url || `https://${domain}`,
   description:
-    'Portfolio of Nilkanth Miyani, DevOps & Cloud Engineer working across AWS, GCP, Azure and Hetzner.',
-  keywords: [
-    'Nilkanth Miyani',
-    'Nilkanth Miyani Portfolio',
-    'DevOps Engineer',
-    'Cloud Engineer',
-    'Kubernetes',
-    'GitOps',
-    'Terraform',
-    'AWS',
-    'Azure',
-    'GCP',
-    'CI/CD',
-    'Platform Engineering',
-  ],
+    env.description ||
+    'DevOps Engineer working across AWS, GCP, Azure and Hetzner on Kubernetes, GitOps delivery, CI/CD and infrastructure cost optimization.',
   links: {
-    github: 'https://github.com/NilkanthMiyani',
-    githubProfile: 'https://github.com/NilkanthMiyani',
-    githubUsername: 'NilkanthMiyani',
-    linkedin: 'https://www.linkedin.com/in/nilkanthmiyani/',
-    twitter: 'https://x.com/nilkanthmiyani',
-    telegram: 'https://t.me/nilkanthmiyani',
-    email: 'mailto:miyaninilkanth2@gmail.com',
-    resume: '/resumenilkanth.pdf',
+    githubUsername: env.githubUsername || 'NilkanthMiyani',
+  },
+
+  /**
+   * Contact details for the maintenance page only. Everywhere else these come
+   * from the profile in MongoDB — but the holding page is served from
+   * middleware on the Edge runtime, where Mongoose cannot run.
+   */
+  contact: {
+    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'miyaninilkanth2@gmail.com',
+    linkedin:
+      process.env.NEXT_PUBLIC_LINKEDIN_URL ||
+      'https://www.linkedin.com/in/nilkanthmiyani/',
+    github:
+      process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/NilkanthMiyani',
   },
 };
 
 export type SiteConfig = typeof siteConfig;
+
+/**
+ * Per-site prefix for anything written to shared infrastructure.
+ *
+ * Both deployments share one Vercel Blob store, and a blob token cannot be
+ * scoped to a path — so isolation has to be enforced by this app instead.
+ * Every upload goes under this prefix, and deletes are refused outside it, so
+ * one site can never remove the other's files.
+ */
+export const STORAGE_NAMESPACE = domain.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
 
 export const navItems = [
   { title: 'Home', href: '/' },
