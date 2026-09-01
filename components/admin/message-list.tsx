@@ -22,19 +22,19 @@ export function MessageList({ messages }: { messages: Message[] }) {
 
   if (messages.length === 0) {
     return (
-      <p className="border-t border-[var(--line)] py-10 text-sm text-[var(--muted)]">
+      <p className="border-t border-border py-10 text-sm text-muted-foreground">
         No messages yet.
       </p>
     );
   }
 
   return (
-    <div className="border-t border-[var(--line)]">
+    <div className="border-t border-border">
       {messages.map((message) => {
         const open = openId === message.id;
 
         return (
-          <div key={message.id} className="border-b border-[var(--line)]">
+          <div key={message.id} className="border-b border-border">
             <div className="flex items-center gap-3 py-4">
               <button
                 type="button"
@@ -55,16 +55,16 @@ export function MessageList({ messages }: { messages: Message[] }) {
                   </span>
                   {/* Full width on phones so the address wraps instead of
                       colliding with the name. */}
-                  <span className="w-full truncate text-xs text-[var(--muted)] sm:w-auto">
+                  <span className="w-full truncate text-xs text-muted-foreground sm:w-auto">
                     {message.email}
                   </span>
                 </p>
-                <p className="mt-1 truncate text-xs text-[var(--muted)]">
+                <p className="mt-1 truncate text-xs text-muted-foreground">
                   {message.message}
                 </p>
               </button>
 
-              <p className="tnum hidden shrink-0 text-[0.6875rem] text-[var(--muted)] sm:block">
+              <p className="tnum hidden shrink-0 text-[0.6875rem] text-muted-foreground sm:block">
                 {message.createdAt
                   ? new Date(message.createdAt).toLocaleDateString('en-GB', {
                       day: '2-digit',
@@ -80,7 +80,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
                   title={message.read ? 'Mark unread' : 'Mark read'}
                   disabled={pending}
                   onClick={() => run(() => setMessageRead(message.id, !message.read))}
-                  className="flex size-10 items-center justify-center rounded-full text-[var(--muted)] transition-colors hover:text-foreground disabled:opacity-25 sm:size-8"
+                  className="flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground disabled:opacity-25 sm:size-8"
                 >
                   {message.read ? (
                     <MailOpen className="size-4" />
@@ -97,7 +97,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
                       run(() => deleteMessage(message.id));
                     }
                   }}
-                  className="flex size-10 items-center justify-center rounded-full text-[var(--muted)] transition-colors hover:text-[var(--destructive)] disabled:opacity-25 sm:size-8"
+                  className="flex size-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-destructive disabled:opacity-25 sm:size-8"
                 >
                   <Trash2 className="size-4" />
                 </button>
@@ -106,7 +106,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
 
             {open ? (
               <div className="pb-8">
-                <p className="text-[var(--muted)] leading-relaxed whitespace-pre-wrap text-sm">
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap text-sm">
                   {message.message}
                 </p>
                 <a

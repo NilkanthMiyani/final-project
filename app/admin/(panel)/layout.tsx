@@ -15,11 +15,11 @@ export default function AdminPanelLayout({
     <div className="min-h-svh">
       {/* Solid bar — the old header used backdrop-filter over a scrolling
           document, which repaints a blurred layer on every frame. */}
-      <header className="border-b border-[var(--line)]">
+      <header className="border-b border-border">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-6 sm:px-8">
           <p className="min-w-0 truncate text-sm font-medium">
             Admin
-            <span className="ml-2 font-normal text-[var(--subtle)]">
+            <span className="ml-2 font-normal text-muted-foreground">
               {siteConfig.domain}
             </span>
           </p>

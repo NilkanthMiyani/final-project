@@ -11,32 +11,32 @@ export default function AdminPanelLoading() {
   return (
     <div aria-busy="true" aria-live="polite">
       <div className="mb-8">
-        <div className="h-6 w-40 bg-[var(--line)]" />
-        <div className="mt-3 h-3.5 w-72 max-w-full bg-[var(--line)]" />
+        <div className="h-6 w-40 bg-border" />
+        <div className="mt-3 h-3.5 w-72 max-w-full bg-border" />
       </div>
 
-      <div className="border-t border-[var(--line)]">
+      <div className="border-t border-border">
         {[0, 1, 2, 3, 4].map((row) => (
           <div
             key={row}
-            className="flex items-center justify-between gap-4 border-b border-[var(--line)] py-5"
+            className="flex items-center justify-between gap-4 border-b border-border py-5"
           >
             <div className="min-w-0 flex-1">
               <div
-                className="h-3.5 bg-[var(--line)]"
+                className="h-3.5 bg-border"
                 style={{ width: `${58 - row * 7}%` }}
               />
               <div
-                className="mt-2 h-3 bg-[var(--line)]"
+                className="mt-2 h-3 bg-border"
                 style={{ width: `${38 - row * 4}%` }}
               />
             </div>
-            <div className="h-3.5 w-16 shrink-0 bg-[var(--line)]" />
+            <div className="h-3.5 w-16 shrink-0 bg-border" />
           </div>
         ))}
       </div>
 
-      <p className="mt-6 text-xs text-[var(--subtle)]">Loading…</p>
+      <p className="mt-6 text-xs text-muted-foreground">Loading…</p>
     </div>
   );
 }

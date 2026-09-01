@@ -1,7 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { SectionHeading } from '@/components/section-heading';
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from '@/components/page-header';
+import Pager from '@/components/pager';
+import { Badge } from '@/components/ui/badge';
 import { getProfile } from '@/lib/content';
 
 import { ContactForm } from './contact-form';
@@ -11,54 +17,53 @@ export const metadata: Metadata = {
   description: 'Get in touch about infrastructure, platform, or DevOps work.',
 };
 
-export default async function ContactPage() {
+const ContactPage = async () => {
   const profile = await getProfile();
 
-  const direct = [
-    { label: 'Email', value: profile.email, href: `mailto:${profile.email}` },
-    { label: 'LinkedIn', value: 'in/nilkanthmiyani', href: profile.socials.linkedin },
-    { label: 'GitHub', value: 'NilkanthMiyani', href: profile.socials.github },
-  ].filter((item) => item.value && item.href);
+  const socials = [
+    { label: 'GitHub', href: profile.socials.github },
+    { label: 'LinkedIn', href: profile.socials.linkedin },
+    { label: 'X', href: profile.socials.twitter },
+    { label: 'Telegram', href: profile.socials.telegram },
+  ].filter((item) => item.href);
 
   return (
-    <div className="mx-auto max-w-2xl px-6 sm:px-8">
-      <header className="pt-32 pb-12 sm:pt-40 sm:pb-14">
-        <SectionHeading
-          as="h1"
-          title="Get in touch"
-          description="A pipeline that's become a maintenance burden, a cloud bill that keeps climbing, or a role you think I'd fit — send it over."
-        />
-      </header>
+    <>
+      <PageHeader className="mb-8">
+        <PageHeaderHeading>Contact</PageHeaderHeading>
+        <PageHeaderHeading className="mt-2 text-muted-foreground">
+          Got an infrastructure problem worth solving?
+        </PageHeaderHeading>
+        <PageHeaderDescription>
+          A pipeline that&rsquo;s become a maintenance burden, a cloud bill that
+          keeps climbing, or a role you think I&rsquo;d fit — send it over.
+        </PageHeaderDescription>
+      </PageHeader>
 
-      <div className="border-t border-[var(--line)] py-10">
-        <ContactForm />
-      </div>
+      <ContactForm />
 
-      {direct.length > 0 ? (
-        <dl className="border-t border-[var(--line)] py-10">
-          <p className="eyebrow mb-4">Or reach me directly</p>
-          <div className="space-y-3">
-            {direct.map((item) => (
-              <div
-                key={item.label}
-                className="flex items-baseline justify-between gap-4"
-              >
-                <dt className="text-sm text-[var(--subtle)]">{item.label}</dt>
-                <dd className="min-w-0">
-                  <Link
-                    href={item.href}
-                    target={item.href.startsWith('http') ? '_blank' : undefined}
-                    rel="noreferrer"
-                    className="link block truncate text-sm"
-                  >
-                    {item.value}
-                  </Link>
-                </dd>
-              </div>
+      {socials.length > 0 ? (
+        <div className="my-8">
+          <h2 className="mb-3 text-lg font-semibold tracking-tight">Elsewhere</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            {socials.map((item) => (
+              <Link key={item.label} href={item.href} target="_blank" rel="noreferrer">
+                <Badge variant="outline" className="px-4 py-2 text-base shadow-sm">
+                  {item.label}
+                </Badge>
+              </Link>
             ))}
           </div>
-        </dl>
+        </div>
       ) : null}
-    </div>
+
+      <Pager
+        prevHref="/education"
+        nextHref="/stats"
+        prevTitle="Education"
+        nextTitle="Stats"
+      />
+    </>
   );
-}
+};
+export default ContactPage;

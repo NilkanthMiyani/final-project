@@ -61,7 +61,7 @@ export function AdminNav() {
                 'shrink-0 text-sm whitespace-nowrap transition-colors md:block',
                 active
                   ? 'text-foreground'
-                  : 'text-[var(--muted)] hover:text-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               {link.label}
@@ -75,8 +75,8 @@ export function AdminNav() {
         type="button"
         onClick={logout}
         className={cn(
-          'mt-8 text-sm text-[var(--subtle)] transition-colors',
-          'hover:text-[var(--destructive)] md:mt-10'
+          'mt-8 text-sm text-muted-foreground transition-colors',
+          'hover:text-destructive md:mt-10'
         )}
       >
         Sign out

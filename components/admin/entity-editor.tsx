@@ -111,7 +111,7 @@ export function EntityEditor({
       </div>
 
       {creating ? (
-        <div className="mb-8 rounded-sm border border-[var(--line)] p-5 sm:p-6">
+        <div className="mb-8 rounded-sm border border-border p-5 sm:p-6">
           <p className="eyebrow">New {noun}</p>
           <div className="mt-5">
             <EntityForm
@@ -125,9 +125,9 @@ export function EntityEditor({
         </div>
       ) : null}
 
-      <div className="border-t border-[var(--line)]">
+      <div className="border-t border-border">
         {ordered.length === 0 ? (
-          <p className="py-10 text-sm text-[var(--muted)]">
+          <p className="py-10 text-sm text-muted-foreground">
             Nothing here yet. Add your first {noun}.
           </p>
         ) : null}
@@ -142,7 +142,7 @@ export function EntityEditor({
             <div
               key={id}
               className={cn(
-                'border-b border-[var(--line)] transition-opacity',
+                'border-b border-border transition-opacity',
                 busy && 'opacity-50'
               )}
             >
@@ -161,23 +161,23 @@ export function EntityEditor({
                   className="min-w-0 flex-1 py-1 text-left"
                 >
                   <p className="flex items-baseline gap-2 text-sm">
-                    <span className="text-[var(--subtle)]">
+                    <span className="text-muted-foreground">
                       {open ? '–' : '+'}
                     </span>
                     <span
                       className={cn(
                         'min-w-0 font-medium sm:truncate',
-                        isDraft && 'text-[var(--muted)] line-through'
+                        isDraft && 'text-muted-foreground line-through'
                       )}
                     >
                       {String(item[titleKey] ?? 'Untitled')}
                     </span>
                     {isDraft ? (
-                      <span className="shrink-0 text-xs text-[var(--subtle)]">Draft</span>
+                      <span className="shrink-0 text-xs text-muted-foreground">Draft</span>
                     ) : null}
                   </p>
                   {subtitleKey && item[subtitleKey] ? (
-                    <p className="mt-1 pl-5 text-xs text-[var(--muted)] sm:truncate">
+                    <p className="mt-1 pl-5 text-xs text-muted-foreground sm:truncate">
                       {String(item[subtitleKey])}
                     </p>
                   ) : null}
@@ -311,7 +311,7 @@ function EntityForm({
         <button
           type="button"
           onClick={onCancel}
-          className="w-full py-2.5 text-sm text-[var(--muted)] transition-colors hover:text-foreground sm:w-auto sm:py-0"
+          className="w-full py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground sm:w-auto sm:py-0"
         >
           Cancel
         </button>
@@ -343,11 +343,11 @@ function IconButton({
       className={cn(
         // 40px on touch screens keeps these above the minimum tap target;
         // desktop can afford the tighter 32px.
-        'flex size-10 items-center justify-center text-xs text-[var(--muted)] transition-colors sm:size-8',
+        'flex size-10 items-center justify-center text-xs text-muted-foreground transition-colors sm:size-8',
         'disabled:opacity-25',
         destructive
-          ? 'hover:text-[var(--destructive)]'
-          : 'hover:text-[var(--foreground)]'
+          ? 'hover:text-destructive'
+          : 'hover:text-foreground'
       )}
     >
       {children}

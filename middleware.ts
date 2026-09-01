@@ -29,7 +29,12 @@ export async function middleware(request: NextRequest) {
      * engines treat this as temporary and keep the real pages indexed. Turn it
      * off by removing MAINTENANCE_MODE from the environment and redeploying.
      */
-    if (process.env.MAINTENANCE_MODE === '1') {
+    const host = request.headers.get('host') ?? '';
+    // Preview deployments stay reachable so the site can be reviewed while the
+    // production domain is still showing the holding page.
+    const isPreview = host.endsWith('.vercel.app');
+
+    if (process.env.MAINTENANCE_MODE === '1' && !isPreview) {
       return new NextResponse(MAINTENANCE_HTML, {
         status: 503,
         headers: {

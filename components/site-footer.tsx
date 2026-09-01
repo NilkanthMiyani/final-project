@@ -1,46 +1,46 @@
 import Link from 'next/link';
 
-import { getProfile } from '@/lib/content';
+import { siteConfig } from '@/config/site';
 
-const socialLabels: Record<string, string> = {
-  github: 'GitHub',
-  linkedin: 'LinkedIn',
-  twitter: 'X',
-  telegram: 'Telegram',
-};
-
-export async function SiteFooter() {
-  const profile = await getProfile();
-  const socials = Object.entries(profile.socials).filter(([, url]) => url);
-
+export function SiteFooter() {
   return (
-    <footer className="mx-auto w-full max-w-2xl px-6 pb-16 sm:px-8">
-      <div className="flex flex-col gap-6 border-t border-[var(--line)] pt-8 sm:flex-row sm:items-baseline sm:justify-between">
-        <div className="space-y-1">
-          {profile.email ? (
-            <Link href={`mailto:${profile.email}`} className="link block text-sm">
-              {profile.email}
-            </Link>
-          ) : null}
-          <p className="text-sm text-[var(--subtle)]">
-            © {new Date().getFullYear()} {profile.name}
-            {profile.location ? ` · ${profile.location}` : ''}
-          </p>
-        </div>
+    <footer className="border-t border-border bg-background/95 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container-wrapper">
+        <div className="container flex flex-col items-center justify-center space-y-2 py-4">
+          <div className="max-w-3xl text-balance text-center text-xs leading-relaxed text-muted-foreground sm:text-sm">
+            <span className="block sm:inline">
+              © {new Date().getFullYear()} {siteConfig.name}
+            </span>
+            <span className="hidden sm:inline"> · </span>
+            <span className="block sm:inline">
+              Built with <span className="font-medium text-foreground">Next.js</span>,{' '}
+              <span className="font-medium text-foreground">shadcn/ui</span> and{' '}
+              <span className="font-medium text-foreground">Tailwind CSS</span>
+            </span>
+            <span className="hidden sm:inline"> · </span>
+            <span className="block sm:inline">
+              Deployed with <span className="font-medium text-foreground">Vercel</span>
+            </span>
+          </div>
 
-        <nav className="flex flex-wrap gap-x-5 gap-y-2">
-          {socials.map(([key, url]) => (
+          {/*
+            The layout and component system are adapted from Aditya Domle's
+            MIT-licensed portfolio. Keeping the credit here is both the decent
+            thing to do and what the licence is for.
+          */}
+          <div className="text-center text-xs text-muted-foreground sm:text-sm">
+            Design adapted from{' '}
             <Link
-              key={key}
-              href={url}
+              href="https://github.com/adityadomle/My-Portfolio"
               target="_blank"
               rel="noreferrer"
-              className="link text-sm"
+              className="font-medium text-primary transition-colors hover:text-primary/80"
             >
-              {socialLabels[key] ?? key}
-            </Link>
-          ))}
-        </nav>
+              Aditya Domle
+            </Link>{' '}
+            · MIT licensed
+          </div>
+        </div>
       </div>
     </footer>
   );

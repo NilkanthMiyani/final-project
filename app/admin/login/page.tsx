@@ -42,14 +42,14 @@ export default function LoginPage() {
     <div className="flex min-h-svh items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <p className="eyebrow">Restricted</p>
-        <h1 className="display mt-3 text-2xl font-medium">Admin</h1>
-        <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
+        <h1 className="mt-3 text-2xl font-medium">Admin</h1>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           Enter the admin password to manage portfolio content.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-10">
           <label className="block">
-            <span className="block text-xs text-[var(--subtle)]">Password</span>
+            <span className="block text-xs text-muted-foreground">Password</span>
             <input
               type="password"
               value={password}
@@ -62,7 +62,7 @@ export default function LoginPage() {
           </label>
 
           {error ? (
-            <p className="mt-4 text-xs text-[var(--destructive)]">{error}</p>
+            <p className="mt-4 text-xs text-destructive">{error}</p>
           ) : null}
 
           <button

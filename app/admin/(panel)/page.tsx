@@ -25,10 +25,10 @@ export default async function AdminOverviewPage() {
       <dl className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3">
         {stats.map((stat) => (
           <Link key={stat.label} href={stat.href} className="group block">
-            <dt className="text-xs text-[var(--subtle)] transition-colors group-hover:text-[var(--muted)]">
+            <dt className="text-xs text-muted-foreground transition-colors group-hover:text-muted-foreground">
               {stat.label}
             </dt>
-            <dd className="tnum display mt-1.5 text-2xl font-medium">
+            <dd className="tnum mt-1.5 text-2xl font-medium">
               {stat.value}
             </dd>
           </Link>
@@ -38,7 +38,7 @@ export default async function AdminOverviewPage() {
       {unread > 0 ? (
         <Link
           href="/messages"
-          className="mt-10 flex items-center gap-2.5 border-t border-[var(--line)] pt-6 text-sm text-[var(--muted)] transition-colors hover:text-foreground"
+          className="mt-10 flex items-center gap-2.5 border-t border-border pt-6 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <span className="size-1.5 rounded-full bg-current" />
           {unread} unread {unread === 1 ? 'message' : 'messages'}
@@ -46,11 +46,11 @@ export default async function AdminOverviewPage() {
       ) : null}
 
       {drafts.length > 0 ? (
-        <div className="mt-10 border-t border-[var(--line)] pt-6">
+        <div className="mt-10 border-t border-border pt-6">
           <p className="eyebrow">Unpublished drafts</p>
           <ul className="mt-3 space-y-1.5">
             {drafts.map((name, index) => (
-              <li key={index} className="text-sm text-[var(--muted)]">
+              <li key={index} className="text-sm text-muted-foreground">
                 {name}
               </li>
             ))}

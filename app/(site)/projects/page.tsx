@@ -1,7 +1,14 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
-import { ProjectList } from '@/components/project-list';
-import { SectionHeading } from '@/components/section-heading';
+import { PageHeader, PageHeaderHeading } from '@/components/page-header';
+import Pager from '@/components/pager';
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { getProjects } from '@/lib/content';
 
 export const metadata: Metadata = {
@@ -10,28 +17,53 @@ export const metadata: Metadata = {
     'Infrastructure, CI/CD and cloud projects — Terraform, Kubernetes, Argo CD, AWS.',
 };
 
-export default async function ProjectsPage() {
+const ProjectsPage = async () => {
   const projects = await getProjects();
 
   return (
-    <div className="mx-auto max-w-2xl px-6 sm:px-8">
-      <header className="pt-32 pb-12 sm:pt-40 sm:pb-16">
-        <SectionHeading
-          as="h1"
-          title="Projects"
-          description="Each one is a working repository — Terraform state, pipeline definitions and manifests included."
-        />
-      </header>
+    <>
+      <PageHeader className="mb-10">
+        <PageHeaderHeading>Projects</PageHeaderHeading>
+        <PageHeaderHeading className="mt-2 text-muted-foreground">
+          A lot of ideas, but some are still under construction!
+        </PageHeaderHeading>
+      </PageHeader>
 
       {projects.length > 0 ? (
-        <div className="border-t border-[var(--line)] pt-4">
-          <ProjectList projects={projects} />
+        <div className="card-container grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => (
+            <Card
+              title={project.overview}
+              key={project.id}
+              className="relative isolate w-full cursor-pointer transition-all duration-300 hover:scale-105"
+            >
+              <CardHeader>
+                <CardTitle className="leading-6">{project.title}</CardTitle>
+                <CardDescription className="flex flex-col gap-2">
+                  {project.tagline}
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="text-muted-foreground"
+                  >
+                    Learn More...
+                    <span className="absolute inset-0"></span>
+                  </Link>
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
         </div>
       ) : (
-        <p className="border-t border-[var(--line)] pt-8 text-[var(--muted)]">
-          No projects published yet.
-        </p>
+        <p className="text-muted-foreground">No projects published yet.</p>
       )}
-    </div>
+
+      <Pager
+        prevHref="/about"
+        nextHref="/skills-tools"
+        prevTitle="About"
+        nextTitle="Skills & Tools"
+      />
+    </>
   );
-}
+};
+export default ProjectsPage;

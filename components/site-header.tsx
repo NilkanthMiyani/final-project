@@ -1,96 +1,130 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import Link from "next/link";
+import { useRef, useState, useEffect } from "react";
+import { FiMusic } from "react-icons/fi";
 
-import { ModeSwitcher } from '@/components/mode-switcher';
-import { navItems } from '@/config/site';
-import { cn } from '@/lib/utils';
+import { siteConfig } from "@/config/site";
+import { Button } from "./ui/button";
+import { ModeSwitcher } from "./mode-switcher";
+import { MainNav } from "./main-nav";
+import { MobileNav } from "./mobile-nav";
+import { CommandMenu } from "./command-menu";
+import { Icons } from "./icons";
 
-/**
- * Fixed, borderless, and static — no scroll listener and no state to animate
- * between. It sits on the page background so it disappears into the layout
- * until you look for it.
- */
 export function SiteHeader() {
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [time, setTime] = useState(new Date());
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-  useEffect(() => setOpen(false), [pathname]);
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+    if (playing) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setPlaying(!playing);
+  };
+
+  // Format time as HH:MM:SS
+  const formattedTime = time.toLocaleTimeString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-background">
-      <div className="mx-auto flex h-16 max-w-2xl items-center justify-between px-6 sm:px-8">
-        <Link href="/" className="text-sm font-medium tracking-tight">
-          Nilkanth Miyani
-        </Link>
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+      <div className="container-wrapper">
+        <div className="container flex h-13 items-center">
+          {/* Logo/Name - Left */}
+          <MainNav />
 
-        <div className="flex items-center gap-1">
-          <nav className="hidden items-center gap-6 sm:flex">
-            {navItems.map((item) => {
-              const active =
-                item.href === '/projects'
-                  ? pathname.startsWith('/projects')
-                  : pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    'text-sm transition-colors',
-                    active
-                      ? 'text-foreground'
-                      : 'text-[var(--muted)] hover:text-foreground'
-                  )}
+          {/* Mobile Nav */}
+          <MobileNav toggleMusic={toggleMusic} playing={playing} />
+
+          {/* Desktop Nav - Right */}
+          <div className="ml-auto flex items-center gap-2 md:gap-3">
+            {/* Command Menu - Hidden on mobile */}
+            <div className="hidden md:block">
+              <CommandMenu />
+            </div>
+
+            {/* Live Clock */}
+            <div className="hidden items-center gap-2 rounded-full border border-border/40 bg-muted/30 px-3 py-1.5 backdrop-blur-sm lg:flex">
+              <div className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+              </div>
+              <span className="text-xs font-medium tabular-nums tracking-tight text-foreground">
+                {formattedTime}
+              </span>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-1">
+              {/* Music Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full transition-all hover:scale-105 hover:bg-muted"
+                onClick={toggleMusic}
+                title={playing ? "Pause Music" : "Play Music"}
+              >
+                <FiMusic
+                  className={`h-[18px] w-[18px] transition-colors ${
+                    playing ? "text-pink-500" : "text-muted-foreground"
+                  }`}
+                />
+              </Button>
+
+              {/* Theme Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full transition-all hover:scale-105 hover:bg-muted"
+                asChild
+              >
+                <div>
+                  <ModeSwitcher className="h-[18px] w-[18px]" />
+                </div>
+              </Button>
+
+              {/* GitHub */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full transition-all hover:scale-105 hover:bg-muted"
+                asChild
+              >
+                <Link 
+                  href={siteConfig.links.github} 
+                  target="_blank" 
+                  rel="noreferrer"
                 >
-                  {item.title}
+                  <Icons.gitHub className="h-[18px] w-[18px]" />
+                  <span className="sr-only">GitHub</span>
                 </Link>
-              );
-            })}
-          </nav>
-
-          <ModeSwitcher className="ml-3" />
-
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            aria-expanded={open}
-            aria-label="Toggle menu"
-            className="-mr-2 flex size-9 items-center justify-center text-[var(--muted)] transition-colors hover:text-foreground sm:hidden"
-          >
-            {/* Two rules that become an X. No rotation animation. */}
-            <span className="relative block h-3 w-4">
-              <span
-                className={cn(
-                  'absolute left-0 block h-px w-4 bg-current',
-                  open ? 'top-1.5 rotate-45' : 'top-1'
-                )}
-              />
-              <span
-                className={cn(
-                  'absolute left-0 block h-px w-4 bg-current',
-                  open ? 'top-1.5 -rotate-45' : 'top-2.5'
-                )}
-              />
-            </span>
-          </button>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {open ? (
-        <nav className="border-t border-[var(--line)] bg-background px-6 pb-4 sm:hidden">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block py-3 text-sm text-[var(--muted)] transition-colors hover:text-foreground"
-            >
-              {item.title}
-            </Link>
-          ))}
-        </nav>
-      ) : null}
+      {/* Persistent Audio */}
+      <audio ref={audioRef} src="/music/theme.mp3" loop preload="auto" />
     </header>
   );
 }

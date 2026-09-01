@@ -1,8 +1,15 @@
+import { ArrowLeftIcon, ExternalLinkIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 
-import { getProjects } from '@/lib/content';
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderHeading,
+} from '@/components/page-header';
+import Pager from '@/components/pager';
+import { Badge } from '@/components/ui/badge';
+import { getProfile, getProjects } from '@/lib/content';
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -23,113 +30,139 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ProjectDetailPage({ params }: PageProps) {
+const ProjectDetails = async ({ params }: PageProps) => {
   const { slug } = await params;
-  const project = (await getProjects()).find((item) => item.slug === slug);
+  const [projects, profile] = await Promise.all([getProjects(), getProfile()]);
+  const project = projects.find((item) => item.slug === slug);
 
-  if (!project) notFound();
+  if (!project) {
+    return (
+      <>
+        <h2 className="text-destructive">Project not found</h2>
+        <Link
+          href="/projects"
+          className="flex items-center gap-2 text-muted-foreground"
+        >
+          <ArrowLeftIcon className="h-4 w-4" />
+          Back to projects
+        </Link>
+      </>
+    );
+  }
 
-  const links = [
-    { label: 'Source', url: project.links.github },
-    { label: 'Live site', url: project.links.live },
-  ].filter((link) => link.url);
+  const hasLinks = Boolean(project.links.live || project.links.github);
 
   return (
-    <div className="mx-auto max-w-2xl px-6 sm:px-8">
-      <div className="pt-28 sm:pt-36">
-        <Link href="/projects" className="link text-sm">
-          ← Projects
+    <div>
+      <div className="navigation">
+        <Link
+          href="/projects"
+          className="mb-4 flex w-fit cursor-pointer items-center gap-2 text-muted-foreground"
+        >
+          <ArrowLeftIcon className="h-4 w-4" />
+          Back to projects
         </Link>
       </div>
 
-      <header className="pt-8 pb-12">
-        <h1 className="display text-3xl leading-tight font-medium sm:text-4xl">
-          {project.title}
-        </h1>
+      <PageHeader>
+        <PageHeaderHeading>{project.title}</PageHeaderHeading>
         {project.tagline ? (
-          <p className="mt-5 text-lg leading-relaxed text-[var(--muted)]">
-            {project.tagline}
-          </p>
+          <PageHeaderDescription>{project.tagline}</PageHeaderDescription>
         ) : null}
-
-        {links.length > 0 ? (
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            {links.map((link, index) => (
-              <Link
-                key={link.label}
-                href={link.url}
-                target="_blank"
-                rel="noreferrer"
-                className={index === 0 ? 'btn' : 'link-btn'}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+        {project.overview ? (
+          <PageHeaderDescription>{project.overview}</PageHeaderDescription>
         ) : null}
-      </header>
-
-      {project.overview ? (
-        <Block label="Overview">
-          <p className="leading-relaxed text-[var(--muted)]">{project.overview}</p>
-        </Block>
-      ) : null}
-
-      {project.features.length > 0 ? (
-        <Block label="What it does">
-          <ul className="space-y-2.5">
-            {project.features.map((feature, index) => (
-              <li
-                key={index}
-                className="grid grid-cols-[1.5rem_1fr] text-sm leading-relaxed"
-              >
-                <span className="tnum text-[var(--subtle)]">{index + 1}</span>
-                <span className="text-[var(--muted)]">{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </Block>
-      ) : null}
-
-      {project.outcomes.length > 0 ? (
-        <Block label="Outcome">
-          <ul className="space-y-2.5">
-            {project.outcomes.map((outcome, index) => (
-              <li
-                key={index}
-                className="grid grid-cols-[0.875rem_1fr] text-sm leading-relaxed"
-              >
-                <span className="text-[var(--subtle)]">·</span>
-                <span className="text-[var(--muted)]">{outcome}</span>
-              </li>
-            ))}
-          </ul>
-        </Block>
-      ) : null}
+      </PageHeader>
 
       {project.techStack.length > 0 ? (
-        <Block label="Stack">
-          <p className="text-sm leading-relaxed text-[var(--muted)]">
-            {project.techStack.join(' · ')}
-          </p>
-        </Block>
+        <div id="badges" className="my-4">
+          <h2 className="text-lg font-semibold">Tech Stack</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            {project.techStack.map((tech) => (
+              <Badge
+                variant="outline"
+                className="px-4 text-base shadow-md"
+                key={tech}
+              >
+                {tech}
+              </Badge>
+            ))}
+          </div>
+        </div>
       ) : null}
+
+      <div className="grid grid-cols-1 gap-4 font-light lg:grid-cols-2">
+        {project.features.length > 0 ? (
+          <div id="features" className="my-4">
+            <h2 className="text-lg font-semibold">Features</h2>
+            <ul className="list-outside list-disc">
+              {project.features.map((feature) => (
+                <li className="ml-4 pl-2" key={feature}>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {project.outcomes.length > 0 ? (
+          <div id="outcomes" className="my-4">
+            <h2 className="text-lg font-semibold">Outcomes</h2>
+            <ul className="list-outside list-disc">
+              {project.outcomes.map((outcome) => (
+                <li className="ml-4 pl-2" key={outcome}>
+                  {outcome}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        <div id="feedback" className="my-4">
+          <h2 className="text-lg font-semibold">Feedback</h2>
+          <p>
+            For feedback or suggestions, contact me at:{' '}
+            <Link href={`mailto:${profile.email}`}>
+              <span className="text-primary">{profile.email}</span>
+            </Link>
+          </p>
+        </div>
+
+        {hasLinks ? (
+          <div id="links" className="my-4">
+            <h2 className="text-lg font-semibold">
+              {project.links.live && project.links.github ? 'Links' : 'Link'}
+            </h2>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {project.links.live ? (
+                <Link href={project.links.live} target="_blank">
+                  <Badge variant="default" className="px-4 text-base">
+                    Live <ExternalLinkIcon className="-mt-2 h-4 w-4" />
+                  </Badge>
+                </Link>
+              ) : null}
+
+              {project.links.github ? (
+                <Link href={project.links.github} target="_blank">
+                  <Badge variant="outline" className="px-4 text-base">
+                    Github <ExternalLinkIcon className="-mt-2 h-4 w-4" />
+                  </Badge>
+                </Link>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      <Pager
+        prevHref="/projects"
+        nextHref="/skills-tools"
+        prevTitle="Projects"
+        nextTitle="Skills & Tools"
+      />
     </div>
   );
-}
+};
 
-/** Label above, content below. One hairline per block. */
-function Block({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="border-t border-[var(--line)] py-8">
-      <h2 className="eyebrow mb-4">{label}</h2>
-      {children}
-    </section>
-  );
-}
+export default ProjectDetails;

@@ -31,7 +31,7 @@ export default async function AdminResumePage() {
         </div>
       ) : null}
 
-      <section className="border-t border-[var(--line)] pt-6">
+      <section className="border-t border-border pt-6">
         <p className="eyebrow mb-5">Upload a new PDF</p>
 
         {blobConfigured ? (
@@ -41,15 +41,15 @@ export default async function AdminResumePage() {
               name="resume"
               accept="application/pdf"
               required
-              className="block w-full text-sm text-[var(--muted)] file:mr-4 file:border file:border-[var(--line)] file:bg-transparent file:px-4 file:py-2 file:text-sm file:text-foreground hover:file:bg-[var(--hover)]"
+              className="block w-full text-sm text-muted-foreground file:mr-4 file:border file:border-border file:bg-transparent file:px-4 file:py-2 file:text-sm file:text-foreground hover:file:bg-accent"
             />
-            <p className="mt-3 text-[0.6875rem] text-[var(--muted)]">
+            <p className="mt-3 text-[0.6875rem] text-muted-foreground">
               PDF only, up to 5 MB. Uploading replaces the link on the site
               immediately.
             </p>
           </AdminForm>
         ) : (
-          <p className="text-[var(--muted)] leading-relaxed text-sm">
+          <p className="text-muted-foreground leading-relaxed text-sm">
             Uploading needs <code >BLOB_READ_WRITE_TOKEN</code>{' '}
             in the environment. Create a Blob store in the Vercel dashboard, then
             pull the variable in. Until then, set the link manually below.
@@ -57,7 +57,7 @@ export default async function AdminResumePage() {
         )}
       </section>
 
-      <section className="mt-12 border-t border-[var(--line)] pt-6">
+      <section className="mt-12 border-t border-border pt-6">
         <p className="eyebrow mb-5">Or point at a URL</p>
         <AdminForm action={setResumeUrl} submitLabel="Save link">
           <div className="max-w-xl">

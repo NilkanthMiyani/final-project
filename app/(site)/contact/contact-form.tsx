@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 export function ContactForm() {
   const [pending, setPending] = useState(false);
@@ -41,27 +45,25 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label htmlFor="fullname" className="block text-xs text-[var(--subtle)]">
-            Name
-          </label>
-          <input
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 rounded-xl border border-border/40 p-6"
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="fullname">Name</Label>
+          <Input
             id="fullname"
             name="fullname"
             required
             maxLength={120}
             autoComplete="name"
             placeholder="Your name"
-            className="field mt-1"
           />
         </div>
-        <div>
-          <label htmlFor="email" className="block text-xs text-[var(--subtle)]">
-            Email
-          </label>
-          <input
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
             id="email"
             name="email"
             type="email"
@@ -69,29 +71,25 @@ export function ContactForm() {
             maxLength={200}
             autoComplete="email"
             placeholder="you@company.com"
-            className="field mt-1"
           />
         </div>
       </div>
 
-      <div>
-        <label htmlFor="message" className="block text-xs text-[var(--subtle)]">
-          Message
-        </label>
-        <textarea
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="message">Message</Label>
+        <Textarea
           id="message"
           name="message"
           required
           rows={6}
           maxLength={5000}
           placeholder="What are you working on?"
-          className="field mt-1 resize-y"
         />
       </div>
 
-      <button type="submit" disabled={pending} className="btn disabled:opacity-50">
+      <Button type="submit" disabled={pending} className="w-fit rounded-md">
         {pending ? 'Sending…' : 'Send message'}
-      </button>
+      </Button>
     </form>
   );
 }
