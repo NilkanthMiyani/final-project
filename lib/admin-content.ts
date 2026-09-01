@@ -35,6 +35,7 @@ export async function adminGetProfile(): Promise<Profile> {
 
   return {
     name: str(doc.name),
+    brandName: str(doc.brandName),
     role: str(doc.role),
     headline: str(doc.headline),
     subheadline: str(doc.subheadline),

@@ -45,16 +45,23 @@ export async function generateMetadata(): Promise<Metadata> {
  * footer. The dashed `border-grid` rules and the `container-wrapper` max width
  * are what give the layout its frame.
  */
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   // Fire-and-forget: a failed counter must never block the page.
   void setViewsServerAction();
+
+  const profile = await getProfile();
+  const brand = profile.brandName || profile.name;
 
   return (
     <LenisProvider>
       <div vaul-drawer-wrapper="">
         <div className="relative flex min-h-svh flex-col bg-background">
           <div data-wrapper="" className="border-grid flex flex-1 flex-col">
-            <SiteHeader />
+            <SiteHeader brand={brand} />
             <main className="flex flex-1 flex-col">
               <div className="container-wrapper">
                 <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">

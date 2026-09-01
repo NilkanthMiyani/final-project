@@ -5,7 +5,18 @@ import { PageTitle } from '@/components/admin/page-title';
 import { adminGetProfile } from '@/lib/admin-content';
 
 const identity: FieldDef[] = [
-  { name: 'name', label: 'Name', type: 'text' },
+  {
+    name: 'name',
+    label: 'Full name',
+    type: 'text',
+    hint: 'Used for the homepage heading, page titles and SEO.',
+  },
+  {
+    name: 'brandName',
+    label: 'Header name',
+    type: 'text',
+    hint: 'The short label beside the logo in the header, drawer and footer. Leave blank to reuse the full name.',
+  },
   { name: 'role', label: 'Role', type: 'text', placeholder: 'DevOps Engineer' },
   {
     name: 'headline',

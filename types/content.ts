@@ -2,6 +2,11 @@
 
 export type Profile = {
   name: string;
+  /**
+   * Short label shown in the header, drawer and footer. Falls back to `name`
+   * when blank — the full legal name is often too long for a nav bar.
+   */
+  brandName: string;
   role: string;
   headline: string;
   subheadline: string;

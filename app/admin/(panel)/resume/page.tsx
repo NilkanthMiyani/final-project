@@ -18,7 +18,7 @@ export default async function AdminResumePage() {
       />
 
       {profile.resumeUrl ? (
-        <div className="mb-10">
+        <div className="mb-10 rounded-xl border border-border/40 p-5">
           <p className="text-sm font-semibold tracking-tight">Currently live</p>
           <Link
             href={profile.resumeUrl}
@@ -43,9 +43,11 @@ export default async function AdminResumePage() {
               required
               className="block w-full text-sm text-muted-foreground file:mr-4 file:border file:border-border file:bg-transparent file:px-4 file:py-2 file:text-sm file:text-foreground hover:file:bg-accent"
             />
-            <p className="mt-3 text-[0.6875rem] text-muted-foreground">
-              PDF only, up to 5 MB. Uploading replaces the link on the site
-              immediately.
+            <p className="mt-3 text-xs text-muted-foreground">
+              PDF only, up to 5 MB. The file goes to Vercel Blob and the
+              &ldquo;Get Resume&rdquo; button on the site switches to it
+              immediately. The previous upload is deleted, so only the current
+              résumé is ever stored.
             </p>
           </AdminForm>
         ) : (

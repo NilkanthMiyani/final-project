@@ -1,15 +1,18 @@
 import Link from 'next/link';
 
-import { siteConfig } from '@/config/site';
+import { getProfile } from '@/lib/content';
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const profile = await getProfile();
+  const brand = profile.brandName || profile.name;
+
   return (
     <footer className="border-t border-border bg-background/95 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container-wrapper">
         <div className="container flex flex-col items-center justify-center space-y-2 py-4">
           <div className="max-w-3xl text-balance text-center text-xs leading-relaxed text-muted-foreground sm:text-sm">
             <span className="block sm:inline">
-              © {new Date().getFullYear()} {siteConfig.name}
+              © {new Date().getFullYear()} {brand}
             </span>
             <span className="hidden sm:inline"> · </span>
             <span className="block sm:inline">

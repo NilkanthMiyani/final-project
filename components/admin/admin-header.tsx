@@ -14,7 +14,7 @@ import { siteConfig } from '@/config/site';
  * Mirrors the public SiteHeader so the admin reads as the same product — same
  * height, same blur, same button shapes. Only the contents differ.
  */
-export function AdminHeader() {
+export function AdminHeader({ brand }: { brand: string }) {
   const router = useRouter();
 
   async function logout(): Promise<void> {
@@ -31,7 +31,7 @@ export function AdminHeader() {
             <Link href="/" className="mr-6 flex items-center gap-2.5">
               <Icons.logo className="h-6 w-6" />
               <span className="hidden font-semibold tracking-tight lg:inline-block">
-                {siteConfig.name}
+                {brand}
               </span>
             </Link>
             <nav className="flex items-center gap-6 text-sm">
@@ -40,7 +40,7 @@ export function AdminHeader() {
             </nav>
           </div>
 
-          <AdminMobileNav />
+          <AdminMobileNav brand={brand} />
 
           <div className="ml-auto flex items-center gap-2 md:gap-3">
             <Button

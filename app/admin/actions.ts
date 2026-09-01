@@ -1,6 +1,6 @@
 'use server';
 
-import { put } from '@vercel/blob';
+import { del, put } from '@vercel/blob';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import type { Model } from 'mongoose';
 
@@ -59,19 +59,30 @@ const slugify = (value: string): string =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
-/**
- * Invalidates the public cache for one collection and the pages that show it.
- *
- * Deliberately NOT `revalidatePath('/', 'layout')`. That form invalidates every
- * route in the deployment — including the admin panel itself and the client
- * router cache — so a single save made every subsequent admin click a cold
- * render. Only the four public routes actually read this content.
- */
+/** Every statically rendered public route. */
+const PUBLIC_ROUTES = [
+  '/',
+  '/about',
+  '/projects',
+  '/skills-tools',
+  '/experience',
+  '/education',
+  '/contact',
+] as const;
+
 function refresh(tag: string): void {
   revalidateTag(tag);
-  revalidatePath('/');
-  revalidatePath('/about');
-  revalidatePath('/projects');
+
+  // Every route, not just the ones showing this collection: the site layout
+  // renders the header brand and footer from the profile, so a change there has
+  // to reach pages that display none of the collection itself.
+  //
+  // Still deliberately NOT `revalidatePath('/', 'layout')` — that form also
+  // invalidates the admin and the client router cache, which is what made every
+  // admin click a cold render after a save.
+  for (const route of PUBLIC_ROUTES) {
+    revalidatePath(route);
+  }
   revalidatePath('/projects/[slug]', 'page');
 }
 
@@ -207,6 +218,7 @@ export async function saveProfile(
       {
         $set: {
           name: text(data, 'name'),
+          brandName: text(data, 'brandName'),
           role: text(data, 'role'),
           headline: text(data, 'headline'),
           subheadline: text(data, 'subheadline'),
@@ -466,6 +478,11 @@ export async function deleteMessage(id: string): Promise<ActionResult> {
 
 const MAX_RESUME_BYTES = 5 * 1024 * 1024;
 
+/** True for URLs this app uploaded to its own Vercel Blob store. */
+function isManagedBlob(url: string): boolean {
+  return /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\//.test(url);
+}
+
 export async function uploadResume(
   _previous: ActionResult | null,
   data: FormData
@@ -487,20 +504,44 @@ export async function uploadResume(
       return fail('BLOB_READ_WRITE_TOKEN is not configured.');
     }
 
-    // `addRandomSuffix` keeps the old file reachable until links are updated and
-    // sidesteps CDN caching of a replaced object at a fixed path.
+    await connectToDatabase();
+
+    // Read the outgoing URL before overwriting it, so the old object can be
+    // cleaned up once the new one is safely stored.
+    // `.lean()` widens to a union that includes an array, so narrow it here
+    // rather than fight the Mongoose overloads.
+    const previous: any = await ProfileModel.findOne(
+      { key: 'primary' },
+      { resumeUrl: 1 }
+    ).lean();
+    const previousUrl: string =
+      typeof previous?.resumeUrl === 'string' ? previous.resumeUrl : '';
+
+    // `addRandomSuffix` sidesteps CDN caching of a replaced object at a fixed
+    // path — a resume uploaded to the same key would keep serving the old PDF.
     const blob = await put(`resume/${file.name}`, file, {
       access: 'public',
       addRandomSuffix: true,
       contentType: 'application/pdf',
     });
 
-    await connectToDatabase();
     await ProfileModel.updateOne(
       { key: 'primary' },
       { $set: { resumeUrl: blob.url } },
       { upsert: true }
     );
+
+    // Only now that the new URL is live: drop the previous upload so the store
+    // holds one résumé rather than every version ever uploaded. Guarded to blob
+    // URLs so a manually set link, or a file in public/, is never touched.
+    if (isManagedBlob(previousUrl) && previousUrl !== blob.url) {
+      try {
+        await del(previousUrl);
+      } catch (error) {
+        // Not fatal: the new résumé is already live and recorded.
+        console.error('Failed to remove the previous résumé blob:', error);
+      }
+    }
 
     refresh(TAGS.profile);
     return ok('Résumé uploaded.');

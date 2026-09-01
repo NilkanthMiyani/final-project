@@ -12,15 +12,15 @@ import { useMetaColor } from "@/hooks/use-meta-color";
 import { Button } from "./ui/button";
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { ModeSwitcher } from "./mode-switcher";
-import { siteConfig } from "@/config/site";
 import { Icons } from "./icons";
 
 interface MobileNavProps {
+  brand: string;
   toggleMusic: () => void;
   playing: boolean;
 }
 
-export function MobileNav({ toggleMusic, playing }: MobileNavProps) {
+export function MobileNav({ brand, toggleMusic, playing }: MobileNavProps) {
   const [open, setOpen] = React.useState(false);
   const [time, setTime] = React.useState(new Date());
   const { setMetaColor, metaColor } = useMetaColor();
@@ -76,7 +76,7 @@ export function MobileNav({ toggleMusic, playing }: MobileNavProps) {
           <div className="flex items-center justify-between border-b border-border/40 px-5 py-3">
             <div className="flex items-center gap-2.5">
               <Icons.logo className="h-5 w-5" />
-              <span className="text-base font-semibold">{siteConfig.name}</span>
+              <span className="text-base font-semibold">{brand}</span>
             </div>
 
             <div className="flex items-center gap-1">

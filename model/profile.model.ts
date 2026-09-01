@@ -9,6 +9,8 @@ const profileSchema = new Schema(
     key: { type: String, default: 'primary', unique: true, immutable: true },
 
     name: { type: String, required: true },
+    /** Header/footer label. Falls back to `name` when blank. */
+    brandName: { type: String, default: '' },
     role: { type: String, required: true },
     headline: { type: String, required: true },
     subheadline: { type: String, default: '' },

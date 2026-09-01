@@ -20,6 +20,7 @@ import {
 /** Shown before the database is seeded so the site never renders empty. */
 export const FALLBACK_PROFILE: Profile = {
   name: 'Nilkanth Miyani',
+  brandName: 'Nilkanth Miyani',
   role: 'DevOps Engineer',
   headline: 'I cut client hosting spend by 60%.',
   subheadline:
@@ -93,6 +94,7 @@ export const getProfile = cachedReader<Profile>(TAGS.profile, FALLBACK_PROFILE, 
 
   return {
     name: str(doc.name, FALLBACK_PROFILE.name),
+    brandName: str(doc.brandName),
     role: str(doc.role, FALLBACK_PROFILE.role),
     headline: str(doc.headline, FALLBACK_PROFILE.headline),
     subheadline: str(doc.subheadline),

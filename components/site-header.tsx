@@ -12,7 +12,12 @@ import { MobileNav } from "./mobile-nav";
 import { CommandMenu } from "./command-menu";
 import { Icons } from "./icons";
 
-export function SiteHeader() {
+/**
+ * `brand` is the admin-editable header label, resolved by the server layout.
+ * It is threaded down as a prop rather than read from siteConfig so the value
+ * stays editable without a redeploy.
+ */
+export function SiteHeader({ brand }: { brand: string }) {
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(new Date());
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -50,10 +55,10 @@ export function SiteHeader() {
       <div className="container-wrapper">
         <div className="container flex h-13 items-center">
           {/* Logo/Name - Left */}
-          <MainNav />
+          <MainNav brand={brand} />
 
           {/* Mobile Nav */}
-          <MobileNav toggleMusic={toggleMusic} playing={playing} />
+          <MobileNav brand={brand} toggleMusic={toggleMusic} playing={playing} />
 
           {/* Desktop Nav - Right */}
           <div className="ml-auto flex items-center gap-2 md:gap-3">
