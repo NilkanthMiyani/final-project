@@ -28,18 +28,22 @@ const IntroductionPage = async () => {
           <PageHeaderDescription key={index}>{paragraph}</PageHeaderDescription>
         ))}
         <PageActions>
-          <Button asChild size="sm" className="rounded-md">
-            <Link href={profile.resumeUrl} target="_blank">
-              Get Resume
-              <ExternalLink className="size-3" strokeWidth={2} />
-            </Link>
-          </Button>
-          <Button asChild size="sm" variant="ghost" className="rounded-md">
-            <Link href={`mailto:${profile.email}`}>
-              <Mail className="size-4" />
-              Send Mail
-            </Link>
-          </Button>
+          {profile.resumeUrl ? (
+            <Button asChild size="sm" className="rounded-md">
+              <Link href={profile.resumeUrl} target="_blank">
+                Get Resume
+                <ExternalLink className="size-3" strokeWidth={2} />
+              </Link>
+            </Button>
+          ) : null}
+          {profile.email ? (
+            <Button asChild size="sm" variant="ghost" className="rounded-md">
+              <Link href={`mailto:${profile.email}`}>
+                <Mail className="size-4" />
+                Send Mail
+              </Link>
+            </Button>
+          ) : null}
         </PageActions>
       </PageHeader>
 

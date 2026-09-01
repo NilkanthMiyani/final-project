@@ -39,23 +39,27 @@ export function MainNav({
           Home
         </Link>
 
-        <Link
-          target="_blank"
-          href={linkedin}
-          className="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
-        >
-          LinkedIn
-          <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </Link>
+        {linkedin ? (
+          <Link
+            target="_blank"
+            href={linkedin}
+            className="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            LinkedIn
+            <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
+        ) : null}
 
-        <Link
-          href={resume}
-          target="_blank"
-          className="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Resume
-          <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </Link>
+        {resume ? (
+          <Link
+            href={resume}
+            target="_blank"
+            className="group flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Resume
+            <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
+        ) : null}
       </nav>
     </div>
   );
